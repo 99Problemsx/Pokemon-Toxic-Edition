@@ -1,0 +1,166 @@
+
+=================
+
+[2025-03-20 23:42:31 +0100]
+[Pokémon Essentials version 21.1]
+
+Script error in event 4 (coords 20,1), map 3 (Player's house)
+Exception: NameError
+Message: undefined local variable or method `pbTrainerPC' for #<Interpreter @event_id: 4>
+
+***Full script:
+pbTrainerPC
+
+Backtrace:
+(eval):1:in `execute_script'
+003_Interpreter.rb:140:in `eval'
+003_Interpreter.rb:140:in `execute_script'
+004_Interpreter_Commands.rb:1189:in `command_355'
+004_Interpreter_Commands.rb:116:in `execute_command'
+003_Interpreter.rb:132:in `block in update'
+003_Interpreter.rb:86:in `loop'
+003_Interpreter.rb:86:in `update'
+002_Scene_Map.rb:163:in `block in update'
+002_Scene_Map.rb:162:in `loop'
+
+=================
+
+[2025-03-20 23:46:16 +0100]
+[Pokémon Essentials version 21.1]
+
+Exception: Errno::ENOENT
+Message: File Graphics/Battle animations/Normal/Tackle hit not found.
+
+Backtrace:
+001_RPG_Cache.rb:127:in `initialize'
+001_RPG_Cache.rb:127:in `initialize'
+001_RPG_Cache.rb:46:in `new'
+001_RPG_Cache.rb:46:in `load_bitmap'
+003_AnimPlayerHelper.rb:242:in `set_bitmap_and_origin'
+001_Anim player.rb:105:in `set_up_particle'
+001_Anim player.rb:249:in `block (3 levels) in set_up'
+001_Anim player.rb:247:in `each'
+001_Anim player.rb:247:in `block (2 levels) in set_up'
+001_Anim player.rb:243:in `times'
+
+=================
+
+[2025-03-20 23:46:23 +0100]
+[Pokémon Essentials version 21.1]
+
+Exception: Errno::ENOENT
+Message: File Graphics/Battle animations/Normal/Tackle hit not found.
+
+Backtrace:
+001_RPG_Cache.rb:127:in `initialize'
+001_RPG_Cache.rb:127:in `initialize'
+001_RPG_Cache.rb:46:in `new'
+001_RPG_Cache.rb:46:in `load_bitmap'
+003_AnimPlayerHelper.rb:242:in `set_bitmap_and_origin'
+001_Anim player.rb:105:in `set_up_particle'
+001_Anim player.rb:249:in `block (3 levels) in set_up'
+001_Anim player.rb:247:in `each'
+001_Anim player.rb:247:in `block (2 levels) in set_up'
+001_Anim player.rb:243:in `times'
+
+=================
+
+[2025-03-20 23:46:25 +0100]
+[Pokémon Essentials version 21.1]
+
+Exception: Errno::ENOENT
+Message: File Graphics/Battle animations/Normal/Tackle hit not found.
+
+Backtrace:
+001_RPG_Cache.rb:127:in `initialize'
+001_RPG_Cache.rb:127:in `initialize'
+001_RPG_Cache.rb:46:in `new'
+001_RPG_Cache.rb:46:in `load_bitmap'
+003_AnimPlayerHelper.rb:242:in `set_bitmap_and_origin'
+001_Anim player.rb:105:in `set_up_particle'
+001_Anim player.rb:249:in `block (3 levels) in set_up'
+001_Anim player.rb:247:in `each'
+001_Anim player.rb:247:in `block (2 levels) in set_up'
+001_Anim player.rb:243:in `times'
+
+=================
+
+[2025-03-20 23:46:27 +0100]
+[Pokémon Essentials version 21.1]
+
+Exception: Errno::ENOENT
+Message: File Graphics/Battle animations/Normal/Tackle hit not found.
+
+Backtrace:
+001_RPG_Cache.rb:127:in `initialize'
+001_RPG_Cache.rb:127:in `initialize'
+001_RPG_Cache.rb:46:in `new'
+001_RPG_Cache.rb:46:in `load_bitmap'
+003_AnimPlayerHelper.rb:242:in `set_bitmap_and_origin'
+001_Anim player.rb:105:in `set_up_particle'
+001_Anim player.rb:249:in `block (3 levels) in set_up'
+001_Anim player.rb:247:in `each'
+001_Anim player.rb:247:in `block (2 levels) in set_up'
+001_Anim player.rb:243:in `times'
+
+=================
+
+[2025-03-20 23:48:55 +0100]
+[Pokémon Essentials version 21.1]
+
+Exception: Errno::ENOENT
+Message: File Graphics/Battle animations/Normal/Tackle hit not found.
+
+Backtrace:
+001_RPG_Cache.rb:127:in `initialize'
+001_RPG_Cache.rb:127:in `initialize'
+001_RPG_Cache.rb:46:in `new'
+001_RPG_Cache.rb:46:in `load_bitmap'
+003_AnimPlayerHelper.rb:242:in `set_bitmap_and_origin'
+001_Anim player.rb:105:in `set_up_particle'
+001_Anim player.rb:249:in `block (3 levels) in set_up'
+001_Anim player.rb:247:in `each'
+001_Anim player.rb:247:in `block (2 levels) in set_up'
+001_Anim player.rb:243:in `times'
+
+=================
+
+[2025-03-20 23:49:16 +0100]
+[Pokémon Essentials version 21.1]
+
+Error in Plugin: [New Animation Editor]
+Exception: NameError
+Message: undefined method `write_all' for class `#<Class:Compiler>'
+
+Backtrace:
+[New Animation Editor] 002_Anim writer.rb:100:in `alias_method'
+[New Animation Editor] 002_Anim writer.rb:100:in `singleton class'
+[New Animation Editor] 002_Anim writer.rb:98:in `<module:Compiler>'
+[New Animation Editor] 002_Anim writer.rb:95:in `<main>'
+005_PluginManager.rb:665:in `eval'
+005_PluginManager.rb:665:in `block (2 levels) in runPlugins'
+005_PluginManager.rb:655:in `each'
+005_PluginManager.rb:655:in `block in runPlugins'
+005_PluginManager.rb:646:in `each'
+005_PluginManager.rb:646:in `runPlugins'
+
+=================
+
+[2025-03-20 23:49:22 +0100]
+[Pokémon Essentials version 21.1]
+
+Error in Plugin: [New Animation Editor]
+Exception: NameError
+Message: undefined method `write_all' for class `#<Class:Compiler>'
+
+Backtrace:
+[New Animation Editor] 002_Anim writer.rb:100:in `alias_method'
+[New Animation Editor] 002_Anim writer.rb:100:in `singleton class'
+[New Animation Editor] 002_Anim writer.rb:98:in `<module:Compiler>'
+[New Animation Editor] 002_Anim writer.rb:95:in `<main>'
+005_PluginManager.rb:665:in `eval'
+005_PluginManager.rb:665:in `block (2 levels) in runPlugins'
+005_PluginManager.rb:655:in `each'
+005_PluginManager.rb:655:in `block in runPlugins'
+005_PluginManager.rb:646:in `each'
+005_PluginManager.rb:646:in `runPlugins'
