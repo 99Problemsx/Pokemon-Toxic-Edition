@@ -194,23 +194,13 @@ class Battle::AI
   # Returns whether the move will definitely fail against the target (assuming
   # no battle conditions change between now and using the move).
   def pbPredictMoveFailureAgainstTarget
-    calc_type = @move.rough_type
-    typeMod = @move.move.pbCalcTypeMod(calc_type, @user.battler, @target.battler)
     # Move effect-specific checks
     return true if Battle::AI::Handlers.move_will_fail_against_target?(@move.function_code, @move, @user, @target, self, @battle)
     # Immunity to priority moves because of Psychic Terrain
     return true if @battle.field.terrain == :Psychic && @target.battler.affectedByTerrain? &&
                    @target.opposes?(@user) && @move.rough_priority(@user) > 0
     # Immunity because of ability
-    if @target.has_active_ability?(:WONDERGUARD) && !@target.being_mold_broken?
-      # NOTE: The Battle::AbilityEffects::MoveImmunity for Wonder Guard makes
-      #       use of target.damageState.typeMod, which isn't set by the AI, so
-      #       its triggering needs to be checked here instead of via
-      #       pbImmunityByAbility.
-      return true if move.damagingMove? && calc_type && !Effectiveness.super_effective?(typeMod)
-    else
-      return true if @move.move.pbImmunityByAbility(@user.battler, @target.battler, false)
-    end
+    return true if @move.move.pbImmunityByAbility(@user.battler, @target.battler, false)
     # Immunity because of Dazzling/Queenly Majesty
     if @move.rough_priority(@user) > 0 && @target.opposes?(@user)
       each_same_side_battler(@target.side) do |b, i|
@@ -218,6 +208,8 @@ class Battle::AI
       end
     end
     # Type immunity
+    calc_type = @move.rough_type
+    typeMod = @move.move.pbCalcTypeMod(calc_type, @user.battler, @target.battler)
     return true if @move.move.pbDamagingMove? && Effectiveness.ineffective?(typeMod)
     # Dark-type immunity to moves made faster by Prankster
     return true if Settings::MECHANICS_GENERATION >= 7 && @move.statusMove? &&
@@ -350,8 +342,7 @@ class Battle::AI
     if @trainer.high_skill? && @user.can_switch_lax?
       badMoves = false
       if max_score <= MOVE_USELESS_SCORE
-        badMoves = user.can_attack?
-        badMoves = true if !badMoves && pbAIRandom(100) < 25
+        badMoves = true
       elsif max_score < MOVE_BASE_SCORE * move_score_threshold && user_battler.turnCount > 2
         badMoves = true if pbAIRandom(100) < 80
       end

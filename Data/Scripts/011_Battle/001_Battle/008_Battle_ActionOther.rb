@@ -1,11 +1,7 @@
-#===============================================================================
-#
-#===============================================================================
 class Battle
-  #-----------------------------------------------------------------------------
-  # Shifting a battler to another position in a battle larger than double.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Shifting a battler to another position in a battle larger than double
+  #=============================================================================
   def pbCanShift?(idxBattler)
     return false if pbSideSize(0) <= 2 && pbSideSize(1) <= 2   # Double battle or smaller
     idxOther = -1
@@ -29,10 +25,9 @@ class Battle
     return true
   end
 
-  #-----------------------------------------------------------------------------
-  # Calling at a battler.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Calling at a battler
+  #=============================================================================
   def pbRegisterCall(idxBattler)
     @choices[idxBattler][0] = :Call
     @choices[idxBattler][1] = 0
@@ -66,10 +61,9 @@ class Battle
     end
   end
 
-  #-----------------------------------------------------------------------------
-  # Choosing to Mega Evolve a battler.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Choosing to Mega Evolve a battler
+  #=============================================================================
   def pbHasMegaRing?(idxBattler)
     if pbOwnedByPlayer?(idxBattler)
       @mega_rings.each { |item| return true if $bag.has?(item) }
@@ -87,9 +81,7 @@ class Battle
         @mega_rings.each { |item| return GameData::Item.get(item).name if $bag.has?(item) }
       else
         trainer_items = pbGetOwnerItems(idxBattler)
-        if trainer_items
-          @mega_rings.each { |item| return GameData::Item.get(item).name if trainer_items.include?(item) }
-        end
+        @mega_rings.each { |item| return GameData::Item.get(item).name if trainer_items&.include?(item) }
       end
     end
     return _INTL("Mega Ring")
@@ -135,10 +127,9 @@ class Battle
     return @megaEvolution[side][owner] == idxBattler
   end
 
-  #-----------------------------------------------------------------------------
-  # Mega Evolving a battler.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Mega Evolving a battler
+  #=============================================================================
   def pbMegaEvolve(idxBattler)
     battler = @battlers[idxBattler]
     return if !battler || !battler.pokemon
@@ -181,15 +172,13 @@ class Battle
     pbCalculatePriority(false, [idxBattler]) if Settings::RECALCULATE_TURN_ORDER_AFTER_MEGA_EVOLUTION
   end
 
-  #-----------------------------------------------------------------------------
-  # Primal Reverting a battler.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Primal Reverting a battler
+  #=============================================================================
   def pbPrimalReversion(idxBattler)
     battler = @battlers[idxBattler]
     return if !battler || !battler.pokemon || battler.fainted?
     return if !battler.hasPrimal? || battler.primal?
-    $stats.primal_reversion_count += 1 if battler.pbOwnedByPlayer?
     if battler.isSpecies?(:KYOGRE)
       pbCommonAnimation("PrimalKyogre", battler)
     elsif battler.isSpecies?(:GROUDON)

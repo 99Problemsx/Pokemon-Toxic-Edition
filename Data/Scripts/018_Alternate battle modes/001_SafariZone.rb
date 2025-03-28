@@ -79,7 +79,6 @@ end
 #===============================================================================
 #
 #===============================================================================
-
 EventHandlers.add(:on_enter_map, :end_safari_game,
   proc { |_old_map_id|
     pbSafariState.pbEnd if !pbInSafari?
@@ -105,7 +104,6 @@ EventHandlers.add(:on_player_step_taken_can_transfer, :safari_game_counter,
 #===============================================================================
 #
 #===============================================================================
-
 EventHandlers.add(:on_calling_wild_battle, :safari_battle,
   proc { |pkmn, handled|
     # handled is an array: [nil]. If [true] or [false], the battle has already
@@ -130,15 +128,15 @@ def pbSafariBattle(pkmn, level = 1)
   battle.ballCount = pbSafariState.ballcount
   BattleCreationHelperMethods.prepare_battle(battle)
   # Perform the battle itself
-  outcome = Battle::Outcome::UNDECIDED
+  decision = 0
   pbBattleAnimation(pbGetWildBattleBGM(foeParty), 0, foeParty) do
-    pbSceneStandby { outcome = battle.pbStartBattle }
+    pbSceneStandby { decision = battle.pbStartBattle }
   end
   Input.update
   # Update Safari game data based on result of battle
   pbSafariState.ballcount = battle.ballCount
   if pbSafariState.ballcount <= 0
-    if outcome != Battle::Outcome::LOSE   # Last Safari Ball was used to catch the wild Pokémon
+    if decision != 2   # Last Safari Ball was used to catch the wild Pokémon
       pbMessage(_INTL("Announcer: You're out of Safari Balls! Game over!"))
     end
     pbSafariState.decision = 1
@@ -149,69 +147,50 @@ def pbSafariBattle(pkmn, level = 1)
   #    2 - Player ran out of Safari Balls
   #    3 - Player or wild Pokémon ran from battle, or player forfeited the match
   #    4 - Wild Pokémon was caught
-  if outcome == Battle::Outcome::CATCH
+  if decision == 4
     $stats.safari_pokemon_caught += 1
     pbSafariState.captures += 1
     $stats.most_captures_per_safari_game = [$stats.most_captures_per_safari_game, pbSafariState.captures].max
   end
-  pbSet(1, outcome)
+  pbSet(1, decision)
   # Used by the Poké Radar to update/break the chain
-  EventHandlers.trigger(:on_wild_battle_end, pkmn.species_data.id, pkmn.level, outcome)
+  EventHandlers.trigger(:on_wild_battle_end, pkmn.species_data.id, pkmn.level, decision)
   # Return the outcome of the battle
-  return outcome
+  return decision
 end
 
 #===============================================================================
 #
 #===============================================================================
-class UI::PauseMenu < UI::BaseScreen
-  alias __safari_show_info show_info unless method_defined?(:__safari_show_info)
+class PokemonPauseMenu
+  alias __safari_pbShowInfo pbShowInfo unless method_defined?(:__safari_pbShowInfo)
 
-  def show_info
-    __safari_show_info
+  def pbShowInfo
+    __safari_pbShowInfo
     return if !pbInSafari?
     if Settings::SAFARI_STEPS <= 0
-      @visuals.show_info(_INTL("Balls: {1}", pbSafariState.ballcount))
+      @scene.pbShowInfo(_INTL("Balls: {1}", pbSafariState.ballcount))
     else
-      @visuals.show_info(_INTL("Steps: {1}/{2}\nBalls: {3}",
-                               pbSafariState.steps, Settings::SAFARI_STEPS, pbSafariState.ballcount))
+      @scene.pbShowInfo(_INTL("Steps: {1}/{2}\nBalls: {3}",
+                              pbSafariState.steps, Settings::SAFARI_STEPS, pbSafariState.ballcount))
     end
   end
 end
-
-# class PokemonPauseMenu
-#   alias __safari_pbShowInfo pbShowInfo unless method_defined?(:__safari_pbShowInfo)
-#
-#   def pbShowInfo
-#     __safari_pbShowInfo
-#     return if !pbInSafari?
-#     if Settings::SAFARI_STEPS <= 0
-#       @scene.pbShowInfo(_INTL("Balls: {1}", pbSafariState.ballcount))
-#     else
-#       @scene.pbShowInfo(_INTL("Steps: {1}/{2}\nBalls: {3}",
-#                               pbSafariState.steps, Settings::SAFARI_STEPS, pbSafariState.ballcount))
-#     end
-#   end
-# end
-
-#===============================================================================
-#
-#===============================================================================
 
 MenuHandlers.add(:pause_menu, :quit_safari_game, {
   "name"      => _INTL("Quit"),
   "order"     => 60,
   "condition" => proc { next pbInSafari? },
   "effect"    => proc { |menu|
-    menu.hide_menu
+    menu.pbHideMenu
     if pbConfirmMessage(_INTL("Would you like to leave the Safari Game right now?"))
-      menu.silent_end_screen
+      menu.pbEndScene
       pbSafariState.decision = 1
       pbSafariState.pbGoToStart
       next true
     end
-    menu.refresh
-    menu.show_menu
+    menu.pbRefresh
+    menu.pbShowMenu
     next false
   }
 })

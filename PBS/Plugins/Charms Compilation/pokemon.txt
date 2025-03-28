@@ -1,0 +1,537 @@
+#-------------------------------
+[ARTICUNO]
+Flags         = Legendary
+#-------------------------------
+[ARTICUNO_1]
+Flags         = Legendary
+#-------------------------------
+[ZAPDOS]
+Flags         = Legendary
+#-------------------------------
+[ZAPDOS_1]
+Flags         = Legendary
+#-------------------------------
+[MOLTRES]
+Flags         = Legendary
+#-------------------------------
+[MOLTRES_1]
+Flags         = Legendary
+#-------------------------------
+[MEWTWO]
+Flags         = Legendary
+#-------------------------------
+[MEW]
+Flags         = Mythical
+#-------------------------------
+[RAIKOU]
+Flags         = Legendary
+#-------------------------------
+[ENTEI]
+Flags         = Legendary
+#-------------------------------
+[SUICUNE]
+Flags         = Legendary
+#-------------------------------
+[LUGIA]
+Flags         = Legendary
+#-------------------------------
+[HOOH]
+Flags         = Legendary
+#-------------------------------
+[CELEBI]
+Flags         = Mythical
+#-------------------------------
+[REGIROCK]
+Flags         = Legendary
+#-------------------------------
+[REGICE]
+Flags         = Legendary
+#-------------------------------
+[REGISTEEL]
+Flags         = Legendary
+#-------------------------------
+[LATIAS]
+Flags         = Legendary
+#-------------------------------
+[LATIAS_1]
+Flags         = Legendary
+#-------------------------------
+[LATIOS]
+Flags         = Legendary
+#-------------------------------
+[LATIOS_1]
+Flags         = Legendary
+#-------------------------------
+[KYOGRE]
+Flags         = Legendary
+#-------------------------------
+[KYOGRE_1]
+Flags         = Legendary
+#-------------------------------
+[GROUDON]
+Flags         = Legendary
+#-------------------------------
+[GROUDON_1]
+Flags         = Legendary
+#-------------------------------
+[RAYQUAZA]
+Flags         = Legendary
+#-------------------------------
+[RAYQUAZA_1]
+Flags         = Legendary
+#-------------------------------
+[JIRACHI]
+Flags         = Mythical
+#-------------------------------
+[DEOXYS]
+Flags         = Mythical
+#-------------------------------
+[DEOXYS_1]
+Flags         = Mythical
+#-------------------------------
+[DEOXYS_2]
+Flags         = Mythical
+#-------------------------------
+[DEOXYS_3]
+Flags         = Mythical
+#-------------------------------
+[UXIE]
+Flags         = Legendary
+#-------------------------------
+[MESPRIT]
+Flags         = Legendary
+#-------------------------------
+[AZELF]
+Flags         = Legendary
+#-------------------------------
+[DIALGA]
+Flags         = Legendary
+#-------------------------------
+[DIALGA_1]
+Flags         = Legendary
+#-------------------------------
+[PALKIA]
+Flags         = Legendary
+#-------------------------------
+[PALKIA_1]
+Flags         = Legendary
+#-------------------------------
+[HEATRAN]
+Flags         = Legendary
+#-------------------------------
+[REGIGIGAS]
+Flags         = Legendary
+#-------------------------------
+[GIRATINA]
+Flags         = Legendary
+#-------------------------------
+[GIRATINA_1]
+Flags         = Legendary
+#-------------------------------
+[CRESSELIA]
+Flags         = Legendary
+#-------------------------------
+[PHIONE]
+Flags         = Mythical
+#-------------------------------
+[MANAPHY]
+Flags         = Mythical
+#-------------------------------
+[DARKRAI]
+Flags         = Mythical
+#-------------------------------
+[SHAYMIN]
+Flags         = Mythical
+#-------------------------------
+[SHAYMIN_1]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_1]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_2]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_3]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_4]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_5]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_6]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_7]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_8]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_9]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_10]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_11]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_12]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_13]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_14]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_15]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_16]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_17]
+Flags         = Mythical
+#-------------------------------
+[ARCEUS_18]
+Flags         = Mythical
+#-------------------------------
+[VICTINI]
+Flags         = Mythical
+#-------------------------------
+[COBALION]
+Flags         = Legendary
+#-------------------------------
+[TERRAKION]
+Flags         = Legendary
+#-------------------------------
+[VIRIZION]
+Flags         = Legendary
+#-------------------------------
+[TORNADUS]
+Flags         = Legendary
+#-------------------------------
+[TORNADUS_1]
+Flags         = Legendary
+#-------------------------------
+[THUNDURUS]
+Flags         = Legendary
+#-------------------------------
+[THUNDURUS_1]
+Flags         = Legendary
+#-------------------------------
+[RESHIRAM]
+Flags         = Legendary
+#-------------------------------
+[ZEKROM]
+Flags         = Legendary
+#-------------------------------
+[LANDORUS]
+Flags         = Legendary
+#-------------------------------
+[LANDORUS_1]
+Flags         = Legendary
+#-------------------------------
+[KYUREM]
+Flags         = Legendary
+#-------------------------------
+[KYUREM_1]
+Flags         = Legendary
+#-------------------------------
+[KYUREM_2]
+Flags         = Legendary
+#-------------------------------
+[KYUREM_3]
+Flags         = Legendary
+#-------------------------------
+[KYUREM_4]
+Flags         = Legendary
+#-------------------------------
+[KELDEO]
+Flags         = Mythical
+#-------------------------------
+[KELDEO_1]
+Flags         = Mythical
+#-------------------------------
+[MELOETTA]
+Flags         = Mythical
+#-------------------------------
+[MELOETTA_1]
+Flags         = Mythical
+#-------------------------------
+[GENESECT]
+Flags         = Mythical
+#-------------------------------
+[GENESECT_1]
+Flags         = Mythical
+#-------------------------------
+[GENESECT_2]
+Flags         = Mythical
+#-------------------------------
+[GENESECT_3]
+Flags         = Mythical
+#-------------------------------
+[GENESECT_4]
+Flags         = Mythical
+#-------------------------------
+[XERNEAS]
+Flags         = Legendary
+#-------------------------------
+[XERNEAS_1]
+Flags         = Legendary
+#-------------------------------
+[YVELTAL]
+Flags         = Legendary
+#-------------------------------
+[ZYGARDE]
+Flags         = Legendary
+#-------------------------------
+[ZYGARDE_1]
+Flags         = Legendary
+#-------------------------------
+[ZYGARDE_2]
+Flags         = Legendary
+#-------------------------------
+[ZYGARDE_3]
+Flags         = Legendary
+#-------------------------------
+[DIANCIE]
+Flags         = Mythical
+#-------------------------------
+[DIANCIE_1]
+Flags         = Mythical
+#-------------------------------
+[HOOPA]
+Flags         = Mythical
+#-------------------------------
+[HOOPA_1]
+Flags         = Mythical
+#-------------------------------
+[VOLCANION]
+Flags         = Mythical
+#-------------------------------
+[TAPUKOKO]
+Flags         = Legendary
+#-------------------------------
+[TAPULELE]
+Flags         = Legendary
+#-------------------------------
+[TAPUBULU]
+Flags         = Legendary
+#-------------------------------
+[TAPUFINI]
+Flags         = Legendary
+#-------------------------------
+[COSMOG]
+Flags         = Legendary
+#-------------------------------
+[COSMOEM]
+Flags         = Legendary
+#-------------------------------
+[SOLGALEO]
+Flags         = Legendary
+#-------------------------------
+[LUNALA]
+Flags         = Legendary
+#-------------------------------
+[NIHILEGO]
+Flags         = UltraBeast
+#-------------------------------
+[BUZZWOLE]
+Flags         = UltraBeast
+#-------------------------------
+[PHEROMOSA]
+Flags         = UltraBeast
+#-------------------------------
+[XURKITREE]
+Flags         = UltraBeast
+#-------------------------------
+[CELESTEELA]
+Flags         = UltraBeast
+#-------------------------------
+[KARTANA]
+Flags         = UltraBeast
+#-------------------------------
+[GUZZLORD]
+Flags         = UltraBeast
+#-------------------------------
+[NECROZMA]
+Flags         = Legendary
+#-------------------------------
+[NECROZMA_1]
+Flags         = Legendary
+#-------------------------------
+[NECROZMA_2]
+Flags         = Legendary
+#-------------------------------
+[NECROZMA_3]
+Flags         = Legendary
+#-------------------------------
+[NECROZMA_4]
+Flags         = Legendary
+#-------------------------------
+[MARSHADOW]
+Flags         = Mythical
+#-------------------------------
+[POIPOLE]
+Flags         = UltraBeast
+#-------------------------------
+[NAGANADEL]
+Flags         = UltraBeast
+#-------------------------------
+[STAKATAKA]
+Flags         = UltraBeast
+#-------------------------------
+[BLACEPHALON]
+Flags         = UltraBeast
+#-------------------------------
+[ZERAORA]
+Flags         = Mythical
+#-------------------------------
+[MELTAN]
+Flags         = Mythical
+#-------------------------------
+[MELMETAL]
+Flags         = Mythical
+#-------------------------------
+[ZACIAN]
+Flags         = Legendary
+#-------------------------------
+[ZACIAN_1]
+Flags         = Legendary
+#-------------------------------
+[ZAMAZENTA]
+Flags         = Legendary
+#-------------------------------
+[ZAMAZENTA_1]
+Flags         = Legendary
+#-------------------------------
+[ETERNATUS]
+Flags         = Legendary
+#-------------------------------
+[KUBFU]
+Flags         = Legendary
+#-------------------------------
+[URSHIFU]
+Flags         = Legendary
+#-------------------------------
+[URSHIFU_1]
+Flags         = Legendary
+#-------------------------------
+[ZARUDE]
+Flags         = Mythical
+#-------------------------------
+[ZARUDE_1]
+Flags         = Mythical
+#-------------------------------
+[REGIELEKI]
+Flags         = Legendary
+#-------------------------------
+[REGIDRAGO]
+Flags         = Legendary
+#-------------------------------
+[GLASTRIER]
+Flags         = Legendary
+#-------------------------------
+[SPECTRIER]
+Flags         = Legendary
+#-------------------------------
+[CALYREX]
+Flags         = Legendary
+#-------------------------------
+[CALYREX_1]
+Flags         = Legendary
+#-------------------------------
+[CALYREX_2]
+Flags         = Legendary
+#-------------------------------
+[ENAMORUS_1]
+Flags         = Legendary
+#-------------------------------
+[GREATTUSK]
+Flags         = Paradox
+#-------------------------------
+[SCREAMTAIL]
+Flags         = Paradox
+#-------------------------------
+[BRUTEBONNET]
+Flags         = Paradox
+#-------------------------------
+[FLUTTERMANE]
+Flags         = Paradox
+#-------------------------------
+[SLITHERWING]
+Flags         = Paradox
+#-------------------------------
+[SANDYSHOCKS]
+Flags         = Paradox
+#-------------------------------
+[IORNTREADS]
+Flags         = Paradox
+#-------------------------------
+[IORNBUNDLE]
+Flags         = Paradox
+#-------------------------------
+[IORNHANDS]
+Flags         = Paradox
+#-------------------------------
+[IORNJUGULIS]
+Flags         = Paradox
+#-------------------------------
+[IORNMOTH]
+Flags         = Paradox
+#-------------------------------
+[IORNTHORNS]
+Flags         = Paradox
+#-------------------------------
+[WOCHIEN]
+Flags         = Legendary
+#-------------------------------
+[CHIENPAO]
+Flags         = Legendary
+#-------------------------------
+[TINGLU]
+Flags         = Legendary
+#-------------------------------
+[CHIYU]
+Flags         = Legendary
+#-------------------------------
+[IORNVALIANT]
+Flags         = Paradox
+#-------------------------------
+[KORAIDON]
+Flags         = Paradox
+#-------------------------------
+[KORAIDON]
+Flags         = Legendary
+#-------------------------------
+[MIRAIDON]
+Flags         = Legendary
+#-------------------------------
+[WALKINGWAKE]
+Flags         = Paradox
+#-------------------------------
+[IORNLEAVES]
+Flags         = Paradox
+#-------------------------------
+[MUNKIDORI]
+Flags         = Legendary
+#-------------------------------
+[OKIDOGI]
+Flags         = Legendary
+#-------------------------------
+[FEZANDIPITI]
+Flags         = Legendary
+#-------------------------------
+[OGERPON]
+Flags         = Legendary
+#-------------------------------
+[TERAPAGOS]
+Flags         = Legendary

@@ -1,5 +1,5 @@
 #===============================================================================
-# Battle preparation.
+# Battle preparation
 #===============================================================================
 class PokemonGlobalMetadata
   attr_accessor :nextBattleBGM
@@ -15,6 +15,8 @@ class Game_Temp
   attr_accessor :encounter_triggered
   attr_accessor :encounter_type
   attr_accessor :party_levels_before_battle
+  attr_accessor :party_critical_hits_dealt
+  attr_accessor :party_direct_damage_taken
 
   def battle_rules
     @battle_rules = {} if !@battle_rules
@@ -110,8 +112,12 @@ end
 EventHandlers.add(:on_start_battle, :record_party_status,
   proc {
     $game_temp.party_levels_before_battle = []
+    $game_temp.party_critical_hits_dealt = []
+    $game_temp.party_direct_damage_taken = []
     $player.party.each_with_index do |pkmn, i|
       $game_temp.party_levels_before_battle[i] = pkmn.level
+      $game_temp.party_critical_hits_dealt[i] = 0
+      $game_temp.party_direct_damage_taken[i] = 0
     end
   }
 )
@@ -127,7 +133,7 @@ def pbCanTripleBattle?
 end
 
 #===============================================================================
-# Helper methods for setting up and closing down battles.
+# Helper methods for setting up and closing down battles
 #===============================================================================
 module BattleCreationHelperMethods
   module_function
@@ -156,8 +162,8 @@ module BattleCreationHelperMethods
     $PokemonGlobal.nextBattleCaptureME  = nil
     $PokemonGlobal.nextBattleBack       = nil
     $PokemonEncounters.reset_step_count
-    outcome = Battle::Outcome::WIN
-    outcome = Battle::Outcome::UNDECIDED if trainer_battle && $player.all_fainted?
+    outcome = 1   # Win
+    outcome = 0 if trainer_battle && $player.able_pokemon_count == 0   # Undecided
     pbSet(outcome_variable, outcome)
     return outcome
   end
@@ -183,8 +189,7 @@ module BattleCreationHelperMethods
       ally = NPCTrainer.new($PokemonGlobal.partner[1], $PokemonGlobal.partner[0])
       ally.id    = $PokemonGlobal.partner[2]
       ally.party = $PokemonGlobal.partner[3]
-      data = GameData::Trainer.try_get($PokemonGlobal.partner[0], $PokemonGlobal.partner[1], $PokemonGlobal.partner[2])
-      ally_items[1] = data&.items.clone || []
+      ally_items[1] = ally.items.clone
       trainer_array.push(ally)
       pokemon_array = []
       $player.party.each { |pkmn| pokemon_array.push(pkmn) }
@@ -246,7 +251,7 @@ module BattleCreationHelperMethods
       when :Rain, :Storm
         battle.defaultWeather = :Rain
       when :Hail
-        battle.defaultWeather = (Settings::USE_SNOWSTORM_WEATHER_INSTEAD_OF_HAIL ? :Snowstorm : :Hail)
+        battle.defaultWeather = :Hail
       when :Sandstorm
         battle.defaultWeather = :Sandstorm
       when :Sun
@@ -311,7 +316,7 @@ module BattleCreationHelperMethods
         pkmn.makeUnprimal
       end
     end
-    if Battle::Outcome.should_black_out?(outcome) && can_lose
+    if [2, 5].include?(outcome) && can_lose   # if loss or draw
       $player.party.each { |pkmn| pkmn.heal }
       timer_start = System.uptime
       until System.uptime - timer_start >= 0.25
@@ -331,14 +336,11 @@ module BattleCreationHelperMethods
   #    5 - Draw
   def set_outcome(outcome, outcome_variable = 1, trainer_battle = false)
     case outcome
-    when Battle::Outcome::WIN, Battle::Outcome::CATCH
+    when 1, 4   # Won, caught
       $stats.wild_battles_won += 1 if !trainer_battle
       $stats.trainer_battles_won += 1 if trainer_battle
-    when Battle::Outcome::LOSE, Battle::Outcome::DRAW
+    when 2, 3, 5   # Lost, fled, draw
       $stats.wild_battles_lost += 1 if !trainer_battle
-      $stats.trainer_battles_lost += 1 if trainer_battle
-    when Battle::Outcome::FLEE
-      $stats.wild_battles_fled += 1 if !trainer_battle
       $stats.trainer_battles_lost += 1 if trainer_battle
     end
     pbSet(outcome_variable, outcome)
@@ -346,7 +348,7 @@ module BattleCreationHelperMethods
 end
 
 #===============================================================================
-# Wild battles.
+# Wild battles
 #===============================================================================
 class WildBattle
   # Used when walking in tall grass, hence the additional code.
@@ -366,7 +368,7 @@ class WildBattle
       EventHandlers.trigger(:on_wild_battle_end, foe_party[0].species, foe_party[0].level, outcome)
     end
     # Return false if the player lost or drew the battle, and true if any other result
-    return !Battle::Outcome.should_black_out?(outcome)
+    return outcome != 2 && outcome != 5
   end
 
   def self.start_core(*args)
@@ -394,7 +396,7 @@ class WildBattle
     BattleCreationHelperMethods.prepare_battle(battle)
     $game_temp.clear_battle_rules
     # Perform the battle itself
-    outcome = Battle::Outcome::UNDECIDED
+    outcome = 0
     pbBattleAnimation(pbGetWildBattleBGM(foe_party), (foe_party.length == 1) ? 0 : 2, foe_party) do
       pbSceneStandby { outcome = battle.pbStartBattle }
       BattleCreationHelperMethods.after_battle(outcome, can_lose)
@@ -439,7 +441,7 @@ class WildBattle
 end
 
 #===============================================================================
-# Trainer battles.
+# Trainer battles
 #===============================================================================
 class TrainerBattle
   # Used by most trainer events, which can be positioned in such a way that
@@ -484,7 +486,7 @@ class TrainerBattle
       outcome = TrainerBattle.start_core(*args)
     end
     # Return true if the player won the battle, and false if any other result
-    return outcome == Battle::Outcome::WIN
+    return outcome == 1
   end
 
   def self.start_core(*args)
@@ -514,7 +516,7 @@ class TrainerBattle
     BattleCreationHelperMethods.prepare_battle(battle)
     $game_temp.clear_battle_rules
     # Perform the battle itself
-    outcome = Battle::Outcome::UNDECIDED
+    outcome = 0
     pbBattleAnimation(pbGetTrainerBattleBGM(foe_trainers), (battle.singleBattle?) ? 1 : 3, foe_trainers) do
       pbSceneStandby { outcome = battle.pbStartBattle }
       BattleCreationHelperMethods.after_battle(outcome, can_lose)
@@ -600,23 +602,25 @@ class TrainerBattle
 end
 
 #===============================================================================
-# After battles.
+# After battles
 #===============================================================================
 EventHandlers.add(:on_end_battle, :evolve_and_black_out,
-  proc { |outcome, canLose|
+  proc { |decision, canLose|
     # Check for evolutions
     pbEvolutionCheck if Settings::CHECK_EVOLUTION_AFTER_ALL_BATTLES ||
-                        !Battle::Outcome.should_black_out?(outcome)
+                        (decision != 2 && decision != 5)   # not a loss or a draw
     $game_temp.party_levels_before_battle = nil
+    $game_temp.party_critical_hits_dealt = nil
+    $game_temp.party_direct_damage_taken = nil
     # Check for blacking out or gaining Pickup/Huney Gather items
-    case outcome
-    when Battle::Outcome::WIN, Battle::Outcome::CATCH
+    case decision
+    when 1, 4   # Win, capture
       $player.pokemon_party.each do |pkmn|
         pbPickup(pkmn)
         pbHoneyGather(pkmn)
       end
-    else
-      if Battle::Outcome.should_black_out?(outcome) && !canLose
+    when 2, 5   # Lose, draw
+      if !canLose
         $game_system.bgm_unpause
         $game_system.bgs_unpause
         pbStartOver
@@ -634,7 +638,7 @@ def pbEvolutionCheck
     if new_species.nil? && $game_temp.party_levels_before_battle &&
        $game_temp.party_levels_before_battle[i] &&
        $game_temp.party_levels_before_battle[i] < pkmn.level
-      new_species = pkmn.check_evolution_on_battle_level_up
+      new_species = pkmn.check_evolution_on_level_up
     end
     new_species = pkmn.check_evolution_after_battle(i) if new_species.nil?
     next if new_species.nil?
@@ -653,7 +657,7 @@ def pbDynamicItemList(*args)
 end
 
 # Common items to find via Pickup. Items from this list are added to the pool in
-# order, starting from a point depending on the Pokémon's level. The number of
+# order, starting from a point dependng on the Pokémon's level. The number of
 # items added is how many probabilities are in the PICKUP_COMMON_ITEM_CHANCES
 # array below.
 # There must be 9 + PICKUP_COMMON_ITEM_CHANCES.length number of items in this
@@ -682,7 +686,7 @@ PICKUP_COMMON_ITEMS = [
 # Chances to get each item added to the pool from the array above.
 PICKUP_COMMON_ITEM_CHANCES = [30, 10, 10, 10, 10, 10, 10, 4, 4]
 # Rare items to find via Pickup. Items from this list are added to the pool in
-# order, starting from a point depending on the Pokémon's level. The number of
+# order, starting from a point dependng on the Pokémon's level. The number of
 # items added is how many probabilities are in the PICKUP_RARE_ITEM_CHANCES
 # array below.
 # There must be 9 + PICKUP_RARE_ITEM_CHANCES.length number of items in this

@@ -201,8 +201,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("SwitchOutTargetDamagingM
   proc { |score, move, user, target, ai, battle|
     next score if target.wild?
     # No score modification if the target can't be made to switch out
-    next score if target.has_active_ability?(:SUCTIONCUPS) && !target.being_mold_broken?
-    next score if target.has_active_ability?(:GUARDDOG) && !target.being_mold_broken?
+    next score if !battle.moldBreaker && target.has_active_ability?(:SUCTIONCUPS)
     next score if target.effects[PBEffects::Ingrain]
     # No score modification if the target can't be replaced
     can_switch = false
@@ -242,30 +241,30 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("BindTarget",
     next score if target.effects[PBEffects::Substitute] > 0
     # Prefer if the user has a Binding Band or Grip Claw (because why have it if
     # you don't want to use it?)
-    score += 4 if user.has_active_item?([:BINDINGBAND, :GRIPCLAW])
+    score += 5 if user.has_active_item?([:BINDINGBAND, :GRIPCLAW])
     # Target will take damage at the end of each round from the binding
-    score += 8 if target.battler.takesIndirectDamage?
+    score += 10 if target.battler.takesIndirectDamage?
     # Check whether the target will be trapped in battle by the binding
     if target.can_become_trapped?
-      score += 4   # Prefer if the target will become trapped by this move
+      score += 8   # Prefer if the target will become trapped by this move
       eor_damage = target.rough_end_of_round_damage
       if eor_damage > 0
         # Prefer if the target will take damage at the end of each round on top
         # of binding damage
-        score += 5
+        score += 10
       elsif eor_damage < 0
         # Don't prefer if the target will heal itself at the end of each round
-        score -= 5
+        score -= 10
       end
       # Prefer if the target has been Perish Songed
-      score += 10 if target.effects[PBEffects::PerishSong] > 0
+      score += 15 if target.effects[PBEffects::PerishSong] > 0
     end
     # Don't prefer if the target can remove the binding (and the binding has an
     # effect)
     if target.can_become_trapped? || target.battler.takesIndirectDamage?
       if ai.trainer.medium_skill? &&
          target.has_move_with_function?("RemoveUserBindingAndEntryHazards")
-        score -= 8
+        score -= 10
       end
     end
     next score
@@ -765,7 +764,7 @@ Battle::AI::Handlers::MoveFailureAgainstTargetCheck.add("DisableTargetStatusMove
     next true if target.effects[PBEffects::Taunt] > 0
     next true if move.move.pbMoveFailedAromaVeil?(user.battler, target.battler, false)
     next true if Settings::MECHANICS_GENERATION >= 6 &&
-                 target.has_active_ability?(:OBLIVIOUS) && !target.being_mold_broken?
+                 !battle.moldBreaker && target.has_active_ability?(:OBLIVIOUS)
     next false
   }
 )
@@ -801,9 +800,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("DisableTargetStatusMoves
       "ProtectUserFromDamagingMovesKingsShield",           # King's Shield
       "ProtectUserFromDamagingMovesObstruct",              # Obstruct
       "ProtectUserFromTargetingMovesSpikyShield",          # Spiky Shield
-      "ProtectUserBanefulBunker",                          # Baneful Bunker
-      "ProtectUserFromDamagingMovesSilkTrap",              # Silk Trap
-      "ProtectUserFromDamagingMovesBurningBulwark"         # Burning Bulwark
+      "ProtectUserBanefulBunker"                           # Baneful Bunker
     ]
     if target.check_for_move { |m| m.statusMove? && protection_moves.include?(m.function_code) }
       score += 10
@@ -842,8 +839,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("DisableTargetHealingMove
 #===============================================================================
 Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("DisableTargetSoundMoves",
   proc { |score, move, user, target, ai, battle|
-    next score if target.effects[PBEffects::ThroatChop] >= 1
-    next score if target.effects[PBEffects::Substitute] > 0
+    next score if target.effects[PBEffects::ThroatChop] > 1
     next score if !target.check_for_move { |m| m.soundMove? }
     # Check additional effect chance
     add_effect = move.get_score_change_for_additional_effect(user, target)

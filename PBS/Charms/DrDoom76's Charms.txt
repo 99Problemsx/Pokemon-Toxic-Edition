@@ -1,0 +1,423 @@
+﻿#-------------------------------
+[APRICORNCHARM]
+Name = Apricorn Charm
+NamePlural = Apricorn Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that doubles the amount of Balls produced from Apricorn and lessens time taken to make them.
+#-------------------------------
+[BALANCECHARM]
+Name = Balance Charm
+NamePlural = Balance Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm said to evenly divide encounter rates across all species in given map.
+#-------------------------------
+[CLOVERCHARM]
+Name = Clover Charm
+NamePlural = Clover Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm said to increase the probability of wild pokemon holding items.
+#-------------------------------
+[COLORCHARM]
+Name = Color Charm
+NamePlural = Color Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Wild Pokemon with a color variation.
+#-------------------------------
+[CONTESTCHARM]
+Name = Contest Charm
+NamePlural = Contest Charms
+Pocket = 8
+Price = 3000
+Flags = KeyItem
+Description = A charm said to increase Ball count and score in the Bug Contest.
+#-------------------------------
+[COINCHARM]
+Name = Coin Charm
+NamePlural = Coin Charm
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that triples all gained coins.
+#-------------------------------
+[CRAFTINGCHARM]
+Name = Crafting Charm
+NamePlural = Crafting Charms
+Pocket = 8
+Price = 3000
+Flags = KeyItem
+Description = A Charm that adds to the yield and reduces crafting materials required to craft items.
+#-------------------------------
+[DISABLECHARM]
+Name = Disable Charm
+NamePlural = Disable Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A mystical charm that randomly disrupts foe's moves.
+#-------------------------------
+[FRUGALCHARM]
+Name = Frugal Charm
+NamePlural = Frugal Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = Reduces prices at Poké Marts.
+#-------------------------------
+[GOLDCHARM]
+Name = Gold Charm
+NamePlural = Gold Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm said to increase gold gained from Trainer battles by 50%.
+#-------------------------------
+[HEALINGCHARM]
+Name = Healing Charm
+NamePlural = Healing Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that doubles potion strength and restores HP while walking.
+#-------------------------------
+[HEARTCHARM]
+Name = Heart Charm
+NamePlural = Heart Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm which reduces flee rate, doubles the encounter rate, and increases Happiness gain.
+#-------------------------------
+[IVCHARM]
+Name = IV Charm
+NamePlural = IV Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm said to increase the overall IVs of Wild Pokemon.
+#-------------------------------
+[KEYCHARM]
+Name = Key Charm
+NamePlural = Key Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm said to increase the probability of wild pokemon having hidden ability.
+#-------------------------------
+[LINKCHARM]
+Name = Link Charm
+NamePlural = Link Charms
+Pocket = 8
+Price = 3000
+Flags = KeyItem
+Description = A charm that increases encounter rate of Pokemon, while decreasing the rate of Pokemon you fled from.
+#-------------------------------
+[LURECHARM]
+Name = Lure Charm
+NamePlural = Lure Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm said to make all fishable Pokemon guaranteed to bite, while fishing.
+#-------------------------------
+[MERCYCHARM]
+Name = Mercy Charm
+NamePlural = Mercy Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm said to ward off wild Pokemon while you have a fainted Pokemon.
+#-------------------------------
+[MININGCHARM]
+Name = Mining Charm
+NamePlural = Mining Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A mining charm said to allow more hits before the wall collaspes.
+#-------------------------------
+[NATURECHARM]
+Name = Nature Charm
+NamePlural = Nature Charms
+Pocket = 8
+Price = 3000
+Flags = KeyItem
+Description = A charm said to increase chance of finding certain Nature Pokemon.
+#-------------------------------
+[PROMOCHARM]
+Name = Promo Charm
+NamePlural = Promo Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm said to force higher level Pokemon to spawn in the wild.
+#-------------------------------
+[ROAMINGCHARM]
+Name = Roaming Charm
+NamePlural = Roaming Charms
+Pocket = 9
+Price = 0
+Flags = KeyItem
+Description = A charm said to increase the encounter probably of Roaming Pokemon.
+#-------------------------------
+[RESISTORCHARM]
+Name = Resistor Charm
+NamePlural = Resistor Charms
+Pocket = 9
+Price = 0
+Flags = KeyItem
+Description = A charm said to decrease taken from Super Effective hits.
+#-------------------------------
+[SAFARICHARM]
+Name = Safari Charm
+NamePlural = Safari Charms
+Pocket = 9
+Price = 0
+Flags = KeyItem
+Description = A charm said to increase the steps, balls, and catch rate while in the Safari Zone.
+#-------------------------------
+[SMARTCHARM]
+Name = Smart Charm
+NamePlural = Smart Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that increases chance of Wild Pokemon spawning with Egg or Tutor moves.
+#-------------------------------
+[SPIRITCHARM]
+Name = Spirit Charm
+NamePlural = Spirit Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that causes Wild Pokemon match the Nature of your Lead Pokemon.
+#-------------------------------
+[STABCHARM]
+Name = STAB Charm
+NamePlural = STAB Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description =  A mystical charm that increases the power of moves that match the Pokémon's type.
+#-------------------------------
+[TRADINGCHARM]
+Name = Trading Charm
+NamePlural = Trading Charms
+Pocket = 8
+Price = 3000
+Flags = KeyItem
+Description = A charm said to increase IVs and Shiny chance from trades.
+#-------------------------------
+[TRIPTRIADCHARM]
+Name = Trip Triad Charm
+NamePlural = Trip Triad Charms
+Pocket = 8
+Price = 3000
+Flags = KeyItem
+Description = A charm said to increase winnings earned from the Triple Triad Mini-Game.
+#-------------------------------
+[TWINCHARM]
+Name = Twin Charm
+NamePlural = Twin Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm said to double gains from hidden items.
+#-------------------------------
+[VIRALCHARM]
+Name = Viral Charm
+NamePlural = Viral Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm said to increase odds of wild Pokemon being infected with Pokerus.
+#-------------------------------
+[WISHINGCHARM]
+Name = Wishing Charm
+NamePlural = Wishing Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A mysterious charm said to materialize a wish once a day.
+#-------------------------------
+[BUGCHARM]
+Name = Bug Charm
+NamePlural = Bug Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Bug Type Pokémon.
+#-------------------------------
+[DRAGONCHARM]
+Name = Dragon Charm
+NamePlural = Dragon Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Dragon Type Pokémon.
+#-------------------------------
+[ELECTRICCHARM]
+Name = Electric Charm
+NamePlural = Electric Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering an Electric Type Pokémon.
+#-------------------------------
+[FAIRYCHARM]
+Name = Fairy Charm
+NamePlural = Fairy Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Fairy Type Pokémon.
+#-------------------------------
+[FIGHTINGCHARM]
+Name = Fighting Charm
+NamePlural = Fighting Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Fighting Type Pokémon.
+#-------------------------------
+[FIRECHARM]
+Name = Fire Charm
+NamePlural = Fire Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Fire Type Pokémon.
+#-------------------------------
+[FLYINGCHARM]
+Name = Flying Charm
+NamePlural = Flying Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Flying Type Pokémon.
+#-------------------------------
+[GHOSTCHARM]
+Name = Ghost Charm
+NamePlural = Ghost Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Ghost Type Pokémon.
+#-------------------------------
+[GRASSCHARM]
+Name = Grass Charm
+NamePlural = Grass Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Grass Type Pokémon.
+#-------------------------------
+[GROUNDCHARM]
+Name = Ground Charm
+NamePlural = Ground Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Ground Type Pokémon.
+#-------------------------------
+[ICECHARM]
+Name = Ice Charm
+NamePlural = Ice Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering an Ice Type Pokémon.
+#-------------------------------
+[NORMALCHARM]
+Name = Normal Charm
+NamePlural = Normal Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Normal Type Pokémon.
+#-------------------------------
+[POISONCHARM]
+Name = Poison Charm
+NamePlural = Poison Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Poison Type Pokémon.
+#-------------------------------
+[PSYCHICCHARM]
+Name = Psychic Charm
+NamePlural = Psychic Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Psychic Type Pokémon.
+#-------------------------------
+[ROCKCHARM]
+Name = Rock Charm
+NamePlural = Rock Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Rock Type Pokémon.
+#-------------------------------
+[STEELCHARM]
+Name = Steel Charm
+NamePlural = Steel Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Steel Type Pokémon.
+#-------------------------------
+[WATERCHARM]
+Name = Water Charm
+NamePlural = Water Charms
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A charm that raises the chance of encountering a Water Type Pokémon.

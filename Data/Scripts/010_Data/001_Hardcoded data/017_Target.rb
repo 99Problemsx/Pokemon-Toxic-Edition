@@ -1,4 +1,3 @@
-#===============================================================================
 # NOTE: If adding a new target, you will need to add code in several places to
 #       make them work properly:
 #         - def pbFindTargets
@@ -6,7 +5,6 @@
 #         - def pbCreateTargetTexts
 #         - def pbFirstTarget
 #         - def pbTargetsMultiple?
-#===============================================================================
 module GameData
   class Target
     attr_reader :id
@@ -24,8 +22,6 @@ module GameData
 
     def self.load; end
     def self.save; end
-
-    #---------------------------------------------------------------------------
 
     def initialize(hash)
       @id               = hash[:id]
@@ -52,8 +48,6 @@ module GameData
   end
 end
 
-#===============================================================================
-#
 #===============================================================================
 
 # Bide, Counter, Metal Burst, Mirror Coat (calculate a target)

@@ -39,7 +39,7 @@ def pbWarpToMap
 end
 
 #===============================================================================
-# Debug Variables screen.
+# Debug Variables screen
 #===============================================================================
 class SpriteWindow_DebugVariables < Window_DrawableCommand
   attr_reader :mode
@@ -118,30 +118,7 @@ class SpriteWindow_DebugVariables < Window_DrawableCommand
       end
     else
       name = $data_system.variables[index + 1]
-      codeswitch = (name[/^s\:/])
-      if codeswitch
-        code = $~.post_match
-        code_parts = code.split(/[(\[=<>. ]/)
-        code_parts[0].strip!
-        code_parts[0].gsub!(/^\s*!/, "")
-        status = nil
-        if code_parts[0][0][/[a-z]/i]
-          if code_parts[0][0].upcase == code_parts[0][0] &&
-             (Kernel.const_defined?(code_parts[0]) rescue false)
-            status = (eval(code) rescue nil)   # Code starts with a class/method name
-          elsif code_parts[0][0].downcase == code_parts[0][0] &&
-                !(Interpreter.method_defined?(code_parts[0].to_sym) rescue false) &&
-                !(Game_Event.method_defined?(code_parts[0].to_sym) rescue false)
-            status = (eval(code) rescue nil)   # Code starts with a method name (that isn't in Interpreter/Game_Event)
-          end
-        else
-          # Code doesn't start with a letter, probably $, just evaluate it
-          status = (eval(code) rescue nil)
-        end
-      else
-        status = $game_variables[index + 1]
-      end
-      status = status.to_s
+      status = $game_variables[index + 1].to_s
       status = "\"__\"" if nil_or_empty?(status)
     end
     name ||= ""
@@ -209,8 +186,6 @@ def pbDebugVariables(mode)
     current_id = right_window.index + 1
     case mode
     when 0   # Switches
-      name = $data_system.switches[current_id]
-      next if name && name[/^s\:/]
       if Input.trigger?(Input::USE)
         pbPlayDecisionSE
         $game_switches[current_id] = !$game_switches[current_id]
@@ -218,8 +193,6 @@ def pbDebugVariables(mode)
         $game_map.need_refresh = true
       end
     when 1   # Variables
-      name = $data_system.variables[current_id]
-      next if name && name[/^s\:/]
       if Input.repeat?(Input::LEFT)
         pbDebugSetVariable(current_id, -1)
         right_window.refresh
@@ -254,7 +227,7 @@ def pbDebugVariables(mode)
 end
 
 #===============================================================================
-# Debug Day Care screen.
+# Debug Day Care screen
 #===============================================================================
 def pbDebugDayCare
   day_care = $PokemonGlobal.day_care
@@ -355,14 +328,16 @@ def pbDebugDayCare
         msg = _INTL("Cost: ${1}", slot.cost)
         if pkmn.level < GameData::GrowthRate.max_level
           end_exp = pkmn.growth_rate.minimum_exp_for_level(pkmn.level + 1)
-          msg += "\n" + _INTL("Steps to next level: {1}", end_exp - pkmn.exp)
+          msg += "\\n" + _INTL("Steps to next level: {1}", end_exp - pkmn.exp)
         end
         # Show level change and cost
         case pbMessage("\\ts[]" + msg,
                        [_INTL("Summary"), _INTL("Withdraw"), _INTL("Cancel")], 3)
         when 0   # Summary
           pbFadeOutIn do
-            UI::PokemonSummary.new(pkmn).main
+            scene = PokemonSummary_Scene.new
+            screen = PokemonSummaryScreen.new(scene, false)
+            screen.pbStartScreen([pkmn], 0)
             need_refresh = true
           end
         when 1   # Withdraw
@@ -401,7 +376,7 @@ def pbDebugDayCare
 end
 
 #===============================================================================
-# Debug roaming Pokémon screen.
+# Debug roaming Pokémon screen
 #===============================================================================
 class SpriteWindow_DebugRoamers < Window_DrawableCommand
   def initialize(viewport)
@@ -448,10 +423,10 @@ class SpriteWindow_DebugRoamers < Window_DrawableCommand
       self.shadowtext(_INTL("[Clear all current roamer locations]"), rect.x, rect.y, nameWidth, rect.height)
     else
       pkmn = Settings::ROAMING_SPECIES[index]
-      name = GameData::Species.get(pkmn[:species]).name + " (Lv. #{pkmn[:level]})"
+      name = GameData::Species.get(pkmn[0]).name + " (Lv. #{pkmn[1]})"
       status = ""
       statuscolor = 0
-      if !pkmn[:game_switch] || pkmn[:game_switch] <= 0 || $game_switches[pkmn[:game_switch]]
+      if pkmn[2] <= 0 || $game_switches[pkmn[2]]
         status = $PokemonGlobal.roamPokemon[index]
         if status == true
           if $PokemonGlobal.roamPokemonCaught[index]
@@ -472,7 +447,7 @@ class SpriteWindow_DebugRoamers < Window_DrawableCommand
           statuscolor = 2
         end
       else
-        status = "[NOT ROAMING][Switch #{pkmn[:game_switch]} is off]"
+        status = "[NOT ROAMING][Switch #{pkmn[2]} is off]"
       end
       self.shadowtext(name, rect.x, rect.y, nameWidth, rect.height)
       self.shadowtext(status, rect.x + nameWidth, rect.y, statusWidth, rect.height, 1, statuscolor)
@@ -500,7 +475,7 @@ def pbDebugRoamers
       pkmn = nil
     end
     if Input.trigger?(Input::ACTION) && cmdwindow.index < cmdwindow.roamerCount &&
-       (!pkmn[:game_switch] || pkmn[:game_switch] <= 0 || $game_switches[pkmn[:game_switch]]) &&
+       (pkmn[2] <= 0 || $game_switches[pkmn[2]]) &&
        $PokemonGlobal.roamPokemon[cmdwindow.index] != true
       # Roam selected Pokémon
       pbPlayDecisionSE
@@ -527,9 +502,9 @@ def pbDebugRoamers
       if cmdwindow.index < cmdwindow.roamerCount
         pbPlayDecisionSE
         # Toggle through roaming, not roaming, defeated
-        if pkmn[:game_switch] && pkmn[:game_switch] > 0 && !$game_switches[pkmn[:game_switch]]
+        if pkmn[2] > 0 && !$game_switches[pkmn[2]]
           # not roaming -> roaming
-          $game_switches[pkmn[:game_switch]] = true
+          $game_switches[pkmn[2]] = true
         elsif $PokemonGlobal.roamPokemon[cmdwindow.index] != true
           # roaming -> defeated
           $PokemonGlobal.roamPokemon[cmdwindow.index] = true
@@ -538,9 +513,9 @@ def pbDebugRoamers
               !$PokemonGlobal.roamPokemonCaught[cmdwindow.index]
           # defeated -> caught
           $PokemonGlobal.roamPokemonCaught[cmdwindow.index] = true
-        elsif pkmn[:game_switch] && pkmn[:game_switch] > 0
+        elsif pkmn[2] > 0
           # caught -> not roaming (or roaming if Switch ID is 0)
-          $game_switches[pkmn[:game_switch]] = false if pkmn[:game_switch] && pkmn[:game_switch] > 0
+          $game_switches[pkmn[2]] = false if pkmn[2] > 0
           $PokemonGlobal.roamPokemon[cmdwindow.index] = nil
           $PokemonGlobal.roamPokemonCaught[cmdwindow.index] = false
         end
@@ -573,7 +548,7 @@ def pbDebugRoamers
 end
 
 #===============================================================================
-# Battle animations import/export.
+# Battle animations import/export
 #===============================================================================
 def pbExportAllAnimations
   begin
@@ -638,7 +613,7 @@ def pbImportAllAnimations
       Graphics.update
       audios = []
       files = Dir.glob(folder + "/*.*")
-      ["wav", "ogg", "mp3", "midi", "mid", "wma"].each do |ext|
+      ["wav", "ogg", "mid", "wma"].each do |ext|   # mp3
         upext = ext.upcase
         audios.concat(files.find_all { |f| f[f.length - 3, 3] == ext })
         audios.concat(files.find_all { |f| f[f.length - 3, 3] == upext })
@@ -688,7 +663,7 @@ def pbImportAllAnimations
 end
 
 #===============================================================================
-# Properly erases all non-existent tiles in maps (including event graphics).
+# Properly erases all non-existent tiles in maps (including event graphics)
 #===============================================================================
 def pbDebugFixInvalidTiles
   total_errors = 0
@@ -742,7 +717,7 @@ def pbDebugFixInvalidTiles
   else
     echoln ""
     Console.echo_h2(_INTL("Done. {1} errors found and fixed.", total_errors), text: :green)
-    Console.echo_warn(_INTL("RMXP data was altered. Close RMXP now without saving to ensure changes are applied."))
+    Console.echo_warn(_INTL("RMXP data was altered. Close RMXP now to ensure changes are applied."))
     echoln ""
     pbMessage(_INTL("{1} error(s) were found across {2} map(s) and fixed.", total_errors, num_error_maps))
     pbMessage(_INTL("Close RPG Maker XP to ensure the changes are applied properly."))
@@ -761,4 +736,134 @@ def pbCheckTileValidity(tile_id, map, tilesets, passages)
     return true if passages[tile_id]
   end
   return false
+end
+
+#===============================================================================
+# Pseudo-party screen for editing Pokémon being set up for a wild battle
+#===============================================================================
+class PokemonDebugPartyScreen
+  def initialize
+    @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
+    @viewport.z = 99999
+    @messageBox = Window_AdvancedTextPokemon.new("")
+    @messageBox.viewport       = @viewport
+    @messageBox.visible        = false
+    @messageBox.letterbyletter = true
+    pbBottomLeftLines(@messageBox, 2)
+    @helpWindow = Window_UnformattedTextPokemon.new("")
+    @helpWindow.viewport = @viewport
+    @helpWindow.visible  = true
+    pbBottomLeftLines(@helpWindow, 1)
+  end
+
+  def pbEndScreen
+    @messageBox.dispose
+    @helpWindow.dispose
+    @viewport.dispose
+  end
+
+  def pbDisplay(text)
+    @messageBox.text    = text
+    @messageBox.visible = true
+    @helpWindow.visible = false
+    pbPlayDecisionSE
+    loop do
+      Graphics.update
+      Input.update
+      pbUpdate
+      if @messageBox.busy?
+        if Input.trigger?(Input::USE)
+          pbPlayDecisionSE if @messageBox.pausing?
+          @messageBox.resume
+        end
+      else
+        if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE)
+          break
+        end
+      end
+    end
+    @messageBox.visible = false
+    @helpWindow.visible = true
+  end
+
+  def pbConfirm(text)
+    ret = -1
+    @messageBox.text    = text
+    @messageBox.visible = true
+    @helpWindow.visible = false
+    using(cmdwindow = Window_CommandPokemon.new([_INTL("Yes"), _INTL("No")])) do
+      cmdwindow.visible = false
+      pbBottomRight(cmdwindow)
+      cmdwindow.y -= @messageBox.height
+      cmdwindow.z = @viewport.z + 1
+      loop do
+        Graphics.update
+        Input.update
+        cmdwindow.visible = true if !@messageBox.busy?
+        cmdwindow.update
+        pbUpdate
+        if !@messageBox.busy?
+          if Input.trigger?(Input::BACK)
+            ret = false
+            break
+          elsif Input.trigger?(Input::USE) && @messageBox.resume
+            ret = (cmdwindow.index == 0)
+            break
+          end
+        end
+      end
+    end
+    @messageBox.visible = false
+    @helpWindow.visible = true
+    return ret
+  end
+
+  def pbShowCommands(text, commands, index = 0)
+    ret = -1
+    @helpWindow.visible = true
+    using(cmdwindow = Window_CommandPokemonColor.new(commands)) do
+      cmdwindow.z     = @viewport.z + 1
+      cmdwindow.index = index
+      pbBottomRight(cmdwindow)
+      @helpWindow.resizeHeightToFit(text, Graphics.width - cmdwindow.width)
+      @helpWindow.text = text
+      pbBottomLeft(@helpWindow)
+      loop do
+        Graphics.update
+        Input.update
+        cmdwindow.update
+        pbUpdate
+        if Input.trigger?(Input::BACK)
+          pbPlayCancelSE
+          ret = -1
+          break
+        elsif Input.trigger?(Input::USE)
+          pbPlayDecisionSE
+          ret = cmdwindow.index
+          break
+        end
+      end
+    end
+    return ret
+  end
+
+  def pbChooseMove(pkmn, text, index = 0)
+    moveNames = []
+    pkmn.moves.each do |i|
+      if i.total_pp <= 0
+        moveNames.push(_INTL("{1} (PP: ---)", i.name))
+      else
+        moveNames.push(_INTL("{1} (PP: {2}/{3})", i.name, i.pp, i.total_pp))
+      end
+    end
+    return pbShowCommands(text, moveNames, index)
+  end
+
+  def pbRefreshSingle(index); end
+
+  def update
+    @messageBox.update
+    @helpWindow.update
+  end
+  alias pbUpdate update
 end

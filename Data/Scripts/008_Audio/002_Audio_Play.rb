@@ -1,6 +1,3 @@
-#===============================================================================
-#
-#===============================================================================
 def pbStringToAudioFile(str)
   if str[/^(.*)\:\s*(\d+)\s*\:\s*(\d+)\s*$/]   # Of the format "XXX: ###: ###"
     file   = $1
@@ -42,8 +39,7 @@ def pbResolveAudioFile(str, volume = nil, pitch = nil)
 end
 
 #===============================================================================
-#
-#===============================================================================
+
 # Plays a BGM file.
 # param -- Either a string showing the filename
 # (relative to Audio/BGM/) or an RPG::AudioFile object.
@@ -93,8 +89,7 @@ def pbBGMStop(timeInSeconds = 0.0)
 end
 
 #===============================================================================
-#
-#===============================================================================
+
 # Plays an ME file.
 # param -- Either a string showing the filename
 # (relative to Audio/ME/) or an RPG::AudioFile object.
@@ -144,8 +139,7 @@ def pbMEStop(timeInSeconds = 0.0)
 end
 
 #===============================================================================
-#
-#===============================================================================
+
 # Plays a BGS file.
 # param -- Either a string showing the filename
 # (relative to Audio/BGS/) or an RPG::AudioFile object.
@@ -195,8 +189,7 @@ def pbBGSStop(timeInSeconds = 0.0)
 end
 
 #===============================================================================
-#
-#===============================================================================
+
 # Plays an SE file.
 # param -- Either a string showing the filename
 # (relative to Audio/SE/) or an RPG::AudioFile object.
@@ -238,6 +231,8 @@ def pbSEStop(_timeInSeconds = 0.0)
     Audio.se_stop
   end
 end
+
+#===============================================================================
 
 # Plays a sound effect that plays when the player moves the cursor.
 def pbPlayCursorSE

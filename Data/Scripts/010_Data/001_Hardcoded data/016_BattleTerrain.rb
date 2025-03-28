@@ -1,6 +1,4 @@
-#===============================================================================
 # These are in-battle terrain effects caused by moves like Electric Terrain.
-#===============================================================================
 module GameData
   class BattleTerrain
     attr_reader :id
@@ -15,8 +13,6 @@ module GameData
     def self.load; end
     def self.save; end
 
-    #---------------------------------------------------------------------------
-
     def initialize(hash)
       @id        = hash[:id]
       @real_name = hash[:name] || "Unnamed"
@@ -30,8 +26,6 @@ module GameData
   end
 end
 
-#===============================================================================
-#
 #===============================================================================
 
 GameData::BattleTerrain.register({

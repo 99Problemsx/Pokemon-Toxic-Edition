@@ -1,6 +1,4 @@
-#===============================================================================
 # Battle scene (the visuals of the battle)
-#===============================================================================
 class Battle::Scene
   attr_accessor :abortable   # For non-interactive battles, can quit immediately
   attr_reader   :viewport
@@ -75,10 +73,9 @@ class Battle::Scene
     return ret
   end
 
-  #-----------------------------------------------------------------------------
-  # Updating and refreshing.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Updating and refreshing
+  #=============================================================================
   def pbUpdate(cw = nil)
     pbGraphicsUpdate
     pbInputUpdate
@@ -142,19 +139,17 @@ class Battle::Scene
     end
   end
 
-  #-----------------------------------------------------------------------------
-  # Party lineup.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Party lineup
+  #=============================================================================
   # Returns whether the party line-ups are currently coming on-screen
   def inPartyAnimation?
     return @animations.length > 0
   end
 
-  #-----------------------------------------------------------------------------
-  # Window displays.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Window displays
+  #=============================================================================
   def pbShowWindow(windowType)
     # NOTE: If you are not using fancy graphics for the command/fight menus, you
     #       will need to make "messageBox" also visible if the windowtype if
@@ -193,7 +188,7 @@ class Battle::Scene
     cw.setText(msg)
     PBDebug.log_message(msg)
     yielded = false
-    timer_start = nil
+    timer_start = System.uptime
     loop do
       pbUpdate(cw)
       if !cw.busy?
@@ -207,7 +202,6 @@ class Battle::Scene
           @briefMessage = true
           break
         end
-        timer_start = System.uptime if !timer_start
         if System.uptime - timer_start >= MESSAGE_PAUSE_TIME   # Autoclose after 1 second
           cw.text = ""
           cw.visible = false
@@ -239,7 +233,7 @@ class Battle::Scene
     cw.text = msg + "\1"
     PBDebug.log_message(msg)
     yielded = false
-    timer_start = nil
+    timer_start = System.uptime
     loop do
       pbUpdate(cw)
       if !cw.busy?
@@ -248,7 +242,6 @@ class Battle::Scene
           yielded = true
         end
         if !@battleEnd
-          timer_start = System.uptime if !timer_start
           if System.uptime - timer_start >= MESSAGE_PAUSE_TIME * 3   # Autoclose after 3 seconds
             cw.text = ""
             cw.visible = false
@@ -312,10 +305,9 @@ class Battle::Scene
     end
   end
 
-  #-----------------------------------------------------------------------------
-  # Sprites.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Sprites
+  #=============================================================================
   def pbAddSprite(id, x, y, filename, viewport)
     sprite = @sprites[id] || IconSprite.new(x, y, viewport)
     if filename
@@ -354,10 +346,9 @@ class Battle::Scene
     pbRefresh
   end
 
-  #-----------------------------------------------------------------------------
-  # Phases.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Phases
+  #=============================================================================
   def pbBeginCommandPhase
     @sprites["messageWindow"].text = ""
   end
@@ -378,10 +369,9 @@ class Battle::Scene
     pbDisposeSprites
   end
 
-  #-----------------------------------------------------------------------------
+  #=============================================================================
   #
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
   def pbSelectBattler(idxBattler, selectMode = 1)
     numWindows = @battle.sideSizes.max * 2
     numWindows.times do |i|
@@ -401,7 +391,6 @@ class Battle::Scene
     shadowSprite.setPokemonBitmap(pkmn)
     # Set visibility of battler's shadow
     shadowSprite.visible = pkmn.species_data.shows_shadow? if shadowSprite && !back
-    @sprites["dataBox_#{idxBattler}"].refresh
   end
 
   def pbResetCommandsIndex(idxBattler)
@@ -409,10 +398,9 @@ class Battle::Scene
     @lastMove[idxBattler] = 0
   end
 
-  #-----------------------------------------------------------------------------
+  #=============================================================================
   #
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
   # This method is called when the player wins a wild Pokémon battle.
   # This method can change the battle's music for example.
   def pbWildBattleSuccess

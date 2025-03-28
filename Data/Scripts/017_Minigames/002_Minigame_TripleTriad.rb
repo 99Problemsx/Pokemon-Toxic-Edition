@@ -1,10 +1,9 @@
 #===============================================================================
-# "Triple Triad" mini-game.
-# By Unknown.
+# "Triple Triad" mini-game
+# By Unknown
 #===============================================================================
-
 #===============================================================================
-# Card class.
+# Card class
 #===============================================================================
 class TriadCard
   attr_reader :species, :form
@@ -95,7 +94,7 @@ class TriadCard
     if type
       typebitmap = AnimatedBitmap.new(_INTL("Graphics/UI/types"))
       type_number = GameData::Type.get(type).icon_position
-      typerect = Rect.new(0, type_number * GameData::Type::ICON_SIZE[1], *GameData::Type::ICON_SIZE)
+      typerect = Rect.new(0, type_number * 28, 64, 28)
       bitmap.blt(8, 50, typebitmap.bitmap, typerect, 192)
       typebitmap.dispose
     end
@@ -117,7 +116,7 @@ class TriadCard
     bitmap.blt(0, 0, cardbitmap.bitmap, Rect.new(0, 0, cardbitmap.width, cardbitmap.height))
     # Draw type icon
     type_number = GameData::Type.get(@type).icon_position
-    typerect = Rect.new(0, type_number * GameData::Type::ICON_SIZE[1], *GameData::Type::ICON_SIZE)
+    typerect = Rect.new(0, type_number * 28, 64, 28)
     bitmap.blt(8, 50, typebitmap.bitmap, typerect, 192)
     # Draw Pokémon icon
     bitmap.blt(8, 24, iconbitmap.bitmap, Rect.new(0, 0, 64, 64))
@@ -135,7 +134,7 @@ class TriadCard
 end
 
 #===============================================================================
-# Duel screen visuals.
+# Duel screen visuals
 #===============================================================================
 class TriadSquare
   attr_accessor :owner, :card, :type
@@ -160,11 +159,9 @@ class TriadSquare
 end
 
 #===============================================================================
-# Scene class for handling appearance of the screen.
+# Scene class for handling appearance of the screen
 #===============================================================================
 class TriadScene
-  TRIPLE_TRIAD_BGM = "Triple Triad"
-
   def pbStartScene(battle)
     @sprites = {}
     @bitmaps = []
@@ -209,7 +206,7 @@ class TriadScene
     @sprites["score"] = Sprite.new(@viewport)
     @sprites["score"].bitmap = Bitmap.new(Graphics.width, Graphics.height)
     pbSetSystemFont(@sprites["score"].bitmap)
-    pbBGMPlay(TRIPLE_TRIAD_BGM)
+    pbBGMPlay("Triple Triad")
     # Fade in all sprites
     pbFadeInAndShow(@sprites) { pbUpdate }
   end
@@ -590,7 +587,7 @@ class TriadScene
 end
 
 #===============================================================================
-# Duel screen logic.
+# Duel screen logic
 #===============================================================================
 class TriadScreen
   attr_accessor :openHand, :countUnplayedCards
@@ -948,7 +945,7 @@ class TriadScreen
 end
 
 #===============================================================================
-# Start duel.
+# Start duel
 #===============================================================================
 def pbCanTriadDuel?
   card_count = $PokemonGlobal.triads.total_cards
@@ -966,7 +963,7 @@ def pbTriadDuel(name, minLevel, maxLevel, rules = nil, oppdeck = nil, prize = ni
 end
 
 #===============================================================================
-# Card storage.
+# Card storage
 #===============================================================================
 class PokemonGlobalMetadata
   attr_writer :triads
@@ -1046,7 +1043,7 @@ class TriadStorage
 end
 
 #===============================================================================
-# Card shop screen.
+# Card shop screen
 #===============================================================================
 def pbBuyTriads
   commands = []
@@ -1292,7 +1289,7 @@ def pbTriadList
 end
 
 #===============================================================================
-# Give the player a particular card.
+# Give the player a particular card
 #===============================================================================
 def pbGiveTriadCard(species, quantity = 1)
   sp = GameData::Species.try_get(species)

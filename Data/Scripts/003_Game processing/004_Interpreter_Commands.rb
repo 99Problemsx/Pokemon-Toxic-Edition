@@ -400,22 +400,8 @@ class Interpreter
         result = ($game_switches[@parameters[1]] == (@parameters[2] == 0))
       end
     when 1   # variable
-      variable1_name = $data_system.variables[@parameters[1]]
-      if variable1_name && variable1_name[/^s\:/]
-        value1 = eval($~.post_match)
-      else
-        value1 = $game_variables[@parameters[1]]
-      end
-      if @parameters[2] == 0
-        value2 = @parameters[3]
-      else
-        variable2_name = $data_system.variables[@parameters[3]]
-        if variable2_name && variable2_name[/^s\:/]
-          value2 = eval($~.post_match)
-        else
-          value2 = $game_variables[@parameters[3]]
-        end
-      end
+      value1 = $game_variables[@parameters[1]]
+      value2 = (@parameters[2] == 0) ? @parameters[3] : $game_variables[@parameters[3]]
       case @parameters[4]
       when 0 then result = (value1 == value2)
       when 1 then result = (value1 >= value2)
@@ -1153,7 +1139,9 @@ class Interpreter
   # * Call Save Screen
   #-----------------------------------------------------------------------------
   def command_352
-    pbFadeOutIn { UI::Save.new.main }
+    scene = PokemonSave_Scene.new
+    screen = PokemonSaveScreen.new(scene)
+    screen.pbSaveScreen
     return true
   end
 

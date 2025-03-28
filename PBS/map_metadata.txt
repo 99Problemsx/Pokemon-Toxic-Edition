@@ -7,24 +7,23 @@ Name = Intro
 Name = Lappet Town
 Outdoor = true
 ShowArea = true
-LocationSign = Pt town
 MapPosition = 0,13,12
 BattleBack = field
 #-------------------------------
-[003]   # Player's house
+[003]   # \PN's house
 Name = \PN's house
 HealingSpot = 2,8,8
 MapPosition = 0,13,12
 #-------------------------------
 [004]   # Pokémon Lab
 Name = Pokémon Lab
+ShowArea = false
 MapPosition = 0,13,12
 #-------------------------------
 [005]   # Route 1
 Name = Route 1
 Outdoor = true
 ShowArea = true
-LocationSign = Pt route
 MapPosition = 0,13,11
 BattleBack = field
 #-------------------------------
@@ -36,7 +35,6 @@ MapPosition = 0,13,11
 Name = Cedolan City
 Outdoor = true
 ShowArea = true
-LocationSign = Pt city
 MapPosition = 0,13,10
 MapSize = 2,11
 #-------------------------------
@@ -54,7 +52,7 @@ Name = Cedolan City
 MapPosition = 0,13,10
 BattleBack = indoor3
 Environment = Rock
-Flags = DisableBoxLink
+Flags = DisableBoxLink,PowerSpot
 #-------------------------------
 [011]   # Pokémon Institute
 Name = Cedolan City
@@ -100,7 +98,6 @@ MapPosition = 0,13,10
 Name = Route 2
 Outdoor = true
 ShowArea = true
-LocationSign = Pt route
 Weather = Rain,100
 MapPosition = 0,14,8
 BattleBack = field
@@ -110,7 +107,6 @@ MapSize = 1,11
 Name = Lerucean Town
 Outdoor = true
 ShowArea = true
-LocationSign = Pt town
 MapPosition = 0,15,8
 #-------------------------------
 [024]   # Lerucean Town Poké Center
@@ -134,35 +130,29 @@ MapPosition = 0,15,8
 Name = Natural Park
 Outdoor = true
 ShowArea = true
-LocationSign = Pt park
 MapPosition = 0,16,8
 BattleBack = field
-Flags = MossRock,BugContest
+Flags = MossRock
 #-------------------------------
 [029]   # Natural Park Entrance
 Name = Natural Park
 Bicycle = true
 MapPosition = 0,16,8
-Flags = BugContestReception
 #-------------------------------
 [030]   # Natural Park Pavillion
 Name = Natural Park
 MapPosition = 0,16,8
-Flags = BugContestReception
 #-------------------------------
 [031]   # Route 3
 Name = Route 3
 Outdoor = true
 ShowArea = true
-LocationSign = Pt route
 MapPosition = 0,14,6
 BattleBack = field
 MapSize = 2,1101
 #-------------------------------
 [034]   # Ice Cave
-Name = Ice Cave
-ShowArea = true
-LocationSign = Pt cave
+Name = Route 3
 Bicycle = true
 MapPosition = 0,15,6
 BattleBack = cave1
@@ -173,7 +163,6 @@ Flags = IceRock
 Name = Ingido Plateau
 Outdoor = true
 ShowArea = true
-LocationSign = Pt route
 MapPosition = 0,13,6
 #-------------------------------
 [036]   # Pokémon League entrance
@@ -185,7 +174,7 @@ MapPosition = 0,13,6
 Name = Ingido Plateau
 MapPosition = 0,13,6
 BattleBack = elite1
-Flags = DisableBoxLink
+Flags = DisableBoxLink,PowerSpot
 #-------------------------------
 [038]   # Hall of Fame
 Name = Ingido Plateau
@@ -196,7 +185,6 @@ Flags = DisableBoxLink
 Name = Route 4
 Outdoor = true
 ShowArea = true
-LocationSign = Pt route
 MapPosition = 0,11,6
 BattleBack = field
 MapSize = 2,11
@@ -205,7 +193,6 @@ MapSize = 2,11
 Name = Route 4
 Outdoor = true
 ShowArea = true
-LocationSign = Pt route
 BicycleAlways = true
 MapPosition = 0,11,6
 #-------------------------------
@@ -213,16 +200,27 @@ MapPosition = 0,11,6
 Name = Route 5
 Outdoor = true
 ShowArea = true
-LocationSign = Pt route
 BicycleAlways = true
 MapPosition = 0,11,7
 MapSize = 1,111
+#-------------------------------
+[042]   # Selago Village
+Name = Selago Village
+Outdoor = true
+ShowArea = true
+Bicycle = true
+MapPosition = 0,30,12
+SnapEdges = false
+MapSize = 2,11
+#-------------------------------
+[043]   # Peskan River - North
+Name = Peskan River - North
+ShowArea = true
 #-------------------------------
 [044]   # Route 6
 Name = Route 6
 Outdoor = true
 ShowArea = true
-LocationSign = Pt route
 MapPosition = 0,11,10
 BattleBack = field
 MapSize = 2,11
@@ -231,7 +229,6 @@ MapSize = 2,11
 Name = Route 6
 Outdoor = true
 ShowArea = true
-LocationSign = Pt route
 BicycleAlways = true
 MapPosition = 0,11,10
 #-------------------------------
@@ -244,17 +241,18 @@ MapPosition = 0,12,6
 Name = Route 7
 Outdoor = true
 ShowArea = true
-LocationSign = Pt route
 Weather = Rain,0
 MapPosition = 0,15,10
 BattleBack = rocky
 MapSize = 2,11
 Environment = Rock
 #-------------------------------
-[049]   # Rock Cave 1F
-Name = Rock Cave
+[048]   # Caramel Hills
+Name = Caramel Hills
 ShowArea = true
-LocationSign = Pt cave
+#-------------------------------
+[049]   # Rock Cave 1F
+Name = Route 7
 Bicycle = true
 MapPosition = 0,16,10
 BattleBack = cave1
@@ -262,9 +260,7 @@ Environment = Cave
 Flags = Magnetic,DistortionWorld
 #-------------------------------
 [050]   # Rock Cave B1F
-Name = Rock Cave
-ShowArea = true
-LocationSign = Pt cave
+Name = Route 7
 Bicycle = true
 MapPosition = 0,16,10
 DarkMap = true
@@ -273,21 +269,18 @@ Environment = Cave
 Flags = Magnetic,DistortionWorld
 #-------------------------------
 [051]   # Dungeon
-Name = Rock Cave
-ShowArea = true
-LocationSign = Pt cave
+Name = Route 7
 Bicycle = true
 MapPosition = 0,16,10
 Dungeon = true
 BattleBack = cave2
 Environment = Cave
-Flags = Magnetic,DistortionWorld,ScaleWildEncounterLevels
+Flags = Magnetic,DistortionWorld
 #-------------------------------
 [052]   # Battle Frontier
 Name = Battle Frontier
 Outdoor = true
 ShowArea = true
-LocationSign = Pt city
 MapPosition = 0,17,10
 #-------------------------------
 [053]   # Battle Frontier Poké Center
@@ -308,7 +301,7 @@ MapPosition = 0,17,10
 Name = Battle Frontier
 MapPosition = 0,17,10
 BattleBack = indoor1
-Flags = DisableBoxLink
+Flags = DisableBoxLink,PowerSpot
 #-------------------------------
 [057]   # Stadium Cup lobby
 Name = Battle Frontier
@@ -322,7 +315,7 @@ MapPosition = 0,17,10
 Name = Battle Frontier
 MapPosition = 0,17,10
 BattleBack = indoor1
-Flags = DisableBoxLink
+Flags = DisableBoxLink,PowerSpot
 #-------------------------------
 [060]   # Battle Arena
 Name = Battle Frontier
@@ -332,7 +325,7 @@ MapPosition = 0,17,10
 Name = Battle Frontier
 MapPosition = 0,17,10
 BattleBack = indoor1
-Flags = DisableBoxLink
+Flags = DisableBoxLink,PowerSpot
 #-------------------------------
 [062]   # Battle Factory
 Name = Battle Frontier
@@ -347,7 +340,7 @@ Flags = DisableBoxLink
 Name = Battle Frontier
 MapPosition = 0,17,10
 BattleBack = indoor1
-Flags = DisableBoxLink
+Flags = DisableBoxLink,PowerSpot
 #-------------------------------
 [065]   # Battle Factory corridor
 Name = Battle Frontier
@@ -358,7 +351,6 @@ Flags = DisableBoxLink
 Name = Safari Zone
 Outdoor = true
 ShowArea = true
-LocationSign = Pt route
 MapPosition = 0,12,12
 BattleBack = field
 #-------------------------------
@@ -370,7 +362,6 @@ MapPosition = 0,12,12
 Name = Safari Zone
 Outdoor = true
 ShowArea = true
-LocationSign = Pt forest
 MapPosition = 0,12,12
 SafariMap = true
 BattleBack = forest
@@ -380,7 +371,6 @@ Environment = Forest
 Name = Route 8
 Outdoor = true
 ShowArea = true
-LocationSign = Pt route
 MapPosition = 0,13,13
 DiveMap = 70
 BattleBack = field
@@ -399,7 +389,6 @@ MapPosition = 0,13,13
 Name = Berth Island
 Outdoor = true
 ShowArea = true
-LocationSign = Pt lake
 Weather = Storm,50
 MapPosition = 0,18,17
 BattleBack = field
@@ -409,7 +398,6 @@ Flags = DistortionWorld
 Name = Faraday Island
 Outdoor = true
 ShowArea = true
-LocationSign = Pt lake
 MapPosition = 0,22,16
 BattleBack = field
 Flags = DistortionWorld
@@ -424,3 +412,171 @@ Name = Tiall Region
 Outdoor = true
 MapPosition = 1,13,16
 BattleBack = city
+#-------------------------------
+[076]   # Sambucha Settlement
+Name = Sambucha Settlement
+Outdoor = true
+ShowArea = true
+Bicycle = true
+MapPosition = 0,44,4
+#-------------------------------
+[078]   # Spirit Path
+Name = Spirit Path
+ShowArea = true
+#-------------------------------
+[079]   # Selago Meadows
+Name = Selago Meadows
+ShowArea = true
+#-------------------------------
+[080]   # Rosewood Village
+Name = Rosewood Village
+Outdoor = true
+ShowArea = true
+Bicycle = true
+MapPosition = 0,43,10
+MapSize = 1,11
+#-------------------------------
+[081]   # Gondola Village
+Name = Gondola Village
+Outdoor = true
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,31,16
+MapSize = 2,1111
+#-------------------------------
+[082]   # Sundance Village
+Name = Sundance Village
+Outdoor = true
+ShowArea = true
+Bicycle = true
+MapPosition = 0,26,5
+MapSize = 2,11
+#-------------------------------
+[083]   # Heliotrope Woods
+Name = Heliotrope Woods
+ShowArea = true
+#-------------------------------
+[084]   # Caramel Hills
+Name = Caramel Hills
+ShowArea = true
+#-------------------------------
+[085]   # Deep Caramel Cave
+Name = Deep Caramel Cave
+ShowArea = true
+#-------------------------------
+[086]   # Sambucha Icelands
+Name = Sambucha Icelands
+ShowArea = true
+#-------------------------------
+[090]   # Sambucha Lake
+Name = Sambucha Lake
+ShowArea = true
+#-------------------------------
+[092]   # Gondola Village Inside
+Name = Gondola Village
+Outdoor = false
+ShowArea = false
+Bicycle = false
+MapPosition = 0,31,16
+MapSize = 2,1111
+#-------------------------------
+[093]   # Tomb of the Spirits
+Name = Tomb of the Spirits
+Name = 
+Outdoor = false
+ShowArea = false
+Bicycle = false
+HealingSpot = 81,42,20
+MapPosition = 0,31,16
+MapSize = 2,1111
+#-------------------------------
+[094]   # Professor Nectar's Lab
+Name = Professor Nectar's Lab
+Outdoor = false
+ShowArea = true
+MapPosition = 0,30,12
+#-------------------------------
+[095]   # Peskan River - South
+Name = Peskan River - South
+ShowArea = true
+#-------------------------------
+[096]   # Selago Village Inside
+Name = Selago Village
+Outdoor = false
+ShowArea = false
+Bicycle = false
+MapPosition = 0,30,12
+MapSize = 2,11
+#-------------------------------
+[097]   # Sambucha Settlement
+Name = Sambucha Settlement
+Name = 
+Outdoor = false
+ShowArea = false
+Bicycle = false
+MapPosition = 0,44,4
+MapSize = 1,1
+#-------------------------------
+[098]   # Merlow Graveyard
+Name = Merlow Graveyard
+ShowArea = true
+#-------------------------------
+[099]   # Bismark Settlement
+Name = Bismark Settlement
+Outdoor = true
+ShowArea = true
+Bicycle = true
+MapPosition = 0,42,21
+MapSize = 2,11
+#-------------------------------
+[100]   # Bismark Settlement
+Name = Bismark Settlement
+Name = 
+Outdoor = false
+ShowArea = false
+Bicycle = false
+MapPosition = 0,42,21
+MapSize = 2,11
+#-------------------------------
+[101]   # Merlow Village
+Name = Merlow Village
+ShowArea = true
+#-------------------------------
+[102]   # Rosewood Forest
+Name = Rosewood Forest
+ShowArea = true
+#-------------------------------
+[103]   # Celtic Village
+Name = Celtic Village
+ShowArea = true
+#-------------------------------
+[104]   # Merlow Coastlands
+Name = Merlow Coastlands
+ShowArea = true
+#-------------------------------
+[105]   # Twine Fieldlands
+Name = Twine Fieldlands
+ShowArea = true
+#-------------------------------
+[107]   # Scarlet Village
+Name = Scarlet Village
+ShowArea = true
+#-------------------------------
+[108]   # Peskan Sea
+Name = Peskan Sea
+ShowArea = true
+#-------------------------------
+[109]   # Scarlet Woodlands - North
+Name = Scarlet Woodlands - North
+ShowArea = true
+#-------------------------------
+[110]   # Scarlet Woodlands - South
+Name = Scarlet Woodlands - South
+ShowArea = true
+#-------------------------------
+[112]   # Caramel Cave
+Name = Caramel Cave
+ShowArea = true
+
+

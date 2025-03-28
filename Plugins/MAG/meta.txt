@@ -1,0 +1,5 @@
+﻿Name       = M.A.G (Moves & Abilities Galore)
+Version    = 0.0.1
+Essentials = 21.1
+Requires   = Generation 9 Pack,3.2.7
+Credits    = Tea-Rex

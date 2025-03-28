@@ -36,16 +36,17 @@ end
 #
 #===============================================================================
 def pbEntryScreen(*arg)
-  ret_val = false
+  retval = false
   pbFadeOutIn do
-    screen = UI::Party.new($player.party, mode: :choose_entry_order)
-    ret = screen.choose_pokemon_entry_order(pbBattleChallenge.rules.ruleset)
+    scene = PokemonParty_Scene.new
+    screen = PokemonPartyScreen.new(scene, $player.party)
+    ret = screen.pbPokemonMultipleEntryScreenEx(pbBattleChallenge.rules.ruleset)
     # Set party
     pbBattleChallenge.setParty(ret) if ret
     # Continue (return true) if Pokémon were chosen
-    ret_val = (ret && ret.length > 0)
+    retval = (ret && ret.length > 0)
   end
-  return ret_val
+  return retval
 end
 
 #===============================================================================

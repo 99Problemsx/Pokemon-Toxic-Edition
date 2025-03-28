@@ -211,17 +211,15 @@ module Translator
     end
   end
 
-  #-----------------------------------------------------------------------------
-
   def normalize_value(value)
     if value[/[\r\n\t\x01]|^[\[\]]/]
       ret = value.dup
       ret.gsub!(/\r/, "<<r>>")
       ret.gsub!(/\n/, "<<n>>")
       ret.gsub!(/\t/, "<<t>>")
+      ret.gsub!(/\[/, "<<[>>")
+      ret.gsub!(/\]/, "<<]>>")
       ret.gsub!(/\x01/, "<<1>>")
-      ret.gsub!(/^\[/, "<<[>>")
-      ret.gsub!(/^\]/, "<<]>>")
       return ret
     end
     return value
@@ -230,12 +228,12 @@ module Translator
   def denormalize_value(value)
     if value[/<<[rnt1\[\]]>>/]
       ret = value.dup
+      ret.gsub!(/<<1>>/, "\1")
       ret.gsub!(/<<r>>/, "\r")
       ret.gsub!(/<<n>>/, "\n")
-      ret.gsub!(/<<t>>/, "\t")
-      ret.gsub!(/<<1>>/, "\1")
       ret.gsub!(/<<\[>>/, "[")
       ret.gsub!(/<<\]>>/, "]")
+      ret.gsub!(/<<t>>/, "\t")
       return ret
     end
     return value
@@ -511,19 +509,17 @@ class Translation
   end
 
   def load_message_files(filename)
-    @core_messages = nil
-    @game_messages = nil
     begin
       core_filename = sprintf("Data/messages_%s_core.dat", filename)
       if FileTest.exist?(core_filename)
-        @core_messages = load_data(core_filename)
-        @core_messages = nil if !@core_messages.is_a?(Array)
+        pbRgssOpen(core_filename, "rb") { |f| @core_messages = Marshal.load(f) }
       end
+      @core_messages = nil if !@core_messages.is_a?(Array)
       game_filename = sprintf("Data/messages_%s_game.dat", filename)
       if FileTest.exist?(game_filename)
-        @game_messages = load_data(game_filename)
-        @game_messages = nil if !@game_messages.is_a?(Array)
+        pbRgssOpen(game_filename, "rb") { |f| @game_messages = Marshal.load(f) }
       end
+      @game_messages = nil if !@game_messages.is_a?(Array)
     rescue
       @core_messages = nil
       @game_messages = nil
@@ -711,53 +707,51 @@ module MessageTypes
   POKEMON_NICKNAMES            = 30
   @@messages = Translation.new
 
-  module_function
-
-  def load_default_messages
+  def self.load_default_messages
     @@messages.load_default_messages
   end
 
-  def load_message_files(filename)
+  def self.load_message_files(filename)
     @@messages.load_message_files(filename)
   end
 
-  def save_default_messages
+  def self.save_default_messages
     @@messages.save_default_messages
   end
 
-  def setMessages(type, array)
+  def self.setMessages(type, array)
     @@messages.setMessages(type, array)
   end
 
-  def addMessages(type, array)
+  def self.addMessages(type, array)
     @@messages.addMessages(type, array)
   end
 
-  def setMessagesAsHash(type, array)
+  def self.setMessagesAsHash(type, array)
     @@messages.setMessagesAsHash(type, array)
   end
 
-  def addMessagesAsHash(type, array)
+  def self.addMessagesAsHash(type, array)
     @@messages.addMessagesAsHash(type, array)
   end
 
-  def setMapMessagesAsHash(type, array)
+  def self.setMapMessagesAsHash(type, array)
     @@messages.setMapMessagesAsHash(type, array)
   end
 
-  def addMapMessagesAsHash(type, array)
+  def self.addMapMessagesAsHash(type, array)
     @@messages.addMapMessagesAsHash(type, array)
   end
 
-  def get(type, id)
+  def self.get(type, id)
     return @@messages.get(type, id)
   end
 
-  def getFromHash(type, key)
+  def self.getFromHash(type, key)
     return @@messages.getFromHash(type, key)
   end
 
-  def getFromMapHash(type, key)
+  def self.getFromMapHash(type, key)
     return @@messages.getFromMapHash(type, key)
   end
 end

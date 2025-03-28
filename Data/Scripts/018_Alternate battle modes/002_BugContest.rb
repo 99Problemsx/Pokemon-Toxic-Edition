@@ -310,7 +310,6 @@ end
 #===============================================================================
 #
 #===============================================================================
-
 EventHandlers.add(:on_map_or_spriteset_change, :show_bug_contest_timer,
   proc { |scene, _map_changed|
     next if !pbInBugContest? || pbBugContestState.decision != 0 || BugContestState::TIME_ALLOWED == 0
@@ -348,7 +347,6 @@ EventHandlers.add(:on_leave_map, :end_bug_contest,
 #===============================================================================
 #
 #===============================================================================
-
 EventHandlers.add(:on_calling_wild_battle, :bug_contest_battle,
   proc { |pkmn, handled|
     # handled is an array: [nil]. If [true] or [false], the battle has already
@@ -380,11 +378,11 @@ def pbBugContestBattle(pkmn, level = 1)
   setBattleRule("single")
   BattleCreationHelperMethods.prepare_battle(battle)
   # Perform the battle itself
-  outcome = Battle::Outcome::UNDECIDED
+  decision = 0
   pbBattleAnimation(pbGetWildBattleBGM(foeParty), 0, foeParty) do
-    outcome = battle.pbStartBattle
-    BattleCreationHelperMethods.after_battle(outcome, true)
-    if Battle::Outcome.should_black_out?(outcome)
+    decision = battle.pbStartBattle
+    BattleCreationHelperMethods.after_battle(decision, true)
+    if [2, 5].include?(decision)   # Lost or drew
       $game_system.bgm_unpause
       $game_system.bgs_unpause
       pbBugContestStartOver
@@ -394,71 +392,50 @@ def pbBugContestBattle(pkmn, level = 1)
   # Update Bug Contest game data based on result of battle
   pbBugContestState.ballcount = battle.ballCount
   if pbBugContestState.ballcount == 0
-    pbMessage(_INTL("ANNOUNCER: The Bug-Catching Contest is over!"))
+    pbMessage(_INTL("ANNOUNCER:  The Bug-Catching Contest is over!"))
     pbBugContestState.pbStartJudging
   end
   # Save the result of the battle in Game Variable 1
-  BattleCreationHelperMethods.set_outcome(outcome, 1)
+  BattleCreationHelperMethods.set_outcome(decision, 1)
   # Used by the Poké Radar to update/break the chain
-  EventHandlers.trigger(:on_wild_battle_end, pkmn.species_data.id, pkmn.level, outcome)
+  EventHandlers.trigger(:on_wild_battle_end, pkmn.species_data.id, pkmn.level, decision)
   # Return false if the player lost or drew the battle, and true if any other result
-  return !Battle::Outcome.should_black_out?(outcome)
+  return (decision != 2 && decision != 5)
 end
 
 #===============================================================================
 #
 #===============================================================================
-class UI::PauseMenu < UI::BaseScreen
-  alias __bug_contest_show_info show_info unless method_defined?(:__bug_contest_show_info)
+class PokemonPauseMenu
+  alias __bug_contest_pbShowInfo pbShowInfo unless method_defined?(:__bug_contest_pbShowInfo)
 
-  def show_info
-    __bug_contest_show_info
+  def pbShowInfo
+    __bug_contest_pbShowInfo
     return if !pbInBugContest?
     if pbBugContestState.lastPokemon
-      @visuals.show_info(_INTL("Caught: {1}\nLevel: {2}\nBalls: {3}",
-                               pbBugContestState.lastPokemon.speciesName,
-                               pbBugContestState.lastPokemon.level,
-                               pbBugContestState.ballcount))
+      @scene.pbShowInfo(_INTL("Caught: {1}\nLevel: {2}\nBalls: {3}",
+                              pbBugContestState.lastPokemon.speciesName,
+                              pbBugContestState.lastPokemon.level,
+                              pbBugContestState.ballcount))
     else
-      @visuals.show_info(_INTL("Caught: None\nBalls: {1}", pbBugContestState.ballcount))
+      @scene.pbShowInfo(_INTL("Caught: None\nBalls: {1}", pbBugContestState.ballcount))
     end
   end
 end
-
-# class PokemonPauseMenu
-#   alias __bug_contest_pbShowInfo pbShowInfo unless method_defined?(:__bug_contest_pbShowInfo)
-#
-#   def pbShowInfo
-#     __bug_contest_pbShowInfo
-#     return if !pbInBugContest?
-#     if pbBugContestState.lastPokemon
-#       @scene.pbShowInfo(_INTL("Caught: {1}\nLevel: {2}\nBalls: {3}",
-#                               pbBugContestState.lastPokemon.speciesName,
-#                               pbBugContestState.lastPokemon.level,
-#                               pbBugContestState.ballcount))
-#     else
-#       @scene.pbShowInfo(_INTL("Caught: None\nBalls: {1}", pbBugContestState.ballcount))
-#     end
-#   end
-# end
-
-#===============================================================================
-#
-#===============================================================================
 
 MenuHandlers.add(:pause_menu, :quit_bug_contest, {
   "name"      => _INTL("Quit Contest"),
   "order"     => 60,
   "condition" => proc { next pbInBugContest? },
   "effect"    => proc { |menu|
-    menu.hide_menu
+    menu.pbHideMenu
     if pbConfirmMessage(_INTL("Would you like to end the Contest now?"))
-      menu.silent_end_screen
+      menu.pbEndScene
       pbBugContestState.pbStartJudging
       next true
     end
-    menu.refresh
-    menu.show_menu
+    menu.pbRefresh
+    menu.pbShowMenu
     next false
   }
 })

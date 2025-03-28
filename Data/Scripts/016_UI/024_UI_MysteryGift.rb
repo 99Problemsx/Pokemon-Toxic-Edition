@@ -1,7 +1,7 @@
 #===============================================================================
-# Mystery Gift system.
-# By Maruno.
-#-------------------------------------------------------------------------------
+# Mystery Gift system
+# By Maruno
+#===============================================================================
 # This url is the location of an example Mystery Gift file.
 # You should change it to your file's url once you upload it.
 #===============================================================================
@@ -226,7 +226,7 @@ def pbRefreshMGCommands(master, online)
     elsif gift[1] > 0
       itemname = GameData::Item.get(gift[2]).name + sprintf(" x%d", gift[1])
     end
-    ontext = ["[  ]", "[Y]"][(online.include?(gift[0])) ? 1 : 0]
+    ontext = ["[  ]", "[X]"][(online.include?(gift[0])) ? 1 : 0]
     commands.push(_INTL("{1} {2}: {3} ({4})", ontext, gift[0], gift[3], itemname))
   end
   commands.push(_INTL("Export selected to file"))

@@ -1,7 +1,5 @@
-#===============================================================================
 # NOTE: The order these colors are registered are the order they are listed in
 #       the Pokédex search screen.
-#===============================================================================
 module GameData
   class BodyColor
     attr_reader :id
@@ -15,8 +13,6 @@ module GameData
     def self.load; end
     def self.save; end
 
-    #---------------------------------------------------------------------------
-
     def initialize(hash)
       @id        = hash[:id]
       @real_name = hash[:name] || "Unnamed"
@@ -29,8 +25,6 @@ module GameData
   end
 end
 
-#===============================================================================
-#
 #===============================================================================
 
 GameData::BodyColor.register({

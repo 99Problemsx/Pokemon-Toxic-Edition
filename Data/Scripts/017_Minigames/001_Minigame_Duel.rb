@@ -1,6 +1,6 @@
 #===============================================================================
-# "Duel" mini-game.
-# Based on the Duel minigame by Alael.
+# "Duel" mini-game
+# Based on the Duel minigame by Alael
 #===============================================================================
 class DuelWindow < Window_AdvancedTextPokemon
   attr_reader :hp
@@ -60,7 +60,7 @@ class PokemonDuel
     @viewport.z = 99999
     @sprites = {}
     @sprites["player"] = IconSprite.new(-160, 96, @viewport)
-    @sprites["player"].setBitmap(GameData::TrainerType.player_front_sprite_filename($player.trainer_type))
+    @sprites["player"].setBitmap(GameData::TrainerType.front_sprite_filename($player.trainer_type))
     @sprites["opponent"] = IconSprite.new(Graphics.width + 32, 96, @viewport)
     @sprites["opponent"].setBitmap(GameData::TrainerType.front_sprite_filename(opponent.trainer_type))
     @sprites["playerwindow"] = DuelWindow.new($player.name, false)
@@ -375,13 +375,11 @@ class PokemonDuel
   end
 end
 
-#===============================================================================
 # Starts a duel.
 # trainer_id - ID or symbol of the opponent's trainer type.
 # trainer_name - Name of the opponent
 # event - Game_Event object for the character's event
 # speeches - Array of 12 speeches
-#===============================================================================
 def pbDuel(trainer_id, trainer_name, event, speeches)
   trainer_id = GameData::TrainerType.get(trainer_id).id
   duel = PokemonDuel.new

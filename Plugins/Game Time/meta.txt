@@ -1,0 +1,6 @@
+Name         = Game Time
+Version      = 1.0.0
+Essentials   = 21.1
+Website      = https://luka-sj.com/res/gmtm
+Credits      = Luka S.J.
+Optional     = Adventure Log

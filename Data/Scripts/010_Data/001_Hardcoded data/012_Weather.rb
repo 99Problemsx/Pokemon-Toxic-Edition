@@ -1,4 +1,3 @@
-#===============================================================================
 # Category has the following effects:
 #   - Determines the in-battle weather.
 #   - Some abilities reduce the encounter rate in certain categories of weather.
@@ -9,7 +8,6 @@
 # Delta values are per second.
 # For the tone_proc, strength goes from 0 to RPG::Weather::MAX_SPRITES (60) and
 # will typically be the maximum.
-#===============================================================================
 module GameData
   class Weather
     attr_reader :id
@@ -31,8 +29,6 @@ module GameData
 
     def self.load; end
     def self.save; end
-
-    #---------------------------------------------------------------------------
 
     def initialize(hash)
       @id                     = hash[:id]
@@ -64,8 +60,6 @@ module GameData
   end
 end
 
-#===============================================================================
-#
 #===============================================================================
 
 GameData::Weather.register({

@@ -1,6 +1,3 @@
-#===============================================================================
-#
-#===============================================================================
 module SaveData
   # Contains Conversion objects for each defined conversion:
   # {
@@ -24,7 +21,6 @@ module SaveData
   #=============================================================================
   # Represents a conversion made to save data.
   # New conversions are added using {SaveData.register_conversion}.
-  #=============================================================================
   class Conversion
     # @return [Symbol] conversion ID
     attr_reader :id
@@ -138,8 +134,7 @@ module SaveData
     # @!endgroup
   end
 
-  #---------------------------------------------------------------------------
-
+  #=============================================================================
   # Registers a {Conversion} to occur for save data that meets the given criteria.
   # Two types of criteria can be defined: {Conversion#essentials_version} and
   # {Conversion#game_version}. The conversion is automatically run on save data
@@ -201,8 +196,7 @@ module SaveData
     validate save_data => Hash
     conversions_to_run = self.get_conversions(save_data)
     return false if conversions_to_run.none?
-    filepath = SaveData::DIRECTORY + SaveData.filename_from_index(save_data[:stats].save_filename_number || 0)
-    File.open(filepath + ".bak", "wb") { |f| Marshal.dump(save_data, f) }
+    File.open(SaveData::FILE_PATH + ".bak", "wb") { |f| Marshal.dump(save_data, f) }
     Console.echo_h1(_INTL("Converting save file"))
     conversions_to_run.each do |conversion|
       Console.echo_li("#{conversion.title}...")

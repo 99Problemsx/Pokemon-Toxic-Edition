@@ -1,6 +1,3 @@
-#===============================================================================
-#
-#===============================================================================
 module GameData
   #=============================================================================
   # A mixin module for data classes which provides common class methods (called
@@ -193,7 +190,7 @@ module GameData
       return self::DATA.keys
     end
 
-    # Yields all data in numerical order.
+    # Yields all data in numberical order.
     def each
       keys = self::DATA.keys.sort
       keys.each { |key| yield self::DATA[key] }

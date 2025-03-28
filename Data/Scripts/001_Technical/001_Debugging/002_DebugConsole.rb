@@ -1,8 +1,6 @@
-#===============================================================================
 # To use the console, use the executable explicitly built with the console
 # enabled on Windows. On Linux and macOS, just launch the executable directly
 # from a terminal.
-#===============================================================================
 module Console
   def self.setup_console
     return unless $DEBUG
@@ -35,9 +33,6 @@ module Console
   end
 end
 
-#===============================================================================
-#
-#===============================================================================
 module Kernel
   def echo(string)
     return unless $DEBUG
@@ -53,15 +48,14 @@ end
 Console.setup_console
 
 #===============================================================================
-# Console message formatting
+#  Console message formatting
 #===============================================================================
 module Console
   module_function
 
   #-----------------------------------------------------------------------------
-  # echo string into console (example shorthand for common options)
+  #  echo string into console (example shorthand for common options)
   #-----------------------------------------------------------------------------
-
   # heading 1
   def echo_h1(msg)
     echoln markup_style("*** #{msg} ***", text: :brown)
@@ -136,7 +130,6 @@ module Console
   #-----------------------------------------------------------------------------
   # Markup options
   #-----------------------------------------------------------------------------
-
   def string_colors
     {
       default: "38", black: "30", red: "31", green: "32", brown: "33",

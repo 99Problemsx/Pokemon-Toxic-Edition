@@ -125,7 +125,7 @@ class Battle::Move::HealUserByTargetAttackLowerTargetAttack1 < Battle::Move
     #       has Contrary and is at +6" check too for symmetry. This move still
     #       works even if the stat stage cannot be changed due to an ability or
     #       other effect.
-    if target.hasActiveAbility?(:CONTRARY) && !target.beingMoldBroken?
+    if !@battle.moldBreaker && target.hasActiveAbility?(:CONTRARY)
       if target.statStageAtMax?(@statDown[0])
         @battle.pbDisplay(_INTL("But it failed!")) if show_message
         return true
@@ -191,19 +191,6 @@ class Battle::Move::HealUserByHalfOfDamageDoneIfTargetAsleep < Battle::Move
     end
     return false
   end
-
-  def pbEffectAgainstTarget(user, target)
-    return if target.damageState.hpLost <= 0
-    hpGain = (target.damageState.hpLost / 2.0).round
-    user.pbRecoverHPFromDrain(hpGain, target)
-  end
-end
-
-#===============================================================================
-# User gains half the HP it inflicts as damage. Burns the target. (Matcha Gotcha)
-#===============================================================================
-class Battle::Move::HealUserByHalfOfDamageDoneBurnTarget < Battle::Move::BurnTarget
-  def healingMove?; return Settings::MECHANICS_GENERATION >= 6; end
 
   def pbEffectAgainstTarget(user, target)
     return if target.damageState.hpLost <= 0
@@ -482,17 +469,19 @@ class Battle::Move::UserLosesHalfOfTotalHPExplosive < Battle::Move
   def worksWithNoTargets?; return true; end
 
   def pbMoveFailed?(user, targets)
-    bearer = @battle.pbCheckGlobalAbility(:DAMP, true)
-    if bearer
-      @battle.pbShowAbilitySplash(bearer)
-      if Battle::Scene::USE_ABILITY_SPLASH
-        @battle.pbDisplay(_INTL("{1} cannot use {2}!", user.pbThis, @name))
-      else
-        @battle.pbDisplay(_INTL("{1} cannot use {2} because of {3}'s {4}!",
-                                user.pbThis, @name, bearer.pbThis(true), bearer.abilityName))
+    if !@battle.moldBreaker
+      bearer = @battle.pbCheckGlobalAbility(:DAMP)
+      if bearer
+        @battle.pbShowAbilitySplash(bearer)
+        if Battle::Scene::USE_ABILITY_SPLASH
+          @battle.pbDisplay(_INTL("{1} cannot use {2}!", user.pbThis, @name))
+        else
+          @battle.pbDisplay(_INTL("{1} cannot use {2} because of {3}'s {4}!",
+                                  user.pbThis, @name, bearer.pbThis(true), bearer.abilityName))
+        end
+        @battle.pbHideAbilitySplash(bearer)
+        return true
       end
-      @battle.pbHideAbilitySplash(bearer)
-      return true
     end
     return false
   end
@@ -512,17 +501,19 @@ class Battle::Move::UserFaintsExplosive < Battle::Move
   def pbNumHits(user, targets); return 1;    end
 
   def pbMoveFailed?(user, targets)
-    bearer = @battle.pbCheckGlobalAbility(:DAMP, true)
-    if bearer
-      @battle.pbShowAbilitySplash(bearer)
-      if Battle::Scene::USE_ABILITY_SPLASH
-        @battle.pbDisplay(_INTL("{1} cannot use {2}!", user.pbThis, @name))
-      else
-        @battle.pbDisplay(_INTL("{1} cannot use {2} because of {3}'s {4}!",
-                                user.pbThis, @name, bearer.pbThis(true), bearer.abilityName))
+    if !@battle.moldBreaker
+      bearer = @battle.pbCheckGlobalAbility(:DAMP)
+      if bearer
+        @battle.pbShowAbilitySplash(bearer)
+        if Battle::Scene::USE_ABILITY_SPLASH
+          @battle.pbDisplay(_INTL("{1} cannot use {2}!", user.pbThis, @name))
+        else
+          @battle.pbDisplay(_INTL("{1} cannot use {2} because of {3}'s {4}!",
+                                  user.pbThis, @name, bearer.pbThis(true), bearer.abilityName))
+        end
+        @battle.pbHideAbilitySplash(bearer)
+        return true
       end
-      @battle.pbHideAbilitySplash(bearer)
-      return true
     end
     return false
   end

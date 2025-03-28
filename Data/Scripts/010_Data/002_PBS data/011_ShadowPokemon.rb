@@ -1,6 +1,3 @@
-#===============================================================================
-#
-#===============================================================================
 module GameData
   class ShadowPokemon
     attr_reader :id
@@ -15,6 +12,7 @@ module GameData
     DATA_FILENAME = "shadow_pokemon.dat"
     PBS_BASE_FILENAME = "shadow_pokemon"
     OPTIONAL = true
+
     SCHEMA = {
       "SectionName" => [:id,         "eV", :Species],
       "GaugeSize"   => [:gauge_size, "v"],
@@ -44,8 +42,6 @@ module GameData
       species_form = (DATA[trial].nil?) ? species : trial
       return (DATA.has_key?(species_form)) ? DATA[species_form] : nil
     end
-
-    #---------------------------------------------------------------------------
 
     def initialize(hash)
       @id              = hash[:id]

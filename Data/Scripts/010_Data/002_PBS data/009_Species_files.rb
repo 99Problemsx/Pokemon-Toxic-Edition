@@ -1,6 +1,3 @@
-#===============================================================================
-#
-#===============================================================================
 module GameData
   class Species
     def self.check_graphic_file(path, species, form = 0, gender = 0, shiny = false, shadow = false, subfolder = "")
@@ -111,7 +108,7 @@ module GameData
       return ret
     end
 
-    #---------------------------------------------------------------------------
+    #===========================================================================
 
     def self.egg_icon_filename(species, form)
       ret = self.check_egg_graphic_file("Graphics/Pokemon/Eggs/", species, form, "_icon")
@@ -142,7 +139,7 @@ module GameData
       return self.icon_bitmap(pkmn.species, pkmn.form, pkmn.gender, pkmn.shiny?, pkmn.shadowPokemon?, pkmn.egg?)
     end
 
-    #---------------------------------------------------------------------------
+    #===========================================================================
 
     def self.footprint_filename(species, form = 0)
       species_data = self.get_species_form(species, form)
@@ -154,7 +151,7 @@ module GameData
       return pbResolveBitmap(sprintf("Graphics/Pokemon/Footprints/%s", species_data.species))
     end
 
-    #---------------------------------------------------------------------------
+    #===========================================================================
 
     def self.shadow_filename(species, form = 0)
       species_data = self.get_species_form(species, form)
@@ -181,7 +178,7 @@ module GameData
       return (filename) ? AnimatedBitmap.new(filename) : nil
     end
 
-    #---------------------------------------------------------------------------
+    #===========================================================================
 
     def self.check_cry_file(species, form, suffix = "")
       species_data = self.get_species_form(species, form)

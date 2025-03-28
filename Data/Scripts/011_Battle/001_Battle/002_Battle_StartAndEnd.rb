@@ -1,21 +1,18 @@
-#===============================================================================
-#
-#===============================================================================
 class Battle
   class BattleAbortedException < Exception; end
-
-  #-----------------------------------------------------------------------------
 
   def pbAbort
     raise BattleAbortedException.new("Battle aborted")
   end
 
+  #=============================================================================
   # Makes sure all Pokémon exist that need to. Alter the type of battle if
   # necessary. Will never try to create battler positions, only delete them
   # (except for wild Pokémon whose number of positions are fixed). Reduces the
   # size of each side by 1 and tries again. If the side sizes are uneven, only
   # the larger side's size will be reduced by 1 each time, until both sides are
   # an equal size (then both sides will be reduced equally).
+  #=============================================================================
   def pbEnsureParticipants
     # Prevent battles larger than 2v2 if both sides have multiple trainers
     # NOTE: This is necessary to ensure that battlers can never become unable to
@@ -106,10 +103,9 @@ class Battle
     end
   end
 
-  #-----------------------------------------------------------------------------
+  #=============================================================================
   # Set up all battlers
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
   def pbCreateBattler(idxBattler, pkmn, idxParty)
     if !@battlers[idxBattler].nil?
       raise _INTL("Battler index {1} already exists", idxBattler)
@@ -168,10 +164,9 @@ class Battle
     return ret
   end
 
-  #-----------------------------------------------------------------------------
-  # Send out all battlers at the start of battle.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Send out all battlers at the start of battle
+  #=============================================================================
   def pbStartBattleSendOut(sendOuts)
     # "Want to battle" messages
     if wildBattle?
@@ -246,10 +241,9 @@ class Battle
     end
   end
 
-  #-----------------------------------------------------------------------------
-  # Start a battle.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Start a battle
+  #=============================================================================
   def pbStartBattle
     PBDebug.log("")
     PBDebug.log("================================================================")
@@ -276,7 +270,7 @@ class Battle
     begin
       pbStartBattleCore
     rescue BattleAbortedException
-      @decision = Outcome::UNDECIDED
+      @decision = 0
       @scene.pbEndBattle(@decision)
     end
     return @decision
@@ -298,7 +292,6 @@ class Battle
     when :Rain        then pbDisplay(_INTL("It is raining."))
     when :Sandstorm   then pbDisplay(_INTL("A sandstorm is raging."))
     when :Hail        then pbDisplay(_INTL("Hail is falling."))
-    when :Snowstorm   then pbDisplay(_INTL("It is snowing."))
     when :HarshSun    then pbDisplay(_INTL("The sunlight is extremely harsh."))
     when :HeavyRain   then pbDisplay(_INTL("It is raining heavily."))
     when :StrongWinds then pbDisplay(_INTL("The wind is strong."))
@@ -323,10 +316,9 @@ class Battle
     pbBattleLoop
   end
 
-  #-----------------------------------------------------------------------------
-  # Main battle loop.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Main battle loop
+  #=============================================================================
   def pbBattleLoop
     @turnCount = 0
     loop do   # Now begin the battle loop
@@ -342,22 +334,21 @@ class Battle
       PBDebug.log("")
       # Command phase
       PBDebug.logonerr { pbCommandPhase }
-      break if decided?
+      break if @decision > 0
       # Attack phase
       PBDebug.logonerr { pbAttackPhase }
-      break if decided?
+      break if @decision > 0
       # End of round phase
       PBDebug.logonerr { pbEndOfRoundPhase }
-      break if decided?
+      break if @decision > 0
       @turnCount += 1
     end
     pbEndOfBattle
   end
 
-  #-----------------------------------------------------------------------------
-  # End of battle.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # End of battle
+  #=============================================================================
   def pbGainMoney
     return if !@internalBattle || !@moneyGain
     # Money rewarded from opposing trainers
@@ -413,9 +404,10 @@ class Battle
 
   def pbEndOfBattle
     oldDecision = @decision
-    @decision = Outcome::CATCH if @decision == Outcome::WIN && wildBattle? && @caughtPokemon.length > 0
+    @decision = 4 if @decision == 1 && wildBattle? && @caughtPokemon.length > 0
     case oldDecision
-    when Outcome::WIN
+    ##### WIN #####
+    when 1
       PBDebug.log("")
       PBDebug.log_header("===== Player won =====")
       PBDebug.log("")
@@ -440,34 +432,33 @@ class Battle
         PBDebug.log("")
       end
       # Gain money from winning a trainer battle, and from Pay Day
-      pbGainMoney if @decision != Outcome::CATCH
+      pbGainMoney if @decision != 4
       # Hide remaining trainer
       @scene.pbShowOpponent(@opponent.length) if trainerBattle? && @caughtPokemon.length > 0
-    when Outcome::LOSE, Outcome::DRAW
+    ##### LOSE, DRAW #####
+    when 2, 5
       PBDebug.log("")
-      PBDebug.log_header("===== Player lost =====") if @decision == Outcome::LOSE
-      PBDebug.log_header("===== Player drew with opponent =====") if @decision == Outcome::DRAW
+      PBDebug.log_header("===== Player lost =====") if @decision == 2
+      PBDebug.log_header("===== Player drew with opponent =====") if @decision == 5
       PBDebug.log("")
       if @internalBattle
-        if pbPlayerBattlerCount == 0
-          pbDisplayPaused(_INTL("You have no more Pokémon that can fight!"))
-          if trainerBattle?
-            case @opponent.length
-            when 1
-              pbDisplayPaused(_INTL("You lost against {1}!", @opponent[0].full_name))
-            when 2
-              pbDisplayPaused(_INTL("You lost against {1} and {2}!",
-                                    @opponent[0].full_name, @opponent[1].full_name))
-            when 3
-              pbDisplayPaused(_INTL("You lost against {1}, {2} and {3}!",
-                                    @opponent[0].full_name, @opponent[1].full_name, @opponent[2].full_name))
-            end
+        pbDisplayPaused(_INTL("You have no more Pokémon that can fight!"))
+        if trainerBattle?
+          case @opponent.length
+          when 1
+            pbDisplayPaused(_INTL("You lost against {1}!", @opponent[0].full_name))
+          when 2
+            pbDisplayPaused(_INTL("You lost against {1} and {2}!",
+                                  @opponent[0].full_name, @opponent[1].full_name))
+          when 3
+            pbDisplayPaused(_INTL("You lost against {1}, {2} and {3}!",
+                                  @opponent[0].full_name, @opponent[1].full_name, @opponent[2].full_name))
           end
         end
         # Lose money from losing a battle
         pbLoseMoney
-        pbDisplayPaused(_INTL("You blacked out!")) if !@canLose && pbPlayerBattlerCount == 0
-      elsif @decision == Outcome::LOSE   # Lost in a Battle Frontier battle
+        pbDisplayPaused(_INTL("You blacked out!")) if !@canLose
+      elsif @decision == 2   # Lost in a Battle Frontier battle
         if @opponent
           @opponent.each_with_index do |trainer, i|
             @scene.pbShowOpponent(i)
@@ -478,7 +469,8 @@ class Battle
           PBDebug.log("")
         end
       end
-    when Outcome::CATCH
+    ##### CAUGHT WILD POKÉMON #####
+    when 4
       PBDebug.log("")
       PBDebug.log_header("===== Pokémon caught =====")
       PBDebug.log("")
@@ -487,7 +479,7 @@ class Battle
     # Register captured Pokémon in the Pokédex, and store them
     pbRecordAndStoreCaughtPokemon
     # Collect Pay Day money in a wild battle that ended in a capture
-    pbGainMoney if @decision == Outcome::CATCH
+    pbGainMoney if @decision == 4
     # Pass on Pokérus within the party
     if @internalBattle
       infected = []
@@ -519,10 +511,9 @@ class Battle
     return @decision
   end
 
-  #-----------------------------------------------------------------------------
-  # Judging.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Judging
+  #=============================================================================
   def pbJudgeCheckpoint(user, move = nil); end
 
   def pbDecisionOnTime
@@ -535,11 +526,11 @@ class Battle
         hpTotals[side] += pkmn.hp
       end
     end
-    return Outcome::WIN if counts[0] > counts[1]        # Win (player has more able Pokémon)
-    return Outcome::LOSE if counts[0] < counts[1]       # Loss (foe has more able Pokémon)
-    return Outcome::WIN if hpTotals[0] > hpTotals[1]    # Win (player has more HP in total)
-    return Outcome::LOSE if hpTotals[0] < hpTotals[1]   # Loss (foe has more HP in total)
-    return Outcome::DRAW
+    return 1 if counts[0] > counts[1]       # Win (player has more able Pokémon)
+    return 2 if counts[0] < counts[1]       # Loss (foe has more able Pokémon)
+    return 1 if hpTotals[0] > hpTotals[1]   # Win (player has more HP in total)
+    return 2 if hpTotals[0] < hpTotals[1]   # Loss (foe has more HP in total)
+    return 5                                # Draw
   end
 
   # Unused
@@ -554,24 +545,24 @@ class Battle
       end
       hpTotals[side] /= counts[side] if counts[side] > 1
     end
-    return Outcome::WIN if counts[0] > counts[1]        # Win (player has more able Pokémon)
-    return Outcome::LOSE if counts[0] < counts[1]       # Loss (foe has more able Pokémon)
-    return Outcome::WIN if hpTotals[0] > hpTotals[1]    # Win (player has a bigger average HP %)
-    return Outcome::LOSE if hpTotals[0] < hpTotals[1]   # Loss (foe has a bigger average HP %)
-    return Outcome::DRAW
+    return 1 if counts[0] > counts[1]       # Win (player has more able Pokémon)
+    return 2 if counts[0] < counts[1]       # Loss (foe has more able Pokémon)
+    return 1 if hpTotals[0] > hpTotals[1]   # Win (player has a bigger average HP %)
+    return 2 if hpTotals[0] < hpTotals[1]   # Loss (foe has a bigger average HP %)
+    return 5                                # Draw
   end
 
-  def pbDecisionOnDraw; return Outcome::DRAW; end   # Draw
+  def pbDecisionOnDraw; return 5; end   # Draw
 
   def pbJudge
     fainted1 = pbAllFainted?(0)
     fainted2 = pbAllFainted?(1)
     if fainted1 && fainted2
-      @decision = pbDecisionOnDraw
+      @decision = pbDecisionOnDraw   # Draw
     elsif fainted1
-      @decision = Outcome::LOSE
+      @decision = 2                  # Loss
     elsif fainted2
-      @decision = Outcome::WIN
+      @decision = 1                  # Win
     end
   end
 end

@@ -1,6 +1,3 @@
-#===============================================================================
-#
-#===============================================================================
 class Game_Character
   attr_reader   :id
   attr_reader   :original_x
@@ -25,9 +22,7 @@ class Game_Character
   attr_accessor :lock_pattern
   attr_reader   :move_route_forcing
   attr_accessor :through
-  attr_reader   :animation_id
-  attr_accessor :animation_height
-  attr_accessor :animation_regular_tone
+  attr_accessor :animation_id
   attr_accessor :transparent
   attr_reader   :move_speed
   attr_reader   :jump_speed
@@ -59,7 +54,7 @@ class Game_Character
     @lock_pattern              = false
     @move_route_forcing        = false
     @through                   = false
-    animation_id               = 0
+    @animation_id              = 0
     @transparent               = false
     @original_direction        = 2
     @original_pattern          = 0
@@ -77,6 +72,7 @@ class Game_Character
     @always_on_top             = false
     @anime_count               = 0   # Time since pattern was last changed
     @stop_count                = 0   # Time since character last finished moving
+    @bumping                   = false   # Used by the player only when walking into something
     @jump_peak                 = 0   # Max height while jumping
     @jump_distance             = 0   # Total distance of jump
     @jump_fraction             = 0   # How far through a jump we currently are (0-1)
@@ -88,14 +84,6 @@ class Game_Character
     @moveto_happened           = false
     @locked                    = false
     @prelock_direction         = 0
-  end
-
-  def animation_id=(value)
-    @animation_id = value
-    if value == 0
-      @animation_height = 3
-      @animation_regular_tone = false
-    end
   end
 
   def x_offset; return @x_offset || 0; end
@@ -196,10 +184,9 @@ class Game_Character
     @direction = @prelock_direction if !@direction_fix && @prelock_direction != 0
   end
 
-  #-----------------------------------------------------------------------------
+  #=============================================================================
   # Information from map data
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
   def map
     return (@map) ? @map : $game_map
   end
@@ -209,12 +196,11 @@ class Game_Character
   end
 
   def bush_depth
-    return 0 if respond_to?("name") && name[/airborne/i]
     return @bush_depth || 0
   end
 
   def calculate_bush_depth
-    if @tile_id > 0 || @always_on_top || jumping? || (respond_to?("name") && name[/airborne/i])
+    if @tile_id > 0 || @always_on_top || jumping?
       @bush_depth = 0
       return
     end
@@ -245,21 +231,20 @@ class Game_Character
     return 0
   end
 
-  #-----------------------------------------------------------------------------
+  #=============================================================================
   # Passability
-  #-----------------------------------------------------------------------------
-
-  def passable?(x, y, dir, strict = false)
-    new_x = x + (dir == 6 ? 1 : dir == 4 ? -1 : 0)
-    new_y = y + (dir == 2 ? 1 : dir == 8 ? -1 : 0)
+  #=============================================================================
+  def passable?(x, y, d, strict = false)
+    new_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
+    new_y = y + (d == 2 ? 1 : d == 8 ? -1 : 0)
     return false unless self.map.valid?(new_x, new_y)
     return true if @through
     if strict
-      return false unless self.map.passableStrict?(x, y, dir, self)
-      return false unless self.map.passableStrict?(new_x, new_y, 10 - dir, self)
+      return false unless self.map.passableStrict?(x, y, d, self)
+      return false unless self.map.passableStrict?(new_x, new_y, 10 - d, self)
     else
-      return false unless self.map.passable?(x, y, dir, self)
-      return false unless self.map.passable?(new_x, new_y, 10 - dir, self)
+      return false unless self.map.passable?(x, y, d, self)
+      return false unless self.map.passable?(new_x, new_y, 10 - d, self)
     end
     self.map.events.each_value do |event|
       next if self == event || !event.at_coordinate?(new_x, new_y) || event.through
@@ -317,10 +302,9 @@ class Game_Character
     return can_move_from_coordinate?(@x, @y, dir, strict)
   end
 
-  #-----------------------------------------------------------------------------
+  #=============================================================================
   # Screen position of the character
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
   def screen_x
     ret = ((@real_x.to_f - self.map.display_x) / Game_Map::X_SUBPIXELS).round
     ret += @width * Game_Map::TILE_WIDTH / 2
@@ -358,10 +342,9 @@ class Game_Character
     return z + ((height > Game_Map::TILE_HEIGHT) ? Game_Map::TILE_HEIGHT - 1 : 0)
   end
 
-  #-----------------------------------------------------------------------------
+  #=============================================================================
   # Movement
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
   def moving?
     return !@move_timer.nil?
   end
@@ -416,10 +399,9 @@ class Game_Character
     triggerLeaveTile
   end
 
-  #-----------------------------------------------------------------------------
+  #=============================================================================
   # Movement commands
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
   def move_type_random
     case rand(6)
     when 0..3 then move_random
@@ -727,22 +709,14 @@ class Game_Character
       (rand(2) == 0) ? abs_sx += 1 : abs_sy += 1
     end
     if abs_sx > abs_sy
-      if abs_sx >= 1
-        (sx > 0) ? move_left : move_right
-      end
+      (sx > 0) ? move_left : move_right
       if !moving? && sy != 0
-        if abs_sy >= 1
-          (sy > 0) ? move_up : move_down
-        end
-      end
-    else
-      if abs_sy >= 1
         (sy > 0) ? move_up : move_down
       end
+    else
+      (sy > 0) ? move_up : move_down
       if !moving? && sx != 0
-        if abs_sx >= 1
-          (sx > 0) ? move_left : move_right
-        end
+        (sx > 0) ? move_left : move_right
       end
     end
   end
@@ -843,7 +817,7 @@ class Game_Character
     oldDirection = @direction
     @direction = dir
     @stop_count = 0
-    check_event_trigger_after_turning if dir != oldDirection
+    pbCheckEventTriggerAfterTurning if dir != oldDirection
   end
 
   def turn_down;  turn_generic(2); end
@@ -913,10 +887,9 @@ class Game_Character
     end
   end
 
-  #-----------------------------------------------------------------------------
+  #=============================================================================
   # Updating
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
   def update
     return if $game_temp.in_menu
     time_now = System.uptime
@@ -995,6 +968,7 @@ class Game_Character
     if moving? && @move_timer >= @move_time &&
        @real_x == @x * Game_Map::REAL_RES_X && @real_y == @y * Game_Map::REAL_RES_Y
       @move_timer = nil
+      @bumping = false
     end
     # End of jump
     if jumping? && @jump_fraction >= 1

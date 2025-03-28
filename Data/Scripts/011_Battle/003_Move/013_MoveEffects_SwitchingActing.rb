@@ -12,7 +12,7 @@ class Battle::Move::FleeFromBattle < Battle::Move
 
   def pbEffectGeneral(user)
     @battle.pbDisplay(_INTL("{1} fled from battle!", user.pbThis))
-    @battle.decision = Battle::Outcome::FLEE
+    @battle.decision = 3   # Escaped
   end
 end
 
@@ -52,7 +52,7 @@ class Battle::Move::SwitchOutUserStatusMove < Battle::Move
   def pbEffectGeneral(user)
     if user.wild?
       @battle.pbDisplay(_INTL("{1} fled from battle!", user.pbThis))
-      @battle.decision = Battle::Outcome::FLEE
+      @battle.decision = 3   # Escaped
     end
   end
 end
@@ -155,7 +155,22 @@ class Battle::Move::SwitchOutTargetStatusMove < Battle::Move
   def canMagicCoat?;            return true; end
 
   def pbFailsAgainstTarget?(user, target, show_message)
-    return true if !target.canBeForcedOutOfBattle?(show_message)
+    if target.hasActiveAbility?(:SUCTIONCUPS) && !@battle.moldBreaker
+      if show_message
+        @battle.pbShowAbilitySplash(target)
+        if Battle::Scene::USE_ABILITY_SPLASH
+          @battle.pbDisplay(_INTL("{1} anchors itself!", target.pbThis))
+        else
+          @battle.pbDisplay(_INTL("{1} anchors itself with {2}!", target.pbThis, target.abilityName))
+        end
+        @battle.pbHideAbilitySplash(target)
+      end
+      return true
+    end
+    if target.effects[PBEffects::Ingrain]
+      @battle.pbDisplay(_INTL("{1} anchored itself with its roots!", target.pbThis)) if show_message
+      return true
+    end
     if target.wild? && target.allAllies.length == 0 && @battle.canRun
       # End the battle
       if target.level > user.level
@@ -181,7 +196,7 @@ class Battle::Move::SwitchOutTargetStatusMove < Battle::Move
   end
 
   def pbEffectAgainstTarget(user, target)
-    @battle.decision = Battle::Outcome::FLEE if target.wild?
+    @battle.decision = 3 if target.wild?   # Escaped from battle
   end
 
   def pbSwitchOutTargetEffect(user, targets, numHits, switched_battlers)
@@ -190,7 +205,8 @@ class Battle::Move::SwitchOutTargetStatusMove < Battle::Move
     targets.each do |b|
       next if b.fainted? || b.damageState.unaffected
       next if b.wild?
-      next if !b.canBeForcedOutOfBattle?(false)
+      next if b.effects[PBEffects::Ingrain]
+      next if b.hasActiveAbility?(:SUCTIONCUPS) && !@battle.moldBreaker
       newPkmn = @battle.pbGetReplacementPokemonIndex(b.index, true)   # Random
       next if newPkmn < 0
       @battle.pbRecallAndReplace(b.index, newPkmn, true)
@@ -214,7 +230,7 @@ class Battle::Move::SwitchOutTargetDamagingMove < Battle::Move
     if target.wild? && target.allAllies.length == 0 && @battle.canRun &&
        target.level <= user.level &&
        (target.effects[PBEffects::Substitute] == 0 || ignoresSubstitute?(user))
-      @battle.decision = Battle::Outcome::FLEE
+      @battle.decision = 3   # Escaped from battle
     end
   end
 
@@ -224,7 +240,8 @@ class Battle::Move::SwitchOutTargetDamagingMove < Battle::Move
     targets.each do |b|
       next if b.fainted? || b.damageState.unaffected || b.damageState.substitute
       next if b.wild?
-      next if !b.canBeForcedOutOfBattle?(false)
+      next if b.effects[PBEffects::Ingrain]
+      next if b.hasActiveAbility?(:SUCTIONCUPS) && !@battle.moldBreaker
       newPkmn = @battle.pbGetReplacementPokemonIndex(b.index, true)   # Random
       next if newPkmn < 0
       @battle.pbRecallAndReplace(b.index, newPkmn, true)
@@ -851,7 +868,7 @@ class Battle::Move::DisableTargetStatusMoves < Battle::Move
     end
     return true if pbMoveFailedAromaVeil?(user, target, show_message)
     if Settings::MECHANICS_GENERATION >= 6 && target.hasActiveAbility?(:OBLIVIOUS) &&
-       !target.beingMoldBroken?
+       !@battle.moldBreaker
       if show_message
         @battle.pbShowAbilitySplash(target)
         if Battle::Scene::USE_ABILITY_SPLASH
@@ -897,12 +914,16 @@ class Battle::Move::DisableTargetHealingMoves < Battle::Move
 end
 
 #===============================================================================
-# Target cannot use sound-based moves for 2 rounds. (Throat Chop)
+# Target cannot use sound-based moves for 2 more rounds. (Throat Chop)
 #===============================================================================
 class Battle::Move::DisableTargetSoundMoves < Battle::Move
   def pbAdditionalEffect(user, target)
     return if target.fainted? || target.damageState.substitute
-    target.effects[PBEffects::ThroatChop] = 2 if target.effects[PBEffects::ThroatChop] == 0
+    if target.effects[PBEffects::ThroatChop] == 0
+      @battle.pbDisplay(_INTL("The effects of {1} prevent {2} from using certain moves!",
+                              @name, target.pbThis(true)))
+    end
+    target.effects[PBEffects::ThroatChop] = 3
   end
 end
 

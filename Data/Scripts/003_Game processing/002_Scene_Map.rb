@@ -1,5 +1,7 @@
 #===============================================================================
-# Modified Scene_Map class for Pokémon.
+# ** Modified Scene_Map class for Pokémon.
+#-------------------------------------------------------------------------------
+#
 #===============================================================================
 class Scene_Map
   attr_reader :spritesetGlobal
@@ -103,7 +105,9 @@ class Scene_Map
     $game_temp.in_menu = true
     $game_player.straighten
     $game_map.update
-    UI::PauseMenu.new.main
+    sscene = PokemonPauseMenu_Scene.new
+    sscreen = PokemonPauseMenu.new(sscene)
+    sscreen.pbStartPokemonMenu
     $game_temp.in_menu = false
   end
 

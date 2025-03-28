@@ -85,7 +85,9 @@ end
 class Window_TextEntry < SpriteWindow_Base
   def initialize(text, x, y, width, height, heading = nil, usedarkercolor = false)
     super(x, y, width, height)
-    @baseColor, @shadowColor = getDefaultTextColors(self.windowskin)
+    colors = getDefaultTextColors(self.windowskin)
+    @baseColor = colors[0]
+    @shadowColor = colors[1]
     if usedarkercolor
       @baseColor = Color.new(16, 24, 32)
       @shadowColor = Color.new(168, 184, 184)
@@ -262,7 +264,9 @@ end
 class Window_MultilineTextEntry < SpriteWindow_Base
   def initialize(text, x, y, width, height)
     super(x, y, width, height)
-    @baseColor, @shadowColor = getDefaultTextColors(self.windowskin)
+    colors = getDefaultTextColors(self.windowskin)
+    @baseColor = colors[0]
+    @shadowColor = colors[1]
     @helper = CharacterEntryHelper.new(text)
     @firstline = 0
     @cursorLine = 0

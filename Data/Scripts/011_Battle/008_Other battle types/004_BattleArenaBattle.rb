@@ -1,5 +1,5 @@
 #===============================================================================
-# Success state.
+# Success state
 #===============================================================================
 class Battle::SuccessState
   attr_accessor :typeMod
@@ -56,10 +56,10 @@ class BattleArenaBattle < Battle
   end
 
   def pbEORSwitch(favorDraws = false)
-    return if favorDraws && @decision == Battle::Outcome::DRAW
-    return if !favorDraws && decided?
+    return if favorDraws && @decision == 5
+    return if !favorDraws && @decision > 0
     pbJudge
-    return if decided?
+    return if @decision > 0
     2.times do |side|
       next if !@battlers[side].fainted?
       next if @partyindexes[side] + 1 >= self.pbParty(side).length
@@ -115,7 +115,7 @@ class BattleArenaBattle < Battle
       @count = 0
     end
     super
-    return if decided?
+    return if @decision != 0
     # Update mind rating (asserting that a move was chosen)
     2.times do |side|
       if @choices[side][2] && @choices[side][0] == :UseMove
@@ -126,7 +126,7 @@ class BattleArenaBattle < Battle
 
   def pbEndOfRoundPhase
     super
-    return if decided?
+    return if @decision != 0
     # Update skill rating
     2.times do |side|
       @skill[side] += self.successStates[side].skill

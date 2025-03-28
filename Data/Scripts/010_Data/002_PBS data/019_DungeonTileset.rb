@@ -1,6 +1,3 @@
-#===============================================================================
-#
-#===============================================================================
 module GameData
   class DungeonTileset
     attr_reader :id
@@ -18,6 +15,7 @@ module GameData
     DATA = {}
     DATA_FILENAME = "dungeon_tilesets.dat"
     PBS_BASE_FILENAME = "dungeon_tilesets"
+
     SCHEMA = {
       "SectionName"          => [:id,                      "u"],
       "Autotile"             => [:autotile,                "^um"],
@@ -42,8 +40,6 @@ module GameData
       return other if other.is_a?(self)
       return (self::DATA.has_key?(other)) ? self::DATA[other] : self.get(self::DATA.keys.first)
     end
-
-    #---------------------------------------------------------------------------
 
     def initialize(hash)
       @id                      = hash[:id]

@@ -1,0 +1,8 @@
+===Change Log===
+
+1.1 
+- New feature: NPC Specific Max Bond. You can now set bond_max as a parameter to override the default BOND_LEVEL_MAX for an NPC, allowing for different NPCs to have different max bond levels.
+- New feature: NPC Specific Bond Icon Positions. You can now set bond_icon_coords as a parameter to override the default positions of bond icons for an NPC. This can be used with bond_max to make the Social Media Profile UI look cleaner for different max bond levels.
+
+1.0 
+- Initial Release

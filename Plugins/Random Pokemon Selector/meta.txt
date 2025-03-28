@@ -1,0 +1,4 @@
+Name = Random Pokémon Selector & Pokémon Hunting
+Version = 1.0
+Essentials = 21.1
+Credits = ChampChar110

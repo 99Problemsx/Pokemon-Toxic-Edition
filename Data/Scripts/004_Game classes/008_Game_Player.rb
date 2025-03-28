@@ -51,6 +51,7 @@ class Game_Player < Game_Character
 
   def can_run?
     return @move_speed > 3 if @move_route_forcing
+    return false if @bumping
     return false if $game_temp.in_menu || $game_temp.in_battle ||
                     $game_temp.message_window_showing || pbMapInterpreterRunning?
     return false if !$player.has_running_shoes && !$PokemonGlobal.diving &&
@@ -94,6 +95,7 @@ class Game_Player < Game_Character
       self.move_speed = 3 if !@move_route_forcing
       new_charset = pbGetPlayerCharset(meta.walk_charset)
     end
+    self.move_speed = 3 if @bumping
     @character_name = new_charset if new_charset
   end
 
@@ -117,10 +119,12 @@ class Game_Player < Game_Character
   #-----------------------------------------------------------------------------
 
   def bump_into_object
-    return if @bump_time_start && (System.uptime - @bump_time_start < @move_time)
     pbSEPlay("Player bump") if !@move_route_forcing
     $stats.bump_count += 1
-    @bump_time_start = System.uptime
+    @move_initial_x = @x
+    @move_initial_y = @y
+    @move_timer = 0.0
+    @bumping = true
   end
 
   def add_move_distance_to_stats(distance = 1)
@@ -231,15 +235,15 @@ class Game_Player < Game_Character
   #     y : y-coordinate
   #     d : direction (0, 2, 4, 6, 8)
   #         * 0 = Determines if all directions are impassable (for jumping)
-  def passable?(x, y, dir, strict = false)
+  def passable?(x, y, d, strict = false)
     # Get new coordinates
-    new_x = x + (dir == 6 ? 1 : dir == 4 ? -1 : 0)
-    new_y = y + (dir == 2 ? 1 : dir == 8 ? -1 : 0)
+    new_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
+    new_y = y + (d == 2 ? 1 : d == 8 ? -1 : 0)
     # If coordinates are outside of map
     return false if !$game_map.validLax?(new_x, new_y)
     if !$game_map.valid?(new_x, new_y)
       return false if !$map_factory
-      return $map_factory.isPassableFromEdge?(new_x, new_y, 10 - dir)
+      return $map_factory.isPassableFromEdge?(new_x, new_y)
     end
     # If debug mode is ON and Ctrl key was pressed
     return true if $DEBUG && Input.press?(Input::CTRL)
@@ -309,18 +313,16 @@ class Game_Player < Game_Character
     return result
   end
 
-  def check_event_trigger_after_turning; end
+  def pbCheckEventTriggerAfterTurning; end
 
   def pbCheckEventTriggerFromDistance(triggers)
-    events = pbTriggeredTrainerEvents(triggers)
-    events.concat(pbTriggeredCounterEvents(triggers))
-    return false if events.length == 0
-    ret = false
-    events.each do |event|
+    ret = pbTriggeredTrainerEvents(triggers)
+    ret.concat(pbTriggeredCounterEvents(triggers))
+    return false if ret.length == 0
+    ret.each do |event|
       event.start
-      ret = true if event.starting
     end
-    return ret
+    return true
   end
 
   # Trigger event(s) at the same coordinates as self with the appropriate
@@ -337,7 +339,7 @@ class Game_Player < Game_Character
       # If starting determinant is same position event (other than jumping)
       next if event.jumping? || !event.over_trigger?
       event.start
-      result = true if event.starting
+      result = true
     end
     return result
   end
@@ -359,7 +361,7 @@ class Game_Player < Game_Character
       # If starting determinant is front event (other than jumping)
       next if event.jumping? || event.over_trigger?
       event.start
-      result = true if event.starting
+      result = true
     end
     # If fitting event is not found
     if result == false && $game_map.counter?(new_x, new_y)
@@ -375,7 +377,7 @@ class Game_Player < Game_Character
         # If starting determinant is front event (other than jumping)
         next if event.jumping? || event.over_trigger?
         event.start
-        result = true if event.starting
+        result = true
       end
     end
     return result
@@ -402,7 +404,7 @@ class Game_Player < Game_Character
       # If starting determinant is front event (other than jumping)
       next if event.jumping? || event.over_trigger?
       event.start
-      result = true if event.starting
+      result = true
     end
     return result
   end
@@ -417,7 +419,7 @@ class Game_Player < Game_Character
     update_stop if $game_temp.in_menu && @stopped_last_frame
     update_screen_position(last_real_x, last_real_y)
     # Update dependent events
-    if (!@moved_last_frame || @stopped_last_frame) && (moving? || jumping?)
+    if (!@moved_last_frame || @stopped_last_frame) && (moving? || jumping?) && !@bumping
       $game_temp.followers.move_followers
     end
     $game_temp.followers.update
@@ -428,32 +430,28 @@ class Game_Player < Game_Character
     dir = Input.dir4
     if $PokemonGlobal.forced_movement?
       move_forward
-      @last_input_time = nil
-      return
-    elsif dir <= 0
-      @last_input_time = nil
-      return
-    end
-    return if pbMapInterpreterRunning? || $game_temp.message_window_showing ||
-              $game_temp.in_mini_update || $game_temp.in_menu
-    # Move player in the direction the directional button is being pressed
-    if @moved_last_frame ||
-       (dir == direction && (!@last_input_time || System.uptime - @last_input_time >= 0.075))
-      case dir
-      when 2 then move_down
-      when 4 then move_left
-      when 6 then move_right
-      when 8 then move_up
+    elsif !pbMapInterpreterRunning? && !$game_temp.message_window_showing &&
+          !$game_temp.in_mini_update && !$game_temp.in_menu
+      # Move player in the direction the directional button is being pressed
+      if @moved_last_frame ||
+         (dir > 0 && dir == @lastdir && System.uptime - @lastdirframe >= 0.075)
+        case dir
+        when 2 then move_down
+        when 4 then move_left
+        when 6 then move_right
+        when 8 then move_up
+        end
+      elsif dir != @lastdir
+        case dir
+        when 2 then turn_down
+        when 4 then turn_left
+        when 6 then turn_right
+        when 8 then turn_up
+        end
       end
-      @last_input_time = nil
-    elsif dir != direction
-      case dir
-      when 2 then turn_down
-      when 4 then turn_left
-      when 6 then turn_right
-      when 8 then turn_up
-      end
-      @last_input_time = System.uptime
+      # Record last direction input
+      @lastdirframe = System.uptime if dir != @lastdir
+      @lastdir = dir
     end
   end
 

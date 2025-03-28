@@ -1,6 +1,3 @@
-#===============================================================================
-#
-#===============================================================================
 module GameData
   class BerryPlant
     attr_reader :id
@@ -12,12 +9,14 @@ module GameData
     DATA = {}
     DATA_FILENAME = "berry_plants.dat"
     PBS_BASE_FILENAME = "berry_plants"
+
     SCHEMA = {
       "SectionName"   => [:id,              "m"],
       "HoursPerStage" => [:hours_per_stage, "v"],
       "DryingPerHour" => [:drying_per_hour, "u"],
       "Yield"         => [:yield,           "uv"]
     }
+
     NUMBER_OF_REPLANTS           = 9
     NUMBER_OF_GROWTH_STAGES      = 4
     NUMBER_OF_FULLY_GROWN_STAGES = 4
@@ -25,8 +24,6 @@ module GameData
 
     extend ClassMethodsSymbols
     include InstanceMethods
-
-    #---------------------------------------------------------------------------
 
     def initialize(hash)
       @id              = hash[:id]

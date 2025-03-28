@@ -1,0 +1,9 @@
+module RfSettings
+  OVERLAY_ADDITIVE_MAPS = []
+
+  # accessibility features
+  ADD_FOGS_TO_SETTINGS = true
+  SETTINGS_AFFECT_FOGS = true
+  SETTINGS_AFFECT_GLOBAL_OVERLAY = true
+  SETTINGS_MAP_OVERLAY_OPACITY = 160
+end

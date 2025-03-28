@@ -149,7 +149,7 @@ end
 #
 #===============================================================================
 module PokemonDebugMixin
-  def pokemon_debug_menu(pkmn, pkmnid, settingUpBattle = false)
+  def pbPokemonDebug(pkmn, pkmnid, heldpoke = nil, settingUpBattle = false)
     # Get all commands
     commands = CommandMenuList.new
     MenuHandlers.each_available(:pokemon_debug_menu) do |option, hash, name|
@@ -159,7 +159,7 @@ module PokemonDebugMixin
     # Main loop
     command = 0
     loop do
-      command = show_menu(_INTL("Do what with {1}?", pkmn.name), commands.list, command)
+      command = pbShowCommands(_INTL("Do what with {1}?", pkmn.name), commands.list, command)
       if command < 0
         parent = commands.getParent
         break if !parent
@@ -170,78 +170,11 @@ module PokemonDebugMixin
         if commands.hasSubMenu?(cmd)
           commands.currentList = cmd
           command = 0
-        elsif MenuHandlers.call(:pokemon_debug_menu, cmd, "effect", pkmn, pkmnid, settingUpBattle, self)
+        elsif MenuHandlers.call(:pokemon_debug_menu, cmd, "effect", pkmn, pkmnid, heldpoke, settingUpBattle, self)
           break
         end
       end
     end
-  end
-end
-
-#===============================================================================
-#
-#===============================================================================
-class UI::Party
-  include PokemonDebugMixin
-end
-
-#===============================================================================
-#
-#===============================================================================
-class UI::PokemonStorage
-  include PokemonDebugMixin
-
-  def choose_move(pkmn, message)
-    move_names = []
-    pkmn.moves.each do |move|
-      next if !move || !move.id
-      if move.total_pp <= 0
-        move_names.push(_INTL("{1} (PP: ---)", move.name))
-      else
-        move_names.push(_INTL("{1} (PP: {2}/{3})", move.name, move.pp, move.total_pp))
-      end
-    end
-    return show_menu(message, move_names)
-  end
-end
-
-#===============================================================================
-#
-#===============================================================================
-class UI::PartyDebugVisuals < UI::BaseVisuals
-  def initialize_background; end
-  def initialize_overlay; end
-
-  def choose_number(help_text, maximum, init_value = 1)
-    old_letter_by_letter = @sprites[:speech_box].letterbyletter
-    @sprites[:speech_box].letterbyletter = false
-    ret = super
-    @sprites[:speech_box].letterbyletter = old_letter_by_letter
-    return ret
-  end
-end
-
-class UI::PartyDebug < UI::BaseScreen
-  include PokemonDebugMixin
-
-  def initialize_visuals
-    @visuals = UI::PartyDebugVisuals.new
-  end
-
-  def choose_move(pkmn, message, index = 0)
-    # TODO: The move names can get rather wide, making the message box rather
-    #       thin. It's just about acceptable, but maybe the choice window needs
-    #       to be displayed above the message box instead of to the right of it.
-    move_names = []
-    pkmn.moves.each do |move|
-      next if !move || !move.id
-      if move.total_pp <= 0
-        move_names.push(_INTL("{1} (PP: ---)", move.name))
-      else
-        move_names.push(_INTL("{1} (PP: {2}/{3})", move.name, move.pp, move.total_pp))
-      end
-    end
-    return show_menu(message, move_names, index)
   end
 end
 
@@ -475,6 +408,18 @@ end
 #===============================================================================
 #
 #===============================================================================
+class PokemonPartyScreen
+  include PokemonDebugMixin
+end
+
+class PokemonStorageScreen
+  include PokemonDebugMixin
+end
+
+class PokemonDebugPartyScreen
+  include PokemonDebugMixin
+end
+
 class Battle
   include Battle::DebugMixin
 end

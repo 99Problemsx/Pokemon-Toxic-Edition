@@ -1,0 +1,703 @@
+#-------------------------------
+[POLLENBLAST]
+Name = Pollen Blast
+Type = BUG
+Category = Special
+Power = 90
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = LeechSeedGrassSpeed
+Flags = Contact,CanProtect,CanMirrorMove
+EffectChance = 100
+Description = Chance to seed the target. Boosts Grass-Type's Speed.
+#-------------------------------
+[QUEENSSHIELD]
+Name = Queen's Shield
+Type = ICE
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = User
+Priority = 4
+FunctionCode = ProtectUserFromDamagingMovesQueensShield
+Description = Protects itself from damage. It also harshly lowers the Special Attack of attackers.
+#-------------------------------
+[TRICKSTERSRAY]
+Name = Trickster's Ray
+Type = DARK
+Category = Special
+Power = 70
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = InverseDarkType
+Flags = CanProtect,CanMirrorMove
+Description = A mysterious beam that works as an Inverse-Type.
+#-------------------------------
+[MAGICTAMPERING]
+Name = Magic Tampering
+Type = DARK
+Category = Status
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = DisableFairyMoves
+Flags = CanProtect,CanMirrorMove
+Description = The target has its magic locked. Preventing Fairy-Types moves for 3 turns.
+#-------------------------------
+[LANCETHRUST]
+Name = Lance Thrust
+Type = STEEL
+Category = Physical
+Power = 80
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = UseUserSpeedInsteadOfUserAttack
+Flags = Contact,CanProtect,CanMirrorMove,CannotMetronome
+Description = The user attacks by slamming its body into the target. Power increases the higher the user's Speed is.
+#-------------------------------
+[BEETLEARMOR]
+Name = Beetle Armor
+Type = BUG
+Category = Status
+Accuracy = 0
+TotalPP = 15
+Target = User
+FunctionCode = RaiseUserDefSDef1LowerSpeed1
+Description = The user exoskeleton hardens. Raising both Defenses but lowers Speed.
+#-------------------------------
+[SHIELDPRESS]
+Name = Shield Press
+Type = PSYCHIC
+Category = Special
+Power = 80
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = UseUserSpDefenseInsteadOfUserSpAttack
+Flags = Contact,CanProtect,CanMirrorMove,CannotMetronome
+Description = User uses it's magical defense to slam into the target.Based off SpDef.
+#-------------------------------
+[MIDNOVERLOAD]
+Name = Mind Overload
+Type = PSYCHIC
+Category = Physical
+Power = 120
+Accuracy = 100
+TotalPP = 5
+Target = NearOther
+FunctionCode = LowerUserSpAtkSpDef1
+Flags = Contact,CanProtect,CanMirrorMove
+Description = The user launches a massive mental attack. Lowers the user's SpAtk and SpDef
+#-------------------------------
+[LIMITBREAK]
+Name = Limit Break
+Type = DRAGON
+Category = Status
+Accuracy = 0
+TotalPP = 5
+Target = User
+FunctionCode = RaiseUserMainStats2TrapUserInBattleHurt8th
+Description = The user exoskeleton hardens. Raising both Defenses but lowers Speed.
+#-------------------------------
+[ONEINCHPUNCH]
+Name = One-Inch Punch
+Type = FIGHTING
+Category = Physical
+Power = 60
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = DoubleDamageIfProtect
+Flags = Contact,CanMirrorMove,Punching
+Description = If the target has already taken some damage in the same turn, this attack's power is doubled.
+#-------------------------------
+[SAPPINGCINDERS]
+Name = Sapping Sinders
+Type = FIRE
+Category = Special
+Power = 80
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = HealUserByHalfOfDamageDone
+Flags = CanProtect,CanMirrorMove
+Description = The user hits the target with fire before eating the fire back up. Heals half the damage delt.
+#-------------------------------
+[FATALSTING]
+Name = Fatal Sting
+Type = BUG
+Category = Physical
+Power = 300
+Accuracy = 80
+TotalPP = 5
+Target = NearOther
+FunctionCode = UserFaintsExplosive
+Flags = CanProtect,CanMirrorMove
+Description = The user drives its stinger deep into the opponent. The user faints upon using this move.
+#-------------------------------
+[GALEFIST]
+Name = Gale Fist
+Type = FLYING
+Category = Physical
+Power = 60
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = RaiseUserSpeed1Raise2InTailWind
+Flags = Contact,CanProtect,CanMirrorMove,Punching
+EffectChance = 100
+Description = The user attacks with a fist as fast as the wind. It may also raise the user's Speed stat.
+#-------------------------------
+[AIKIDOBLAST]
+Name = Aikido Blast
+Type = FIGHTING
+Category = Special
+Power = 120
+Accuracy = 90
+TotalPP = 10
+Target = NearOther
+FunctionCode = TwoTurnAttackFocusEnergy
+Flags = CanProtect,CanMirrorMove
+Description = The user focuses their energy into a blast of energy. The user gets a +2 to their crit chances.
+#-------------------------------
+[AURASTORM]
+Name = Aura Storm
+Type = FIGHTING
+Category = Special
+Power = 150
+Accuracy = 90
+TotalPP = 5
+Target = NearOther
+FunctionCode = AttackAndSkipNextTurn
+Flags = CanProtect,CanMirrorMove
+Description = The foe is attacked with a powerful beam made up of aura. The user must recharge.
+#-------------------------------
+[EXCALIBUR]
+Name = Excalibur
+Type = STEEL
+Category = Physical
+Power = 80
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = SuperEffectiveAgainstDragon
+Flags = CanProtect,CanMirrorMove,HighCriticalHitRate,Slicing
+Description = The user creates a heroic blade. Is super-effective on Dragon types.
+#-------------------------------
+[CORALCASCADE]
+Name = Coral Cascade
+Type = WATER
+Category = Physical
+Power = 90
+Accuracy = 100
+TotalPP = 10
+Target = Other
+FunctionCode = EffectivenessIncludesRockTypeChancetoHeal
+Flags = Contact,CanProtect,CanMirrorMove
+EffectChance = 30
+Description = The user dives at the target with a Rock & Water type move. This has a chance to heal the user and allies.
+#-------------------------------
+[PEBBLEFLICK]
+Name = Pebble Flick
+Type = ROCK
+Category = Physical
+Power = 10
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+Priority = 3
+FunctionCode = FlinchTarget1AccuracyFailsIfNotUserFirstTurn
+Flags = Contact,CanProtect,CanMirrorMove
+EffectChance = 100
+Description = In the first turn, User flicks a small pebble at the target making the target flinch. Raises Accuracy.
+#-------------------------------
+[FIRSTSTRIKE]
+Name = First Strike
+Type = NORMAL
+Category = Special
+Power = 80
+Accuracy = 100
+TotalPP = 5
+Target = NearOther
+FunctionCode = CategoryDependsOnHigherDamageSuperEffective1stTurn
+Flags = CanProtect,CanMirrorMove,CannotMetronome
+Description = The user attacks quickly dealing Super effective damage. This move the higher of the user's Attack or Sp. Atk stat.
+#-------------------------------
+[GOLDHOARD]
+Name = Gold Hoard
+Type = DRAGON
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = UserSide
+FunctionCode = SetUpGoldHoard
+Description = User creates a fake hoard of gold boosting the power of Dragon-Type moves for five turns.
+#-------------------------------
+[VINYHOLD]
+Name = Viny Hold
+Type = GRASS
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = NearOther
+FunctionCode = TrapTargetLowerHighestStat
+Flags = CanMirrorMove
+Description = The user restricts the target preventing them from switching. Lowers the highest offensive Stat.
+#-------------------------------
+[CORRODINGACID]
+Name = Corroding Acid
+Type = POISON
+Category = Special
+Power = 70
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = PoisonTargetSuperEffectiveAgainstSteel
+Flags = CanProtect,CanMirrorMove
+EffectChance = 30
+Description = The user rapidly melts the target. This may poison the target. Is super-effective on Steel types.
+#-------------------------------
+[CLIMATICBLADE]
+Name = Climatic Blade
+Type = NORMAL
+Category = Special
+Power = 50
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = TypeAndPowerDependOnWeather
+Flags = CanProtect,CanMirrorMove,Slicing
+Description = An attack move that varies in power and type depending on the weather.
+#-------------------------------
+[WHIRLWIDNFIST]
+Name = Whirlwind Fist
+Type = FIGHTING
+Category = Physical
+Power = 60
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = SuperEffectiveAgainstFlyingExtraDamageInTailwind
+Flags = CanProtect,CanMirrorMove,Punching
+Description = The user flies through the sky before punching. Is super-effective on Flying types and does extra damage in tailwind.
+#-------------------------------
+[BLAZINGWINGS]
+Name = Blazing Wings
+Type = FIRE
+Category = Physical
+Power = 80
+Accuracy = 100
+TotalPP = 10
+Target = Other
+FunctionCode = EffectivenessIncludesFlyingType
+Flags = Contact,CanProtect,CanMirrorMove
+Description = The user's wing ignite as it strikes the target. This move is Fire and Flying type simultaneously.
+#-------------------------------
+[NEWTRIATTACK]
+Name = Tri Attack
+Type = NORMAL
+Category = Special
+Power = 25
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = HitThreeTimesTriAttack
+Flags = CanProtect,CanMirrorMove
+Description = This is still not working. Do not use!!!
+#-------------------------------
+[DECOMPRESS]
+Name = Decompress
+Type = STEEL
+Category = Status
+Accuracy = 0
+TotalPP = 15
+Target = User
+FunctionCode = RemoveRoomsAndTailwind
+Description = The user compresses the area destroying all rooms and tailwind.
+
+
+
+#-------------------------------
+# Entry Hazards
+#-------------------------------
+[TERRAINSMASH]
+Name = Terrain Smash
+Type = FIGHTING
+Category = Status
+Accuracy = 0
+TotalPP = 20
+Target = FoeSide
+FunctionCode = AddTerrainSmashToFoeSide
+Description = The user smashes the terrain and spreads debris across the opposing side. This disables terrain.
+#-------------------------------
+[RESTRICTIVEWINDS]
+Name = Restrictive Winds
+Type = FLYING
+Category = Status
+Accuracy = 0
+TotalPP = 20
+Target = FoeSide
+FunctionCode = AddRestrictiveWindsToFoeSide
+Description = The user creates a wind vortex on the opposing side. This knocks airborne Pokémon out of the sky on switch in.
+#-------------------------------
+[HAUNTEDORBS]
+Name = Haunted Orbs
+Type = GHOST
+Category = Status
+Accuracy = 0
+TotalPP = 20
+Target = FoeSide
+FunctionCode = AddHauntedOrbsToFoeSide
+Description = User launches haunting orbs on the opposing side. These orbs lower SpDef on switch in.
+#-------------------------------
+[SHARPSTEEL]
+Name = Sharp Steel
+Type = GHOST
+Category = Status
+Accuracy = 0
+TotalPP = 20
+Target = FoeSide
+FunctionCode = AddSharpSteelToFoeSide
+Description = User launches sharp steel on the opposing side. This deals damage upon contact moves.
+#-------------------------------
+[BURNINGDEBRIS]
+Name = Burning Debris
+Type = FIRE
+Category = Status
+Accuracy = 0
+TotalPP = 20
+Target = FoeSide
+FunctionCode = AddBurningDebrisToFoeSide
+Description = User launches burning charol and rocks on the opposing side. This burns on switch in.
+#-------------------------------
+[ROSEFIELD]
+Name = Rose Field
+Type = GRASS
+Category = Status
+Accuracy = 0
+TotalPP = 20
+Target = FoeSide
+FunctionCode = AddRoseFieldToFoeSide
+Description = User creates a rose garden on the opposite side. This deals damage upon contact moves.
+#-------------------------------
+[WATERCHANNEL]
+Name = Water Channel
+Type = WATER
+Category = Status
+Accuracy = 0
+TotalPP = 20
+Target = FoeSide
+FunctionCode = AddWaterChannelToFoeSide
+Description = User creates a small channel current on the opposing side. This damages on switch in.
+#-------------------------------
+[PROTONOVERLOAD]
+Name = Proton Overload
+Type = ELECTRIC
+Category = Status
+Accuracy = 0
+TotalPP = 20
+Target = FoeSide
+FunctionCode = AddProtonOverloadToFoeSide
+Description = User creates a small overcharge on the opposing side. This causes Paralysis on switch in.
+#-------------------------------
+[MINDFIELD]
+Name = Mind Field
+Type = PSYCHIC
+Category = Status
+Accuracy = 0
+TotalPP = 20
+Target = FoeSide
+FunctionCode = AddMindFieldToFoeSide
+Description = User creates psychic mind bombs on the opposing side. This damages on switch in.
+#-------------------------------
+[ICERING]
+Name = Ice Ring
+Type = ICE
+Category = Status
+Accuracy = 0
+TotalPP = 20
+Target = FoeSide
+FunctionCode = AddIceRingToFoeSide
+Description = User freezez the field of the opposing side causing them to slip. This lowers Def on switch in.
+#-------------------------------
+[DRACONICRIFT]
+Name = Draconic Rift
+Type = DRAGON
+Category = Status
+Accuracy = 0
+TotalPP = 20
+Target = FoeSide
+FunctionCode = AddDraconicRiftToFoeSide
+Description = User opens the Dragon Force on the opposing side. This damages on switch in.
+#-------------------------------
+[DARKSMOG]
+Name = Dark Smog
+Type = DARK
+Category = Status
+Accuracy = 0
+TotalPP = 20
+Target = FoeSide
+FunctionCode = AddDarkMistToFoeSide
+Description = User creates a dark fog on the opposite side. This crawls up and lowers the Attack upon switching in.
+#-------------------------------
+[MANAFLUX]
+Name = Mana Flux
+Type = FAIRY
+Category = Status
+Accuracy = 0
+TotalPP = 20
+Target = FoeSide
+FunctionCode = AddManaFluxToFoeSide
+Description = Use creates a magical circle which disrupts the opposing side. This lowers SpAtk on switch in.
+
+
+
+#-------------------------------
+# Status
+#-------------------------------
+[WORKOUT]
+Name = Work Out
+Type = FIGHTING
+Category = Status
+Accuracy = 0
+TotalPP = 5
+Target = User
+FunctionCode = FatiguesUserRaiseUserAtk3
+Description = The user works out to their limits. Fatigues the user but gives a +4 Attack.
+#-------------------------------
+[OVERWORK]
+Name = Overwork
+Type = FIGHTING
+Category = Status
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+FunctionCode = FatigueTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user overworks the target to make them fatigue.
+#-------------------------------
+[FIERCEWINDS]
+Name = Fierce Winds
+Type = FLYING
+Category = Status
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+FunctionCode = WindedTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user blows a harsh wind that knocks the wind out of the target.
+#-------------------------------
+[VERTIGO]
+Name = Vertigo
+Type = GROUND
+Category = Status
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+FunctionCode = FatigueTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user rumbles the ground to throw off the target's balance, leaving them with vertigo.
+#-------------------------------
+[SPLINTER]
+Name = Splinter
+Type = ROCK
+Category = Status
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+FunctionCode = SplinterTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user lodges a handful of splinters into the target, leaving them with splinters.
+#-------------------------------
+[PESTER]
+Name = Pester
+Type = BUG
+Category = Status
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+FunctionCode = PesterTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user pokes and prods at the target leaving them pestered.
+#-------------------------------
+[HAUNTINGPRANK]
+Name = Haunting Prank
+Type = GHOST
+Category = Status
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+FunctionCode = ScaredTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user surprises the target scaring them.
+#-------------------------------
+[VIBRATINGBANG]
+Name = Vibrating Bang
+Type = STEEL
+Category = Status
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+FunctionCode = BrittleTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user hits the target causing them to cartoonishly shake, leaving them brittle.
+#-------------------------------
+[SUDDENSPLASH]
+Name = Sudden Splash
+Type = WATER
+Category = Status
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+FunctionCode = DrenchedTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user jumps causeing a wave of water to hit the target, leaving them drenched.
+#-------------------------------
+[HAYFEVER]
+Name = Hay Fever
+Type = GRASS
+Category = Status
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+FunctionCode = AllergiesTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user dusts pollen at the target, leaving them with allergies.
+#-------------------------------
+[MINDSHAKE]
+Name = Mind Shake
+Type = PSYCHIC
+Category = Status
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+FunctionCode = MigraineTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user attacks the targets mind, leaving them with a migraine.
+#-------------------------------
+[EGOBOOST]
+Name = Ego Boost
+Type = DRAGON
+Category = Status
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+FunctionCode = OpulentTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user hypes up the target causing them to be opulent.
+#-------------------------------
+[BLINDED]
+Name = Blinded
+Type = DARK
+Category = Status
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+FunctionCode = BlindedTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user attacks the target's eyes causing them to be blinded.
+#-------------------------------
+[FANFARE]
+Name = Fanfare
+Type = FAIRY
+Category = Status
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+FunctionCode = IdolizeTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user performs a fanfare causing the target to idolize the user.
+#-------------------------------
+# OP
+#-------------------------------
+[SPIRALABYSS]
+Name = Spiral Abyss
+Type = GHOST
+Category = Physical
+Power = 90
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+Priority = -1
+FunctionCode = OPSpiralAbyss
+Flags = Contact,CanProtect,CanMirrorMove
+EffectChance = 50
+Description = Ensnares the foe in a trap which will either inflict a random status condition or lower a random stat by one.
+#-------------------------------
+[ENCHANTINGCONE]
+Name = Enchanting Cone
+Type = GHOST
+Category = Physical
+Power = 50
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+Priority = 1
+FunctionCode = OPEnchantingCone
+Flags = Contact,CanProtect,CanMirrorMove
+EffectChance = 25
+Description = Causes infatuation in target regardless of gender or spiritual alignment.
+#-------------------------------
+[PROHIBITORYSIGNBOARD]
+Name = Prohibitory Signboard
+Type = GHOST
+Category = Special
+Power = 50
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+Priority = -3
+FunctionCode = OPProhibitorySignboard
+Flags = Contact,CanProtect,CanMirrorMove
+EffectChance = 50
+Description = Charges energy to paralyze the foe. If interupted, disables the move it was hit by.
+#-------------------------------
+[WALPURGISNIGHT]
+Name = Walpurgis Night
+Type = GHOST
+Category = Physical
+Power = 1
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = OPWalpurgisNight
+Flags = CanProtect,CanMirrorMove
+Description = Summons the spirit of fallen allies to harass the foe.
+#-------------------------------
+[CREEPINGMYCELIUM]
+Name = Creeping Mycelium
+Type = GHOST
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = BothSides
+FunctionCode = OPCreepingMycelium
+Description = Spreads a miasma over the field which will inflict a random status condition on a foe.
+#-------------------------------
+[ULTIMATEDREAM]
+Name = Ultimate Dream
+Type = GHOST
+Category = Special
+Power = 110
+Accuracy = 85
+TotalPP = 99
+Target = NearOther
+FunctionCode = OPUltimateDream
+Flags = Contact,CanProtect,CanMirrorMove
+Description = I am not bothering to put a description in here. This move has too much going on.
+#-------------------------------
+[MYRAIDDREAMS]
+Name = All the Myraid Dreams of Paradise
+Type = GHOST
+Category = Special
+Power = 110
+Accuracy = 100
+TotalPP = 5
+Target = NearOther
+FunctionCode = OPAllTheMyraidDreamsOfParadise
+Flags = Contact,CanProtect,CanMirrorMove
+EffectChance = 100
+Description = All of Fantasy is at your beck and call. With it by your side, there is nothing you can't do.

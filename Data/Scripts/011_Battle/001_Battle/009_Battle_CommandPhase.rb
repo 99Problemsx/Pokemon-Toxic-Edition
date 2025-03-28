@@ -1,11 +1,7 @@
-#===============================================================================
-#
-#===============================================================================
 class Battle
-  #-----------------------------------------------------------------------------
-  # Clear commands.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Clear commands
+  #=============================================================================
   def pbClearChoice(idxBattler)
     @choices[idxBattler] = [] if !@choices[idxBattler]
     @choices[idxBattler][0] = :None
@@ -26,18 +22,16 @@ class Battle
     pbClearChoice(idxBattler)
   end
 
-  #-----------------------------------------------------------------------------
-  # Use main command menu (Fight/Pokémon/Bag/Run).
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Use main command menu (Fight/Pokémon/Bag/Run)
+  #=============================================================================
   def pbCommandMenu(idxBattler, firstAction)
     return @scene.pbCommandMenu(idxBattler, firstAction)
   end
 
-  #-----------------------------------------------------------------------------
-  # Check whether actions can be taken.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Check whether actions can be taken
+  #=============================================================================
   def pbCanShowCommands?(idxBattler)
     battler = @battlers[idxBattler]
     return false if !battler || battler.fainted?
@@ -59,10 +53,9 @@ class Battle
     return usable
   end
 
-  #-----------------------------------------------------------------------------
-  # Use sub-menus to choose an action, and register it if is allowed.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Use sub-menus to choose an action, and register it if is allowed
+  #=============================================================================
   # Returns true if a choice was made, false if cancelled.
   def pbFightMenu(idxBattler)
     # Auto-use Encored move or no moves choosable, so auto-use Struggle
@@ -175,10 +168,9 @@ class Battle
     end
   end
 
-  #-----------------------------------------------------------------------------
-  # Command phase.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Command phase
+  #=============================================================================
   def pbCommandPhase
     @command_phase = true
     @scene.pbBeginCommandPhase
@@ -195,7 +187,7 @@ class Battle
     end
     # Choose actions for the round (player first, then AI)
     pbCommandPhaseLoop(true)    # Player chooses their actions
-    if decided?   # Battle ended, stop choosing actions
+    if @decision != 0   # Battle ended, stop choosing actions
       @command_phase = false
       return
     end
@@ -209,13 +201,13 @@ class Battle
     actioned = []
     idxBattler = -1
     loop do
-      break if decided?   # Battle ended, stop choosing actions
+      break if @decision != 0   # Battle ended, stop choosing actions
       idxBattler += 1
       break if idxBattler >= @battlers.length
       next if !@battlers[idxBattler] || pbOwnedByPlayer?(idxBattler) != isPlayer
       if @choices[idxBattler][0] != :None || !pbCanShowCommands?(idxBattler)
         # Action is forced, can't choose one
-        PBDebug.log("[Command phase] #{@battlers[idxBattler].pbThis} (#{idxBattler}) is forced to use a multi-turn move")
+        PBDebug.log_ai("#{@battlers[idxBattler].pbThis} (#{idxBattler}) is forced to use a multi-turn move")
         next
       end
       # AI controls this battler

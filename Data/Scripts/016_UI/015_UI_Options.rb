@@ -145,7 +145,7 @@ class SliderOption
 end
 
 #===============================================================================
-# Main options list.
+# Main options list
 #===============================================================================
 class Window_PokemonOption < Window_DrawableCommand
   attr_reader :value_changed
@@ -263,7 +263,7 @@ class Window_PokemonOption < Window_DrawableCommand
 end
 
 #===============================================================================
-# Options main screen.
+# Options main screen
 #===============================================================================
 class PokemonOption_Scene
   attr_reader :sprites
@@ -379,9 +379,8 @@ class PokemonOptionScreen
 end
 
 #===============================================================================
-# Options Menu commands.
+# Options Menu commands
 #===============================================================================
-
 MenuHandlers.add(:options_menu, :bgm_volume, {
   "name"        => _INTL("Music Volume"),
   "order"       => 10,
@@ -392,7 +391,7 @@ MenuHandlers.add(:options_menu, :bgm_volume, {
   "set_proc"    => proc { |value, scene|
     next if $PokemonSystem.bgmvolume == value
     $PokemonSystem.bgmvolume = value
-    next if scene.in_load_screen || !$game_system || $game_system.playing_bgm.nil?
+    next if scene.in_load_screen || $game_system.playing_bgm.nil?
     playingBGM = $game_system.getPlayingBGM
     $game_system.bgm_pause
     $game_system.bgm_resume(playingBGM)
@@ -409,7 +408,7 @@ MenuHandlers.add(:options_menu, :se_volume, {
   "set_proc"    => proc { |value, _scene|
     next if $PokemonSystem.sevolume == value
     $PokemonSystem.sevolume = value
-    if $game_system && $game_system.playing_bgs
+    if $game_system.playing_bgs
       $game_system.playing_bgs.volume = value
       playingBGS = $game_system.getPlayingBGS
       $game_system.bgs_pause
@@ -496,7 +495,6 @@ MenuHandlers.add(:options_menu, :speech_frame, {
   "type"        => NumberOption,
   "parameters"  => 1..Settings::SPEECH_WINDOWSKINS.length,
   "description" => _INTL("Choose the appearance of dialogue boxes."),
-  "condition"   => proc { next Settings::SPEECH_WINDOWSKINS.length > 1 },
   "get_proc"    => proc { next $PokemonSystem.textskin },
   "set_proc"    => proc { |value, scene|
     $PokemonSystem.textskin = value
@@ -512,7 +510,6 @@ MenuHandlers.add(:options_menu, :menu_frame, {
   "type"        => NumberOption,
   "parameters"  => 1..Settings::MENU_WINDOWSKINS.length,
   "description" => _INTL("Choose the appearance of menu boxes."),
-  "condition"   => proc { next Settings::MENU_WINDOWSKINS.length > 1 },
   "get_proc"    => proc { next $PokemonSystem.frame },
   "set_proc"    => proc { |value, scene|
     $PokemonSystem.frame = value

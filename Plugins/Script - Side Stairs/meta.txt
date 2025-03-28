@@ -1,0 +1,4 @@
+Name      = Side Stairs
+Version   = 2.0
+Credits   = Boonzeet, Vendily, MakerBlack
+Essentials = 21.1

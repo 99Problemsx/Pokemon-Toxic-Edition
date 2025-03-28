@@ -1,11 +1,7 @@
-#===============================================================================
-#
-#===============================================================================
 class Battle
-  #-----------------------------------------------------------------------------
-  # Choosing to use an item.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Choosing to use an item
+  #=============================================================================
   def pbCanUseItemOnPokemon?(item, pkmn, battler, scene, showMessages = true)
     if !pkmn || pkmn.egg?
       scene.pbDisplay(_INTL("It won't have any effect.")) if showMessages
@@ -47,10 +43,9 @@ class Battle
     return true
   end
 
-  #-----------------------------------------------------------------------------
-  # Using an item.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Using an item
+  #=============================================================================
   def pbConsumeItemInBag(item, idxBattler)
     return if !item
     return if !GameData::Item.get(item).consumed_after_use?
@@ -60,7 +55,7 @@ class Battle
       end
     else
       items = pbGetOwnerItems(idxBattler)
-      items.delete_at(items.index(item)) if items
+      items.delete_at(items.index(item))
     end
   end
 

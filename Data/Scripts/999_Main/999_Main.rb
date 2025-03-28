@@ -1,19 +1,15 @@
-#===============================================================================
-#
-#===============================================================================
 class Scene_DebugIntro
   def main
     Graphics.transition(0)
-    UI::Load.new.main
+    sscene = PokemonLoad_Scene.new
+    sscreen = PokemonLoadScreen.new(sscene)
+    sscreen.pbStartLoadScreen
     Graphics.freeze
   end
 end
 
-#===============================================================================
-#
-#===============================================================================
 def pbCallTitle
-  return Scene_DebugIntro.new if $DEBUG && Settings::SKIP_TITLE_SCREEN
+  return Scene_DebugIntro.new if $DEBUG
   return Scene_Intro.new
 end
 
@@ -29,12 +25,6 @@ end
 def mainFunctionDebug
   begin
     MessageTypes.load_default_messages if FileTest.exist?("Data/messages_core.dat")
-    if $DEBUG && !FileTest.exist?("Game.rgssad") && Settings::PROMPT_TO_COMPILE
-      pbSetResizeFactor(1)   # Needed to make the message look good
-      if pbConfirmMessage("\\ts[]" + "Do you want to compile your data and plugins?")
-        $full_compile = true
-      end
-    end
     PluginManager.runPlugins
     Compiler.main
     Game.initialize
@@ -51,9 +41,6 @@ def mainFunctionDebug
   end
 end
 
-#===============================================================================
-#
-#===============================================================================
 loop do
   retval = mainFunction
   case retval

@@ -1,6 +1,3 @@
-#===============================================================================
-#
-#===============================================================================
 module GameData
   class Metadata
     attr_reader :id
@@ -20,6 +17,7 @@ module GameData
     DATA = {}
     DATA_FILENAME = "metadata.dat"
     PBS_BASE_FILENAME = "metadata"
+
     SCHEMA = {
       "SectionName"       => [:id,                   "u"],
       "StartMoney"        => [:start_money,          "u"],
@@ -57,8 +55,6 @@ module GameData
     def self.get
       return DATA[0]
     end
-
-    #---------------------------------------------------------------------------
 
     def initialize(hash)
       @id                   = hash[:id]                 || 0

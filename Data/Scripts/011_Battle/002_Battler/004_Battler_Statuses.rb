@@ -1,11 +1,7 @@
-#===============================================================================
-#
-#===============================================================================
 class Battle::Battler
-  #-----------------------------------------------------------------------------
-  # Generalised checks for whether a status problem can be inflicted.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Generalised checks for whether a status problem can be inflicted
+  #=============================================================================
   # NOTE: Not all "does it have this status?" checks use this method. If the
   #       check is leading up to curing self of that status condition, then it
   #       will look at the value of @status directly instead - if it is that
@@ -76,7 +72,7 @@ class Battle::Battler
       end
     end
     # Uproar immunity
-    if newStatus == :SLEEP && !(hasActiveAbility?(:SOUNDPROOF) && !beingMoldBroken?)
+    if newStatus == :SLEEP && !(hasActiveAbility?(:SOUNDPROOF) && !@battle.moldBreaker)
       @battle.allBattlers.each do |b|
         next if b.effects[PBEffects::Uproar] == 0
         @battle.pbDisplay(_INTL("But the uproar kept {1} awake!", pbThis(true))) if showMessages
@@ -109,16 +105,17 @@ class Battle::Battler
     immAlly = nil
     if Battle::AbilityEffects.triggerStatusImmunityNonIgnorable(self.ability, self, newStatus)
       immuneByAbility = true
-    elsif abilityActive? && (self_inflicted || !beingMoldBroken?) &&
-       Battle::AbilityEffects.triggerStatusImmunity(self.ability, self, newStatus)
-      immuneByAbility = true
-    else
-      allAllies.each do |b|
-        next if !b.abilityActive? || (!self_inflicted && b.beingMoldBroken?)
-        next if !Battle::AbilityEffects.triggerStatusImmunityFromAlly(b.ability, self, newStatus)
+    elsif self_inflicted || !@battle.moldBreaker
+      if abilityActive? && Battle::AbilityEffects.triggerStatusImmunity(self.ability, self, newStatus)
         immuneByAbility = true
-        immAlly = b
-        break
+      else
+        allAllies.each do |b|
+          next if !b.abilityActive?
+          next if !Battle::AbilityEffects.triggerStatusImmunityFromAlly(b.ability, self, newStatus)
+          immuneByAbility = true
+          immAlly = b
+          break
+        end
       end
     end
     if immuneByAbility
@@ -216,10 +213,9 @@ class Battle::Battler
     return true
   end
 
-  #-----------------------------------------------------------------------------
-  # Generalised infliction of status problem.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Generalised infliction of status problem
+  #=============================================================================
   def pbInflictStatus(newStatus, newStatusCount = 0, msg = nil, user = nil)
     # Inflict the new status
     self.status      = newStatus
@@ -274,10 +270,9 @@ class Battle::Battler
     end
   end
 
-  #-----------------------------------------------------------------------------
-  # Sleep.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Sleep
+  #=============================================================================
   def asleep?
     return pbHasStatus?(:SLEEP)
   end
@@ -315,8 +310,8 @@ class Battle::Battler
     return true
   end
 
-  def pbSleep(user = nil, msg = nil)
-    pbInflictStatus(:SLEEP, pbSleepDuration, msg, user)
+  def pbSleep(msg = nil)
+    pbInflictStatus(:SLEEP, pbSleepDuration, msg)
   end
 
   def pbSleepSelf(msg = nil, duration = -1)
@@ -329,10 +324,9 @@ class Battle::Battler
     return duration
   end
 
-  #-----------------------------------------------------------------------------
-  # Poison.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Poison
+  #=============================================================================
   def poisoned?
     return pbHasStatus?(:POISON)
   end
@@ -349,10 +343,9 @@ class Battle::Battler
     pbInflictStatus(:POISON, (toxic) ? 1 : 0, msg, user)
   end
 
-  #-----------------------------------------------------------------------------
-  # Burn.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Burn
+  #=============================================================================
   def burned?
     return pbHasStatus?(:BURN)
   end
@@ -369,10 +362,9 @@ class Battle::Battler
     pbInflictStatus(:BURN, 0, msg, user)
   end
 
-  #-----------------------------------------------------------------------------
-  # Paralyze.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Paralyze
+  #=============================================================================
   def paralyzed?
     return pbHasStatus?(:PARALYSIS)
   end
@@ -389,10 +381,9 @@ class Battle::Battler
     pbInflictStatus(:PARALYSIS, 0, msg, user)
   end
 
-  #-----------------------------------------------------------------------------
-  # Freeze.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Freeze
+  #=============================================================================
   def frozen?
     return pbHasStatus?(:FROZEN)
   end
@@ -401,14 +392,13 @@ class Battle::Battler
     return pbCanInflictStatus?(:FROZEN, user, showMessages, move)
   end
 
-  def pbFreeze(user = nil, msg = nil)
-    pbInflictStatus(:FROZEN, 0, msg, user)
+  def pbFreeze(msg = nil)
+    pbInflictStatus(:FROZEN, 0, msg)
   end
 
-  #-----------------------------------------------------------------------------
-  # Generalised status displays.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Generalised status displays
+  #=============================================================================
   def pbContinueStatus
     if self.status == :POISON && @statusCount > 0
       @battle.pbCommonAnimation("Toxic", self)
@@ -447,10 +437,9 @@ class Battle::Battler
     PBDebug.log("[Status change] #{pbThis}'s status was cured") if !showMessages
   end
 
-  #-----------------------------------------------------------------------------
-  # Confusion.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Confusion
+  #=============================================================================
   def pbCanConfuse?(user = nil, showMessages = true, move = nil, selfInflicted = false)
     return false if fainted?
     if @effects[PBEffects::Confusion] > 0
@@ -467,7 +456,7 @@ class Battle::Battler
       @battle.pbDisplay(_INTL("{1} surrounds itself with misty terrain!", pbThis(true))) if showMessages
       return false
     end
-    if (selfInflicted || !beingMoldBroken?) && hasActiveAbility?(:OWNTEMPO)
+    if (selfInflicted || !@battle.moldBreaker) && hasActiveAbility?(:OWNTEMPO)
       if showMessages
         @battle.pbShowAbilitySplash(self)
         if Battle::Scene::USE_ABILITY_SPLASH
@@ -511,10 +500,9 @@ class Battle::Battler
     @effects[PBEffects::Confusion] = 0
   end
 
-  #-----------------------------------------------------------------------------
-  # Attraction.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Attraction
+  #=============================================================================
   def pbCanAttract?(user, showMessages = true)
     return false if fainted?
     return false if !user || user.fainted?
@@ -528,30 +516,32 @@ class Battle::Battler
       @battle.pbDisplay(_INTL("{1} is unaffected!", pbThis)) if showMessages
       return false
     end
-    if hasActiveAbility?([:AROMAVEIL, :OBLIVIOUS]) && !beingMoldBroken?
-      if showMessages
-        @battle.pbShowAbilitySplash(self)
-        if Battle::Scene::USE_ABILITY_SPLASH
-          @battle.pbDisplay(_INTL("{1} is unaffected!", pbThis))
-        else
-          @battle.pbDisplay(_INTL("{1}'s {2} prevents romance!", pbThis, abilityName))
-        end
-        @battle.pbHideAbilitySplash(self)
-      end
-      return false
-    else
-      allAllies.each do |b|
-        next if !b.hasActiveAbility?(:AROMAVEIL) || b.beingMoldBroken?
+    if !@battle.moldBreaker
+      if hasActiveAbility?([:AROMAVEIL, :OBLIVIOUS])
         if showMessages
-          @battle.pbShowAbilitySplash(b)
+          @battle.pbShowAbilitySplash(self)
           if Battle::Scene::USE_ABILITY_SPLASH
             @battle.pbDisplay(_INTL("{1} is unaffected!", pbThis))
           else
-            @battle.pbDisplay(_INTL("{1}'s {2} prevents romance!", b.pbThis, b.abilityName))
+            @battle.pbDisplay(_INTL("{1}'s {2} prevents romance!", pbThis, abilityName))
           end
-          @battle.pbHideAbilitySplash(b)
+          @battle.pbHideAbilitySplash(self)
         end
         return false
+      else
+        allAllies.each do |b|
+          next if !b.hasActiveAbility?(:AROMAVEIL)
+          if showMessages
+            @battle.pbShowAbilitySplash(b)
+            if Battle::Scene::USE_ABILITY_SPLASH
+              @battle.pbDisplay(_INTL("{1} is unaffected!", pbThis))
+            else
+              @battle.pbDisplay(_INTL("{1}'s {2} prevents romance!", b.pbThis, b.abilityName))
+            end
+            @battle.pbHideAbilitySplash(b)
+          end
+          return false
+        end
       end
     end
     return true
@@ -575,12 +565,11 @@ class Battle::Battler
     @effects[PBEffects::Attract] = -1
   end
 
-  #-----------------------------------------------------------------------------
-  # Flinching.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Flinching
+  #=============================================================================
   def pbFlinch(_user = nil)
-    return if hasActiveAbility?(:INNERFOCUS) && !beingMoldBroken?
+    return if hasActiveAbility?(:INNERFOCUS) && !@battle.moldBreaker
     @effects[PBEffects::Flinch] = true
   end
 end

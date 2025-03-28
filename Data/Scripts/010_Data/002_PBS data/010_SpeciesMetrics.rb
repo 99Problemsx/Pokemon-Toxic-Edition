@@ -1,6 +1,3 @@
-#===============================================================================
-#
-#===============================================================================
 module GameData
   class SpeciesMetrics
     attr_reader   :id
@@ -16,6 +13,7 @@ module GameData
     DATA = {}
     DATA_FILENAME = "species_metrics.dat"
     PBS_BASE_FILENAME = "pokemon_metrics"
+
     SCHEMA = {
       "SectionName"         => [:id,                    "eV", :Species],
       "BackSprite"          => [:back_sprite,           "ii"],
@@ -57,8 +55,6 @@ module GameData
       self.register({:id => species}) if !DATA[species]
       return DATA[species]
     end
-
-    #---------------------------------------------------------------------------
 
     def initialize(hash)
       @id                    = hash[:id]

@@ -1,11 +1,7 @@
-#===============================================================================
-#
-#===============================================================================
 class Battle
-  #-----------------------------------------------------------------------------
-  # Attack phase actions.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Attack phase actions
+  #=============================================================================
   # Quick Claw, Custap Berry's "X let it move first!" message.
   def pbAttackPhasePriorityChangeMessages
     pbPriority.each do |b|
@@ -44,7 +40,7 @@ class Battle
       # Use Pursuit
       @choices[b.index][3] = idxSwitcher   # Change Pursuit's target
       b.pbProcessTurn(@choices[b.index], false)
-      break if decided? || @battlers[idxSwitcher].fainted?
+      break if @decision > 0 || @battlers[idxSwitcher].fainted?
     end
     @switching = false
   end
@@ -59,7 +55,7 @@ class Battle
       pbMessageOnRecall(b)
       # Pursuit interrupts switching
       pbPursuit(b.index)
-      return if decided?
+      return if @decision > 0
       # Switch Pokémon
       allBattlers.each do |b2|
         b2.droppedBelowHalfHP = false
@@ -88,7 +84,7 @@ class Battle
       else
         next
       end
-      return if decided?
+      return if @decision > 0
     end
     pbCalculatePriority if Settings::RECALCULATE_TURN_ORDER_AFTER_SPEED_CHANGES
   end
@@ -122,7 +118,7 @@ class Battle
         advance = b.pbProcessTurn(@choices[b.index])
         break if advance
       end
-      return if decided?
+      return if @decision > 0
       next if advance
       # Regular priority order
       priority.each do |b|
@@ -132,7 +128,7 @@ class Battle
         advance = b.pbProcessTurn(@choices[b.index])
         break if advance
       end
-      return if decided?
+      return if @decision > 0
       next if advance
       # Quashed
       if Settings::MECHANICS_GENERATION >= 8
@@ -159,7 +155,7 @@ class Battle
           break if advance || !moreQuash
         end
       end
-      return if decided?
+      return if @decision > 0
       next if advance
       # Check for all done
       priority.each do |b|
@@ -174,10 +170,9 @@ class Battle
     end
   end
 
-  #-----------------------------------------------------------------------------
-  # Attack phase.
-  #-----------------------------------------------------------------------------
-
+  #=============================================================================
+  # Attack phase
+  #=============================================================================
   def pbAttackPhase
     @scene.pbBeginAttackPhase
     # Reset certain effects
@@ -198,9 +193,9 @@ class Battle
     pbAttackPhasePriorityChangeMessages
     pbAttackPhaseCall
     pbAttackPhaseSwitch
-    return if decided?
+    return if @decision > 0
     pbAttackPhaseItems
-    return if decided?
+    return if @decision > 0
     pbAttackPhaseMegaEvolution
     pbAttackPhaseMoves
   end

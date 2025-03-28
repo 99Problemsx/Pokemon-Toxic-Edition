@@ -1,6 +1,3 @@
-#===============================================================================
-#
-#===============================================================================
 module Input
   USE      = C
   BACK     = B
@@ -23,12 +20,11 @@ module Input
   end
 end
 
-#===============================================================================
-#
-#===============================================================================
 module Mouse
+  module_function
+
   # Returns the position of the mouse relative to the game window.
-  def self.getMousePos(catch_anywhere = false)
+  def getMousePos(catch_anywhere = false)
     return nil unless Input.mouse_in_window || catch_anywhere
     return Input.mouse_x, Input.mouse_y
   end

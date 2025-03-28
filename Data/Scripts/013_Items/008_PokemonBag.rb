@@ -2,57 +2,60 @@
 # The Bag object, which actually contains all the items.
 #===============================================================================
 class PokemonBag
-  attr_reader   :pockets
   attr_accessor :last_viewed_pocket
   attr_accessor :last_pocket_selections
   attr_reader   :registered_items
   attr_reader   :ready_menu_selection
 
-  MAX_PER_SLOT = 999
+  def self.pocket_names
+    return Settings.bag_pocket_names
+  end
 
   def self.pocket_count
-    return GameData::BagPocket.count
+    return self.pocket_names.length
   end
 
   def initialize
-    @pockets = {}
-    GameData::BagPocket.all_pockets.each { |pckt| @pockets[pckt] = [] }
+    @pockets = []
+    (0..PokemonBag.pocket_count).each { |i| @pockets[i] = [] }
     reset_last_selections
     @registered_items = []
     @ready_menu_selection = [0, 0, 1]   # Used by the Ready Menu to remember cursor positions
   end
 
   def reset_last_selections
-    @last_viewed_pocket = GameData::BagPocket.all_pockets.first
-    @last_pocket_selections ||= {}
-    GameData::BagPocket.all_pockets.each { |pckt| @last_pocket_selections[pckt] = 0 }
+    @last_viewed_pocket = 1
+    @last_pocket_selections ||= []
+    (0..PokemonBag.pocket_count).each { |i| @last_pocket_selections[i] = 0 }
   end
 
   def clear
-    @pockets.each_value { |pocket| pocket.clear }
-    @pockets.clear
-    @last_pocket_selections.clear
-    GameData::BagPocket.all_pockets.each do |pckt|
-      @pockets[pckt] = []
-      @last_pocket_selections[pckt] = 0
-    end
+    @pockets.each { |pocket| pocket.clear }
+    (PokemonBag.pocket_count + 1).times { |i| @last_pocket_selections[i] = 0 }
+  end
+
+  def pockets
+    rearrange
+    return @pockets
   end
 
   #-----------------------------------------------------------------------------
 
   # Gets the index of the current selected item in the pocket
   def last_viewed_index(pocket)
-    if !GameData::BagPocket.exists?(pocket)
+    if pocket <= 0 || pocket > PokemonBag.pocket_count
       raise ArgumentError.new(_INTL("Invalid pocket: {1}", pocket.inspect))
     end
+    rearrange
     return [@last_pocket_selections[pocket], @pockets[pocket].length].min || 0
   end
 
   # Sets the index of the current selected item in the pocket
   def set_last_viewed_index(pocket, value)
-    if !GameData::BagPocket.exists?(pocket)
+    if pocket <= 0 || pocket > PokemonBag.pocket_count
       raise ArgumentError.new(_INTL("Invalid pocket: {1}", pocket.inspect))
     end
+    rearrange
     @last_pocket_selections[pocket] = value if value <= @pockets[pocket].length
   end
 
@@ -61,7 +64,7 @@ class PokemonBag
   def quantity(item)
     item_data = GameData::Item.try_get(item)
     return 0 if !item_data
-    pocket = item_data.bag_pocket
+    pocket = item_data.pocket
     return ItemStorageHelper.quantity(@pockets[pocket], item_data.id)
   end
 
@@ -73,23 +76,23 @@ class PokemonBag
   def can_add?(item, qty = 1)
     item_data = GameData::Item.try_get(item)
     return false if !item_data
-    pocket = item_data.bag_pocket
+    pocket = item_data.pocket
     max_size = max_pocket_size(pocket)
     max_size = @pockets[pocket].length + 1 if max_size < 0   # Infinite size
     return ItemStorageHelper.can_add?(
-      @pockets[pocket], max_size, MAX_PER_SLOT, item_data.id, qty
+      @pockets[pocket], max_size, Settings::BAG_MAX_PER_SLOT, item_data.id, qty
     )
   end
 
   def add(item, qty = 1)
     item_data = GameData::Item.try_get(item)
     return false if !item_data
-    pocket = item_data.bag_pocket
+    pocket = item_data.pocket
     max_size = max_pocket_size(pocket)
     max_size = @pockets[pocket].length + 1 if max_size < 0   # Infinite size
     ret = ItemStorageHelper.add(@pockets[pocket],
-                                max_size, MAX_PER_SLOT, item_data.id, qty)
-    if ret && GameData::BagPocket.get(pocket).auto_sort
+                                max_size, Settings::BAG_MAX_PER_SLOT, item_data.id, qty)
+    if ret && Settings::BAG_POCKET_AUTO_SORT[pocket - 1]
       @pockets[pocket].sort! { |a, b| GameData::Item.keys.index(a[0]) <=> GameData::Item.keys.index(b[0]) }
     end
     return ret
@@ -106,7 +109,7 @@ class PokemonBag
   def remove(item, qty = 1)
     item_data = GameData::Item.try_get(item)
     return false if !item_data
-    pocket = item_data.bag_pocket
+    pocket = item_data.pocket
     return ItemStorageHelper.remove(@pockets[pocket], item_data.id, qty)
   end
 
@@ -124,7 +127,7 @@ class PokemonBag
     old_item_data = GameData::Item.try_get(old_item)
     new_item_data = GameData::Item.try_get(new_item)
     return false if !old_item_data || !new_item_data
-    pocket = old_item_data.bag_pocket
+    pocket = old_item_data.pocket
     old_id = old_item_data.id
     new_id = new_item_data.id
     ret = false
@@ -163,12 +166,35 @@ class PokemonBag
   private
 
   def max_pocket_size(pocket)
-    return GameData::BagPocket.get(pocket).max_slots
+    return Settings::BAG_MAX_POCKET_SIZE[pocket - 1] || -1
+  end
+
+  def rearrange
+    return if @pockets.length == PokemonBag.pocket_count + 1
+    @last_viewed_pocket = 1
+    new_pockets = []
+    @last_pocket_selections = []
+    (PokemonBag.pocket_count + 1).times do |i|
+      new_pockets[i] = []
+      @last_pocket_selections[i] = 0
+    end
+    @pockets.each do |pocket|
+      next if !pocket
+      pocket.each do |item|
+        item_pocket = GameData::Item.get(item[0]).pocket
+        new_pockets[item_pocket].push(item)
+      end
+    end
+    new_pockets.each_with_index do |pocket, i|
+      next if i == 0 || !Settings::BAG_POCKET_AUTO_SORT[i - 1]
+      pocket.sort! { |a, b| GameData::Item.keys.index(a[0]) <=> GameData::Item.keys.index(b[0]) }
+    end
+    @pockets = new_pockets
   end
 end
 
 #===============================================================================
-# The PC item storage object, which actually contains all the items.
+# The PC item storage object, which actually contains all the items
 #===============================================================================
 class PCItemStorage
   attr_reader :items
@@ -233,21 +259,19 @@ class PCItemStorage
 end
 
 #===============================================================================
-# Implements methods that act on arrays of items. Each element in an item array
-# is itself an array of [itemID, itemCount].
+# Implements methods that act on arrays of items.  Each element in an item
+# array is itself an array of [itemID, itemCount].
 # Used by the Bag, PC item storage, and Triple Triad.
 #===============================================================================
 module ItemStorageHelper
-  module_function
-
-  # Returns the quantity of item in items.
-  def quantity(items, item)
+  # Returns the quantity of item in items
+  def self.quantity(items, item)
     ret = 0
     items.each { |i| ret += i[1] if i && i[0] == item }
     return ret
   end
 
-  def can_add?(items, max_slots, max_per_slot, item, qty)
+  def self.can_add?(items, max_slots, max_per_slot, item, qty)
     raise "Invalid value for qty: #{qty}" if qty < 0
     return true if qty == 0
     max_slots.times do |i|
@@ -265,7 +289,7 @@ module ItemStorageHelper
     return false
   end
 
-  def add(items, max_slots, max_per_slot, item, qty)
+  def self.add(items, max_slots, max_per_slot, item, qty)
     raise "Invalid value for qty: #{qty}" if qty < 0
     return true if qty == 0
     max_slots.times do |i|
@@ -285,8 +309,8 @@ module ItemStorageHelper
     return false
   end
 
-  # Deletes an item (items array, max. size per slot, item, no. of items to delete).
-  def remove(items, item, qty)
+  # Deletes an item (items array, max. size per slot, item, no. of items to delete)
+  def self.remove(items, item, qty)
     raise "Invalid value for qty: #{qty}" if qty < 0
     return true if qty == 0
     ret = false

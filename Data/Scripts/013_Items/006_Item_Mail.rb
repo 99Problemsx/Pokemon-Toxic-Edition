@@ -1,5 +1,5 @@
 #===============================================================================
-# Data structure representing mail that the Pokémon can hold.
+# Data structure representing mail that the Pokémon can hold
 #===============================================================================
 class Mail
   attr_accessor :item, :message, :sender, :poke1, :poke2, :poke3
@@ -101,7 +101,7 @@ def pbWriteMail(item, pkmn, pkmnid, scene)
   message = ""
   loop do
     message = pbMessageFreeText(_INTL("Please enter a message (max. 250 characters)."),
-                                "", false, 250, Graphics.width) { scene.update }
+                                "", false, 250, Graphics.width) { scene.pbUpdate }
     if message != ""
       # Store mail if a message was written
       poke1 = poke2 = nil
@@ -120,6 +120,6 @@ def pbWriteMail(item, pkmn, pkmnid, scene)
       pbStoreMail(pkmn, item, message, poke1, poke2, poke3)
       return true
     end
-    return false if scene.show_confirm_message(_INTL("Stop giving the Pokémon Mail?"))
+    return false if scene.pbConfirm(_INTL("Stop giving the Pokémon Mail?"))
   end
 end

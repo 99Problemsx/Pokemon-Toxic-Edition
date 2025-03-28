@@ -1,5 +1,5 @@
 #===============================================================================
-# Day and night system.
+# Day and night system
 #===============================================================================
 def pbGetTimeNow
   return Time.now
@@ -36,45 +36,42 @@ module PBDayNight
     Tone.new(-70, -90,  15, 55)    # Night
   ]
   CACHED_TONE_LIFETIME = 30   # In seconds; recalculates overworld tone once per this time
-
   @cachedTone = nil
   @dayNightToneLastUpdate = nil
   @oneOverSixty = 1 / 60.0
 
-  module_function
-
   # Returns true if it's day.
-  def isDay?(time = nil)
+  def self.isDay?(time = nil)
     time = pbGetTimeNow if !time
     return (time.hour >= 5 && time.hour < 20)
   end
 
   # Returns true if it's night.
-  def isNight?(time = nil)
+  def self.isNight?(time = nil)
     time = pbGetTimeNow if !time
     return (time.hour >= 20 || time.hour < 5)
   end
 
   # Returns true if it's morning.
-  def isMorning?(time = nil)
+  def self.isMorning?(time = nil)
     time = pbGetTimeNow if !time
     return (time.hour >= 5 && time.hour < 10)
   end
 
   # Returns true if it's the afternoon.
-  def isAfternoon?(time = nil)
+  def self.isAfternoon?(time = nil)
     time = pbGetTimeNow if !time
     return (time.hour >= 14 && time.hour < 17)
   end
 
   # Returns true if it's the evening.
-  def isEvening?(time = nil)
+  def self.isEvening?(time = nil)
     time = pbGetTimeNow if !time
     return (time.hour >= 17 && time.hour < 20)
   end
 
   # Gets a number representing the amount of daylight (0=full night, 255=full day).
-  def getShade
+  def self.getShade
     time = pbGetDayNightMinutes
     time = (24 * 60) - time if time > (12 * 60)
     return 255 * time / (12 * 60)
@@ -82,7 +79,7 @@ module PBDayNight
 
   # Gets a Tone object representing a suggested shading
   # tone for the current time of day.
-  def getTone
+  def self.getTone
     @cachedTone = Tone.new(0, 0, 0) if !@cachedTone
     return @cachedTone if !Settings::TIME_SHADING
     if !@dayNightToneLastUpdate || (System.uptime - @dayNightToneLastUpdate >= CACHED_TONE_LIFETIME)
@@ -92,12 +89,12 @@ module PBDayNight
     return @cachedTone
   end
 
-  def pbGetDayNightMinutes
+  def self.pbGetDayNightMinutes
     now = pbGetTimeNow   # Get the current in-game time
     return (now.hour * 60) + now.min
   end
 
-  def getToneInternal
+  def self.getToneInternal
     # Calculates the tone for the current frame, used for day/night effects
     realMinutes = pbGetDayNightMinutes
     hour   = realMinutes / 60
@@ -127,7 +124,7 @@ def pbDayNightTint(object)
 end
 
 #===============================================================================
-# Days of the week.
+# Days of the week
 #===============================================================================
 def pbIsWeekday(wdayVariable, *arg)
   timenow = pbGetTimeNow
@@ -152,7 +149,7 @@ def pbIsWeekday(wdayVariable, *arg)
 end
 
 #===============================================================================
-# Months.
+# Months
 #===============================================================================
 def pbIsMonth(monVariable, *arg)
   timenow = pbGetTimeNow
@@ -199,7 +196,7 @@ def pbGetAbbrevMonthName(month)
 end
 
 #===============================================================================
-# Seasons.
+# Seasons
 #===============================================================================
 def pbGetSeason
   return (pbGetTimeNow.mon - 1) % 4
@@ -235,7 +232,7 @@ def pbGetSeasonName(season)
 end
 
 #===============================================================================
-# Moon phases and Zodiac.
+# Moon phases and Zodiac
 #===============================================================================
 # Calculates the phase of the moon. time is in UTC.
 # 0 - New Moon

@@ -65,7 +65,7 @@ class BattleSwapScene
     @mode = 1
   end
 
-  # End the scene here.
+  # End the scene here
   def pbEndScene
     pbFadeOutAndHide(@sprites) { pbUpdate }
     pbDisposeSpriteHash(@sprites)
@@ -93,7 +93,7 @@ class BattleSwapScene
     return commands
   end
 
-  # Processes the scene.
+  # Processes the scene
   def pbChoosePokemon(canCancel)
     pbActivateWindow(@sprites, "list") do
       loop do
@@ -146,8 +146,9 @@ class BattleSwapScene
 
   def pbSummary(list, index)
     visibleSprites = pbFadeOutAndHide(@sprites) { pbUpdate }
-    screen = UI::PokemonSummary.new(list, index).main
-    @sprites["list"].index = screen.result
+    scene = PokemonSummary_Scene.new
+    screen = PokemonSummaryScreen.new(scene)
+    @sprites["list"].index = screen.pbStartScreen(list, index)
     pbFadeInAndShow(@sprites, visibleSprites) { pbUpdate }
   end
 

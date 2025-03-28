@@ -1,0 +1,144 @@
+#-------------------------------
+[VAMPIRICFANG]
+Name = Vampiric Fang
+Description = Bite moves heals the user. Stackable.
+#-------------------------------
+[WARRIORDANCER]
+Name = Warrior Dancer
+Description = Dance moves lowers the Attack of all Pokémon.
+#-------------------------------
+[JOAT]
+Name = Joat
+Description = Removes STAB. Boosts all moves by 30%.
+#-------------------------------
+[CRYOHEALING]
+Name = Cryo Healing
+Description = Restores HP if the Pokémon is frostbiten.
+#-------------------------------
+[MENACING]
+Name = Menacing
+Description = Lowers the foe's Special Attack stat.
+#-------------------------------
+[EXTREMEFOCUS]
+Name = Extreme Focus
+Description = Boosts Special Attack if there is a status problem.
+#-------------------------------
+[STORMFRONT]
+Name = Storm Front
+Description = Summons rain & electric terrain.
+#-------------------------------
+[CHLOROPLAST]
+Name = Chloroplast
+Description = Acts as if the sun is up.
+#-------------------------------
+[BONECHILL]
+Name = Bonechill
+Description = May frostbite targets when a Pokémon makes contact.
+#-------------------------------
+[OVERWHELMINGFROST]
+Name = Overwhelming Frost
+Description = Once per battle, the user Frostbites everything on switch in.
+#-------------------------------
+[OVERWHELMINGVOLTAGE]
+Name = Overwhelming Voltage
+Description = Once per battle, the user Paralyzes everything on switch in.
+#-------------------------------
+[OVERWHELMINGBLAZE]
+Name = Overwhelming Blaze
+Description = Once per battle, the user Burns everything on switch in.
+#-------------------------------
+[SEADIVER]
+Name = Sea Diver
+Description = Raises Speed and give Water-Type moves a damage increase in rain.
+#-------------------------------
+[TANGLINGROOTS]
+Name = Tangling Roots
+Description = Leech Seeds the target and ingrain.
+#-------------------------------
+[FUELLEDBLAZE]
+Name = Fuelled Blaze
+Description = Always crit if the target burnt.
+#-------------------------------
+[POWERSURGE]
+Name = Power Surge
+Description = Electric moves hit the targets allies.
+#-------------------------------
+[CATASTROPHE]
+Name = Cat-astrophe
+Description = Powers up dark-type moves by 75% but lowers priority. Priorty moves ignore this ability.
+#-------------------------------
+[SHALLOWNESS]
+Name = Shallowness
+Description = Immune to Infatuation, Taunt & Flinching.
+#-------------------------------
+[DUALWIELD]
+Name = Dual Wield
+Description = Slicing and Pulse moves hit twice
+#-------------------------------
+[VENGENCE]
+Name = Vengence
+Description = The user becomes Vengful if it's ally was knocked out the previous turn.
+#-------------------------------
+[UNPREDICTABLE]
+Name = Unpredictable
+Description = Resistance to Psychic-Types and STAB deals Super Effective against Psychic-Types.
+#-------------------------------
+[SPECTRALIZE]
+Name = Spectralize
+Description = Gives the Ghost-type on switch in.
+#-------------------------------
+[FROZENYIN]
+Name = Frozen Yin
+Description = Combo of Teravolt and Overwhelming Frost.
+#-------------------------------
+[FROZENYANG]
+Name = Frozen Yang
+Description = Combo of Turboblaze and Overwhelming Frost.
+#-------------------------------
+[POISONABSORB]
+Name = Poison Absorb
+Description = Restores HP if hit by a Poison-type move.
+#-------------------------------
+[CRYSTALLIZE]
+Name = Crystallize
+Description = Rock-type moves become Ice-type and powered up.
+#-------------------------------
+[FLAMEWING]
+Name = Flame Wing
+Description = Flying-type moves become Fire-type and powered up.
+#-------------------------------
+[ARCANEMAGE]
+Name = Arcane Mage
+Description = Restores HP if hit by a Poison-type move.
+#-------------------------------
+[FIERYSPIRIT]
+Name = Fiery Spirit
+Description = Gains the Fire-type on Switch in.
+#-------------------------------
+[SKYFORCE]
+Name = Sky Force
+Description = Doubles the power of Flying-type moves.
+#-------------------------------
+[DOUBLECROSS]
+Name = Double Cross
+Description = 30% chance to attack twice.
+#-------------------------------
+[UNDERWEATHER]
+Name = Under Weather
+Description = Restores HP if hit by a Poison-type move.
+#-------------------------------
+[POTENTPOISON]
+Name = Potent Poison
+Description = Restores HP if hit by a Poison-type move.
+#-------------------------------
+[VENGEFULSPIRIT]
+Name = Vengeful Spirit
+Description = Restores HP if hit by a Poison-type move.
+#-------------------------------
+[FAULTYRECEIVER]
+Name = Faulty Receiver
+Description = Protects the Pokémon from some aura and pulse moves.
+#-------------------------------
+[MONKEYBUSINESS]
+Name = Monkey Business
+Description = Boosts Special Attack, but allows only one move to be used.

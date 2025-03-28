@@ -1,11 +1,8 @@
-#===============================================================================
-#
-#===============================================================================
 module BattleAnimationEditor
   module_function
 
   #=============================================================================
-  # Importing and exporting.
+  # Importing and exporting
   #=============================================================================
   def pbRgssChdir(dir)
     RTP.eachPathFor(dir) { |path| Dir.chdir(path) { yield } }
@@ -87,7 +84,7 @@ module BattleAnimationEditor
   end
 
   #=============================================================================
-  # Format conversion.
+  # Format conversion
   #=============================================================================
   def pbConvertAnimToNewFormat(textdata)
     needconverting = false

@@ -23,7 +23,7 @@ class PokemonGlobalMetadata
 end
 
 #===============================================================================
-# General purpose utilities.
+# General purpose utilities
 #===============================================================================
 def pbDrawGauge(bitmap, rect, color, value, maxValue)
   return if !bitmap
@@ -100,7 +100,7 @@ class PurifyChamberSet
   end
 
   # Tempo refers to the type advantages of each Pokemon in a certain set in a
-  # clockwise direction. Tempo also depends on the number of Pokemon in the set.
+  # clockwise direction. Tempo also depends on the number of Pokemon in the set
   def tempo
     ret = 0
     @list.length.times do |i|
@@ -1232,7 +1232,9 @@ class PurifyChamberScene
   def pbSummary(pos, heldpkmn)
     if heldpkmn
       oldsprites = pbFadeOutAndHide(@sprites)
-      UI::PokemonSummary.new(heldpkmn).main
+      scene = PokemonSummary_Scene.new
+      screen = PokemonSummaryScreen.new(scene)
+      screen.pbStartScreen([heldpkmn], 0)
       pbFadeInAndShow(@sprites, oldsprites)
       return
     end
@@ -1249,8 +1251,9 @@ class PurifyChamberScene
     end
     return if party.length == 0
     oldsprites = pbFadeOutAndHide(@sprites)
-    screen = UI::PokemonSummary.new(party, startindex).main
-    selection = screen.result
+    scene = PokemonSummary_Scene.new
+    screen = PokemonSummaryScreen.new(scene)
+    selection = screen.pbStartScreen(party, startindex)
     @sprites["setview"].cursor = indexes[selection]
     pbFadeInAndShow(@sprites, oldsprites)
   end
@@ -1267,19 +1270,13 @@ class PurifyChamberScene
     pbRefresh
   end
 
-  # TODO: Depending on which position is selected, make Shadow Pokémon/non-Shadow
-  #       Pokémon in UI::PokemonStorage semi-transparent and don't let them be
-  #       selected.
-  # TODO: Don't let eggs be selected.
-  # TODO: Don't let the last able Pokémon in the party be selected.
   def pbChoosePokemon
-    pos = nil
-    pbFadeOutInWithUpdate(@sprites) do
-      screen = UI::PokemonStorage.new($PokemonStorage, mode: :choose_pokemon)
-      screen.main
-      pos = screen.result
-      pbRefresh
-    end
+    visible = pbFadeOutAndHide(@sprites)
+    scene = PokemonStorageScene.new
+    screen = PokemonStorageScreen.new(scene, $PokemonStorage)
+    pos = screen.pbChoosePokemon
+    pbRefresh
+    pbFadeInAndShow(@sprites, visible)
     return pos
   end
 end
@@ -1299,7 +1296,6 @@ end
 #===============================================================================
 #
 #===============================================================================
-
 MenuHandlers.add(:pc_menu, :purify_chamber, {
   "name"      => _INTL("Purify Chamber"),
   "order"     => 30,

@@ -1,6 +1,3 @@
-#===============================================================================
-#
-#===============================================================================
 module GameData
   class PlayerMetadata
     attr_reader :id
@@ -11,6 +8,7 @@ module GameData
 
     DATA = {}
     DATA_FILENAME = "player_metadata.dat"
+
     SCHEMA = {
       "SectionName"     => [:id,                "u"],
       "TrainerType"     => [:trainer_type,      "e", :TrainerType],
@@ -49,8 +47,6 @@ module GameData
       return self::DATA[player_id] if self::DATA.has_key?(player_id)
       return self::DATA[1]
     end
-
-    #---------------------------------------------------------------------------
 
     def initialize(hash)
       @id                = hash[:id]

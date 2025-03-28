@@ -2,13 +2,6 @@
 #
 #===============================================================================
 class PokemonPokedexInfo_Scene
-  LEFT          = 0
-  TOP           = 0
-  RIGHT         = 29
-  BOTTOM        = 19
-  SQUARE_WIDTH  = 16
-  SQUARE_HEIGHT = 16
-
   def pbStartScene(dexlist, index, region)
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
     @viewport.z = 99999
@@ -38,8 +31,8 @@ class PokemonPokedexInfo_Scene
       pbDrawImagePositions(
         @sprites["areamap"].bitmap,
         [["Graphics/UI/Town Map/#{hidden[4]}",
-          hidden[2] * SQUARE_WIDTH,
-          hidden[3] * SQUARE_HEIGHT]]
+          hidden[2] * PokemonRegionMap_Scene::SQUARE_WIDTH,
+          hidden[3] * PokemonRegionMap_Scene::SQUARE_HEIGHT]]
       )
     end
     @sprites["areahighlight"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
@@ -161,7 +154,7 @@ class PokemonPokedexInfo_Scene
   def pbGetAvailableForms
     ret = []
     multiple_forms = false
-    gender_differences = (GameData::Species.front_sprite_filename(@species, 0) != GameData::Species.front_sprite_filename(@species, 0, 1))
+    gender_differences = (GameData::Species.front_sprite_filename(@species, 0) == GameData::Species.front_sprite_filename(@species, 0, 1))
     # Find all genders/forms of @species that have been seen
     GameData::Species.each do |sp|
       next if sp.species != @species
@@ -322,12 +315,12 @@ class PokemonPokedexInfo_Scene
     # defined point in town_map.txt, and which either have no Self Switch
     # controlling their visibility or whose Self Switch is ON)
     visible_points = []
-    @mapdata.points.each do |loc|
-      next if loc[:switch] && !$game_switches[loc[:switch]]   # Point is not visible
-      visible_points.push(loc[:position])
+    @mapdata.point.each do |loc|
+      next if loc[7] && !$game_switches[loc[7]]   # Point is not visible
+      visible_points.push([loc[0], loc[1]])
     end
     # Find all points with a visible area for @species
-    town_map_width = 1 + RIGHT - LEFT
+    town_map_width = 1 + PokemonRegionMap_Scene::RIGHT - PokemonRegionMap_Scene::LEFT
     ret = []
     GameData::Encounter.each_of_version($PokemonGlobal.encounter_version) do |enc_data|
       next if !pbFindEncounter(enc_data.types, @species)   # Species isn't in encounter table
@@ -335,7 +328,7 @@ class PokemonPokedexInfo_Scene
       map_metadata = GameData::MapMetadata.try_get(enc_data.map)
       next if !map_metadata || map_metadata.has_flag?("HideEncountersInPokedex")
       mappos = map_metadata.town_map_position
-      next if !mappos || mappos[0] != @region   # Map isn't in the region being shown
+      next if mappos[0] != @region   # Map isn't in the region being shown
       # Get the size and shape of the map in the Town Map
       map_size = map_metadata.town_map_size
       map_width = 1
@@ -369,9 +362,9 @@ class PokemonPokedexInfo_Scene
     # Draw coloured squares on each point of the Town Map with a nest
     pointcolor   = Color.new(0, 248, 248)
     pointcolorhl = Color.new(192, 248, 248)
-    town_map_width = 1 + RIGHT - LEFT
-    sqwidth = SQUARE_WIDTH
-    sqheight = SQUARE_HEIGHT
+    town_map_width = 1 + PokemonRegionMap_Scene::RIGHT - PokemonRegionMap_Scene::LEFT
+    sqwidth = PokemonRegionMap_Scene::SQUARE_WIDTH
+    sqheight = PokemonRegionMap_Scene::SQUARE_HEIGHT
     points.length.times do |j|
       next if !points[j]
       x = (j % town_map_width) * sqwidth

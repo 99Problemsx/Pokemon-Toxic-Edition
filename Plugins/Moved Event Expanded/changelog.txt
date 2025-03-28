@@ -1,0 +1,6 @@
+v1.1
+- Some coded events (like Trainer Battles) call $PokemonMap.addMovedEvent automatically. In order for this plugin to not break these because they wouldn't return to their original place, I had to add a parameter to activate the persistent saved spot. Now, you have to set the argument "permanent: true" in order to save the event's position permanently.
+-- Example: $PokemonMap.addMovedEvent(eventide, permanent: true)
+
+v1.0
+- Initial Release

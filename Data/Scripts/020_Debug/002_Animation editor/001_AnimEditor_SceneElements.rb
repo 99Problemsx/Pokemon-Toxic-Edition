@@ -1,11 +1,8 @@
-#===============================================================================
-#
-#===============================================================================
 module BattleAnimationEditor
   module_function
 
   #=============================================================================
-  # Controls.
+  # Controls
   #=============================================================================
   class Window_Menu < Window_CommandPokemon
     def initialize(commands, x, y)
@@ -45,7 +42,7 @@ module BattleAnimationEditor
   end
 
   #=============================================================================
-  # Clipboard.
+  # Clipboard
   #=============================================================================
   module Clipboard
     @data = nil
@@ -98,7 +95,7 @@ module BattleAnimationEditor
   end
 
   #=============================================================================
-  # Sprite sheet scrolling bar.
+  # Sprite sheet scrolling bar
   #=============================================================================
   class AnimationWindow < Sprite
     attr_reader :animbitmap
@@ -250,7 +247,7 @@ module BattleAnimationEditor
   end
 
   #=============================================================================
-  # Cel sprite.
+  # Cel sprite
   #=============================================================================
   class InvalidatableSprite < Sprite
     def initialize(viewport = nil)
@@ -356,7 +353,7 @@ module BattleAnimationEditor
   end
 
   #=============================================================================
-  # Canvas.
+  # Canvas
   #=============================================================================
   class AnimationCanvas < Sprite
     attr_reader :viewport
@@ -578,7 +575,7 @@ module BattleAnimationEditor
       end
     end
 
-    # Clears all items in the frame except locked items.
+    # Clears all items in the frame except locked items
     def clearFrame(frame)
       if frame >= 0 && frame < @animation.length
         PBAnimation::MAX_SPRITES.times do |i|
@@ -623,7 +620,7 @@ module BattleAnimationEditor
       self.invalidate
     end
 
-    # This frame becomes a copy of the previous frame.
+    # This frame becomes a copy of the previous frame
     def pasteLast
       copyFrame(@currentframe - 1, @currentframe) if @currentframe > 0
     end
@@ -762,6 +759,7 @@ module BattleAnimationEditor
         return false
       end
       if usealpha
+        # TODO: This should account for sprite.angle as well.
         bitmapX = sprite.src_rect.x
         bitmapY = sprite.src_rect.y
         bitmapX += sprite.ox
@@ -933,7 +931,7 @@ module BattleAnimationEditor
   end
 
   #=============================================================================
-  # Window classes.
+  # Window classes
   #=============================================================================
   class BitmapDisplayWindow < SpriteWindow_Base
     attr_reader :bitmapname

@@ -1,6 +1,6 @@
-#===============================================================================
+#==============================================================================
 # * Scene_Credits
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 # Scrolls the credits you make below. Original Author unknown.
 #
 ## Edited by MiDas Mike so it doesn't play over the Title, but runs by calling
@@ -32,11 +32,11 @@
 ## New Edit 21/8/2020 by Marin.
 # Now automatically inserts the credits from the plugins that have been
 # registered through the PluginManager module.
-#===============================================================================
+#==============================================================================
 class Scene_Credits
   # Backgrounds to show in credits. Found in Graphics/Titles/ folder
   BACKGROUNDS_LIST       = ["credits1", "credits2", "credits3", "credits4", "credits5"]
-  CREDITS_BGM            = "Credits"
+  BGM                    = "Credits"
   SCROLL_SPEED           = 40   # Pixels per second
   SECONDS_PER_BACKGROUND = 11
   TEXT_OUTLINE_COLOR     = Color.new(0, 0, 128, 255)
@@ -88,7 +88,7 @@ class Scene_Credits
     ret.push("")
     ret.push(_INTL("\"mkxp-z\" by:"))
     add_names_to_credits(ret, [
-      "Anon",
+      "Roza",
       _INTL("Based on \"mkxp\" by Ancurio et al.")
     ])
     ret.push(_INTL("\"RPG Maker XP\" by:"))
@@ -108,16 +108,22 @@ class Scene_Credits
 
   def main
     @quit = false
-    @timer_start = System.uptime   # Time when the credits started
+    #-------------------------------
     # Animated Background Setup
+    #-------------------------------
+    @timer_start = System.uptime   # Time when the credits started
     @bg_index = 0
     @bitmap_height = Graphics.height   # For a single credits text bitmap
     @trim = Graphics.height / 10
     # Number of game frames per background frame
     @realOY = -(Graphics.height - @trim)
+    #-------------------------------
     # Credits text Setup
+    #-------------------------------
     credit_lines = get_text
+    #-------------------------------
     # Make background and text sprites
+    #-------------------------------
     viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
     viewport.z = 99999
     text_viewport = Viewport.new(0, @trim, Graphics.width, Graphics.height - (@trim * 2))
@@ -167,14 +173,16 @@ class Scene_Credits
       credit_sprite.oy     = @realOY - (@bitmap_height * i)
       @credit_sprites[i] = credit_sprite
     end
+    #-------------------------------
     # Setup
+    #-------------------------------
     # Stops all audio but background music
     previousBGM = $game_system.getPlayingBGM
     pbMEStop
     pbBGSStop
     pbSEStop
     pbBGMFade(2.0)
-    pbBGMPlay(CREDITS_BGM)
+    pbBGMPlay(BGM)
     Graphics.transition
     loop do
       Graphics.update

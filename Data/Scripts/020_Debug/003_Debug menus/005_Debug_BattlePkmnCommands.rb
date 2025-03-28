@@ -1,7 +1,6 @@
 #===============================================================================
-# HP/Status options.
+# HP/Status options
 #===============================================================================
-
 MenuHandlers.add(:battle_pokemon_debug_menu, :hp_status_menu, {
   "name"   => _INTL("HP/status..."),
   "parent" => :main,
@@ -130,9 +129,8 @@ MenuHandlers.add(:battle_pokemon_debug_menu, :full_heal, {
 })
 
 #===============================================================================
-# Level/stats options.
+# Level/stats options
 #===============================================================================
-
 MenuHandlers.add(:battle_pokemon_debug_menu, :level_stats, {
   "name"   => _INTL("Stats/level..."),
   "parent" => :main,
@@ -410,9 +408,8 @@ MenuHandlers.add(:battle_pokemon_debug_menu, :set_happiness, {
 })
 
 #===============================================================================
-# Types.
+# Types
 #===============================================================================
-
 MenuHandlers.add(:battle_pokemon_debug_menu, :set_types, {
   "name"   => _INTL("Set types"),
   "parent" => :main,
@@ -460,9 +457,8 @@ MenuHandlers.add(:battle_pokemon_debug_menu, :set_types, {
 })
 
 #===============================================================================
-# Moves options.
+# Moves options
 #===============================================================================
-
 MenuHandlers.add(:battle_pokemon_debug_menu, :moves, {
   "name"   => _INTL("Moves..."),
   "parent" => :main,
@@ -604,9 +600,8 @@ MenuHandlers.add(:battle_pokemon_debug_menu, :reset_moves, {
 })
 
 #===============================================================================
-# Other options.
+# Other options
 #===============================================================================
-
 MenuHandlers.add(:battle_pokemon_debug_menu, :set_item, {
   "name"   => _INTL("Set item"),
   "parent" => :main,
@@ -632,8 +627,8 @@ MenuHandlers.add(:battle_pokemon_debug_menu, :set_item, {
         end
       when 1   # Remove item
         if pkmn.hasItem?
-          pkmn.item = nil
-          battler.item = nil if battler
+          (battler || pkmn).item = nil
+          pkmn.mail = nil
         end
       else
         break

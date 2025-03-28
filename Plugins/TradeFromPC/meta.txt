@@ -1,0 +1,83 @@
+Name         = Trade From PC
+Version      = 1.0
+Essentials   = 20, 20.1, 21, 21.1
+Website      = https://reliccastle.com/resources/1417/
+Credits      = Dr.Doom76
+#==============================================================================#
+# =============================== Installation================================ #
+#==============================================================================#
+# To install this plugin, extract the folder into your game root folder.
+# 
+#==============================================================================#
+# ================================ How to use ================================ #
+#==============================================================================#
+ # ================================ Overview ================================ #
+# Simplify the trading process in your Pokémon Essentials game by enabling direct trading from the Pokémon Storage, 
+# eliminating the need to access your party. This script streamlines 
+# trading, making it more efficient and user-friendly.
+# 
+#==============================================================================#
+#===============================V1.01 Changes==================================#
+#==============================================================================#
+
+ # ============================ Trade Initiation ============================ #
+	# ========= To initiate a trade, use the following command ========= #
+# pbChoosePokemonForTradePC(:RATTATA)
+# The parameter (:RATTATA) represents the Pokémon symbol that the trader is seeking.
+# Changed the way the initial is called. It now requires less arugments.
+# Faster to type and less of a chance of error.
+#
+ # ========================== Completing the Trade ========================== #
+		# ===== Execute the trade using the following command ===== #
+# pbStartTradePC(:HAUNTER, _I("HaHa"), _I("Andrea"), 1)
+# The first parameter (:HAUNTER) specifies the Pokémon symbol that the trader will exchange with you.
+# The second parameter (_I("HaHa")) is the nickname for the Pokémon you'll receive in the trade.
+# The third parameter (_I("Andrea")) represents the name of the trader conducting the trade with you.
+# The fourth parameter (1) indicates the trader's gender (0 for male, 1 for female).
+#
+# Changed the way the initial is called. It now requires less arugments.
+# Faster to type and less of a chance of error.
+#
+# ========================== Imporant Additions ========================== #
+# I have removed the needed for the old first parameter. It now starts with the Pokemon.
+# Also, it's now written to accept just one argument, if wanted.
+# If you want to use the short form version call with:
+# pbStartTradePC(:HAUNTER)
+# This will start the trade where Haunter is the Pokemon coming to you. 
+# The Nickname value will default to the Pokemon's original name.
+# The Trainer name will default to whatever the event's name is within the map. If your NPC Trader is named "Gent" (in the example situation),
+# leaving it blank will result in the Pokemon's trainer name being "Gent".
+# The Trainer gender is defaulted to male(0). 
+# If you want to change a certain section of the arguments, for instance the Trainer gender, but nothing else, you would have to put "nil" for the other arguments.
+# I.E. pbStartTradePC(:HAUNTER, nil, nil, 1)
+# This would trade you a Haunter, with Nickname Haunter, from NPC "Event Name", with a trainer gender of female.
+# 
+# Another example would be if you wanted to just change the nickname of the Pokemon.
+# I.E. pbStartTradePC(:HAUNTER, "Boo")
+# Since you only wanted to change the second argument, you don't have to continue with the third and fourth, as they're optional.
+#
+#
+#
+# ========================== Further Information ========================== #
+# For more comprehensive details on the trading mechanics, please refer to this resource.
+# https://essentialsdocs.fandom.com/wiki/Trading_Pok%C3%A9mon
+# Enjoy an enhanced trading experience in your Pokémon Essentials game, making trades faster and more 
+# convenient than ever before!
+#
+# Old Method: Ignore for the most part. Only here for reference purposes.
+ # ============================ Trade Initiation ============================ #
+	# ========= To initiate a trade, use the following command ========= #
+# pbChoosePokemonForTradePC(1, 2, :RATTATA)
+# The first parameter (1) designates where the selected Pokémon will be stored as a game variable. You can customize this variable as needed.
+# The second parameter (2) stores the Pokémon's name as a game variable.
+# The third parameter (:RATTATA) represents the Pokémon symbol that the trader is seeking.
+#
+#
+ # ========================== Completing the Trade ========================== #
+		# ===== Execute the trade using the following command ===== #
+# pbStartTradePC(pbGet(1), :HAUNTER, _I("HaHa"), _I("Andrea"), 1)
+# The first parameter (pbGet(1)) retrieves the information stored in game variable 1, ensuring consistency with the variable used during trade initiation.
+# The second parameter (:HAUNTER) specifies the Pokémon symbol that the trader will exchange with you.
+# The third parameter (_I("HaHa")) is the nickname for the Pokémon you'll receive in the trade.
+# The fourth parameter (_I("Andrea")) represents the name of the trader conducting the trade with you.
+# The fifth parameter (1) indicates the trader's gender (0 for male, 1 for female).
