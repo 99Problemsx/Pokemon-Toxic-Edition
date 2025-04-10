@@ -70,7 +70,7 @@ class NamedEvent
 
   # Adds an event handler procedure from the event.
   def add(key, proc)
-    @callbacks[key] = proc if !@callbacks.has_key?(key)
+    @callbacks[key] = proc
   end
 
   # Removes an event handler procedure from the event.
@@ -102,6 +102,10 @@ class HandlerHash
   def [](id)
     return @hash[id] if id && @hash[id]
     return nil
+  end
+
+  def keys
+    return @hash.keys
   end
 
   def add(id, handler = nil, &handlerBlock)
@@ -158,6 +162,10 @@ class HandlerHashSymbol
       return add_if[1] if add_if[0].call(sym)
     end
     return nil
+  end
+
+  def keys
+    return @hash.keys
   end
 
   def add(sym, handler = nil, &handlerBlock)
@@ -223,6 +231,10 @@ class HandlerHashEnum
       end
     end
     return ret
+  end
+
+  def keys
+    return @hash.keys
   end
 
   def fromSymbol(sym)

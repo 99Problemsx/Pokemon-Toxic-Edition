@@ -1,15 +1,17 @@
 #===============================================================================
 # * Egg Hatch Animation - by FL (Credits will be apreciated)
 #                         Tweaked by Maruno
-#===============================================================================
+#-------------------------------------------------------------------------------
 # This script is for Pokémon Essentials. It's an egg hatch animation that
 # works even with special eggs like Manaphy egg.
-#===============================================================================
+#-------------------------------------------------------------------------------
 # To this script works, put it above Main and put a picture (a 5 frames
 # sprite sheet) with egg sprite height and 5 times the egg sprite width at
 # Graphics/Battlers/eggCracks.
 #===============================================================================
 class PokemonEggHatch_Scene
+  EGG_HATCH_BGM = "Evolution"
+
   def pbStartScene(pokemon)
     @sprites = {}
     @pokemon = pokemon
@@ -50,7 +52,7 @@ class PokemonEggHatch_Scene
   end
 
   def pbMain
-    pbBGMPlay("Evolution")
+    pbBGMPlay(EGG_HATCH_BGM)
     # Egg animation
     updateScene(1.5)
     pbPositionHatchMask(0)
@@ -215,6 +217,7 @@ def pbHatch(pokemon)
   pokemon.name           = nil
   pokemon.owner          = Pokemon::Owner.new_from_trainer($player)
   pokemon.happiness      = 120
+  pokemon.steps_to_hatch = 0
   pokemon.timeEggHatched = Time.now.to_i
   pokemon.obtain_method  = 1   # hatched from egg
   pokemon.hatched_map    = $game_map.map_id

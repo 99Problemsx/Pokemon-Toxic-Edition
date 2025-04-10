@@ -1,5 +1,5 @@
 #===============================================================================
-#  Reads files of certain format from a directory
+# Reads files of certain format from a directory
 #===============================================================================
 class Dir
   # Reads all files in a directory
@@ -73,19 +73,6 @@ end
 #===============================================================================
 # Checking for files and directories
 #===============================================================================
-# Works around a problem with FileTest.directory if directory contains accent marks
-# @deprecated This method is slated to be removed in v22.
-def safeIsDirectory?(f)
-  Deprecation.warn_method("safeIsDirectory?(f)", "v22", "FileTest.directory?(f)")
-  return FileTest.directory?(f)
-end
-
-# @deprecated This method is slated to be removed in v22.
-def safeExists?(f)
-  Deprecation.warn_method("safeExists?(f)", "v22", "FileTest.exist?(f)")
-  return FileTest.exist?(f)
-end
-
 # Similar to "Dir.glob", but designed to work around a problem with accessing
 # files if a path contains accent marks.
 # "dir" is the directory path, "wildcard" is the filename pattern to match.
@@ -108,8 +95,8 @@ end
 
 def pbResolveAudioSE(file)
   return nil if !file
-  if RTP.exists?("Audio/SE/" + file, ["", ".wav", ".ogg"])   # ".mp3"
-    return RTP.getPath("Audio/SE/" + file, ["", ".wav", ".ogg"])   # ".mp3"
+  if RTP.exists?("Audio/SE/" + file, ["", ".wav", ".ogg", ".mp3", ".wma"])
+    return RTP.getPath("Audio/SE/" + file, ["", ".wav", ".ogg", ".mp3", ".wma"])
   end
   return nil
 end
@@ -197,7 +184,7 @@ module RTP
   end
 
   def self.getAudioPath(filename)
-    return self.getPath(filename, ["", ".wav", ".wma", ".mid", ".ogg", ".midi"])   # ".mp3"
+    return self.getPath(filename, ["", ".wav", ".ogg", ".mp3", ".midi", ".mid", ".wma"])
   end
 
   def self.getPath(filename, extensions = [])
@@ -261,7 +248,7 @@ end
 #===============================================================================
 module FileTest
   IMAGE_EXTENSIONS = [".png", ".gif"]   # ".jpg", ".jpeg", ".bmp",
-  AUDIO_EXTENSIONS = [".mid", ".midi", ".ogg", ".wav", ".wma"]   # ".mp3"
+  AUDIO_EXTENSIONS = [".wav", ".ogg", ".mp3", ".midi", ".mid", ".wma"]
 
   def self.audio_exist?(filename)
     return RTP.exists?(filename, AUDIO_EXTENSIONS)

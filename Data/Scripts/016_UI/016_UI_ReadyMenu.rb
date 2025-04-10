@@ -82,7 +82,7 @@ class ReadyMenuButton < Sprite
         textpos.push([_INTL(">99"), 230, 24, :right,
                       Color.new(248, 248, 248), Color.new(40, 40, 40), :outline])
       else
-        textpos.push([_INTL("x{1}", qty), 230, 24, :right,
+        textpos.push([_INTL("×{1}", qty), 230, 24, :right,
                       Color.new(248, 248, 248), Color.new(40, 40, 40), :outline])
       end
     end
@@ -261,11 +261,11 @@ class PokemonReadyMenu
         user = $player.party[commands[0][command[1]][3]]
         if move == :FLY
           ret = nil
-          pbFadeOutInWithUpdate(99999, @scene.sprites) do
+          pbFadeOutInWithUpdate(@scene.sprites) do
             pbHideMenu
-            scene = PokemonRegionMap_Scene.new(-1, false)
-            screen = PokemonRegionMapScreen.new(scene)
-            ret = screen.pbStartFlyScreen
+            town_map_screen = UI::TownMap.new(mode: :fly)
+            town_map_screen.main
+            ret = town_map_screen.result
             pbShowMenu if !ret
           end
           if ret
@@ -300,7 +300,7 @@ class PokemonReadyMenu
 end
 
 #===============================================================================
-# Using a registered item
+# Using a registered item.
 #===============================================================================
 def pbUseKeyItem
   moves = [:CUT, :DEFOG, :DIG, :DIVE, :FLASH, :FLY, :HEADBUTT, :ROCKCLIMB,

@@ -1,0 +1,47 @@
+# Backup-Struktur für Pokémon Toxic Edition
+#----------------------------------------
+
+# 1. Hauptbackup-Ordner
+/Backups/
+    /Gen_9/
+        /Content/         # Gen 9 Inhalte
+        /Updates/         # Gen 9 Updates
+        /Vanilla/         # Vanilla Gen 9 Dateien
+    
+    /Gen_8/
+        /Content/         # Gen 8 Inhalte
+        /Updates/         # Gen 8 Updates
+        /Vanilla/         # Vanilla Gen 8 Dateien
+    
+    /Gen_7/
+        /Content/         # Gen 7 Inhalte
+        /Updates/         # Gen 7 Updates
+        /Vanilla/         # Vanilla Gen 7 Dateien
+    
+    /Gen_6/
+        /Content/         # Gen 6 Inhalte
+        /Updates/         # Gen 6 Updates
+        /Vanilla/         # Vanilla Gen 6 Dateien
+    
+    /Gen_5/
+        /Content/         # Gen 5 Inhalte
+        /Updates/         # Gen 5 Updates
+        /Vanilla/         # Vanilla Gen 5 Dateien
+
+# 2. Spezielle Backups
+    /Shadow_Pokemon/     # Shadow Pokémon Inhalte
+    /Forms/             # Spezielle Formen
+    /Items/             # Items und Itemsets
+    /Moves/             # Attacken und Movesets
+
+# 3. Konfigurationsdateien
+    /Config/            # Spielkonfigurationen
+    /Scripts/           # Backup-Skripte
+    /Documentation/     # Dokumentation
+
+# Backup-Richtlinien:
+# 1. Regelmäßige Backups (mindestens wöchentlich)
+# 2. Versionskontrolle für alle Dateien
+# 3. Dokumentation aller Änderungen
+# 4. Testen der Backups vor dem Speichern
+# 5. Komprimierung alter Backups 

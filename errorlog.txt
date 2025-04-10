@@ -40,3 +40,110 @@ Backtrace:
 999_Main.rb:18:in `mainFunction'
 999_Main.rb:51:in `block (2 levels) in load_scripts_from_folder'
 999_Main.rb:50:in `loop'
+
+=================
+
+[2025-03-30 03:43:40 +0200]
+[Pokémon Essentials version 21.1]
+[v21.1 Hotfixes 1.0.9]
+
+Exception: NoMethodError
+Message: undefined method `>' for nil:NilClass
+
+Backtrace:
+007_Game_Character.rb:376:in `jumping?'
+007_Game_Character.rb:899:in `update_command'
+007_Game_Character.rb:886:in `update'
+[v21.1 Hotfixes] Misc bug fixes.rb:592:in `update'
+004_Game_Map.rb:462:in `block in update'
+004_Game_Map.rb:462:in `each_value'
+004_Game_Map.rb:462:in `update'
+[Delta Speed Up] _Main_Script.rb:153:in `update'
+001_StartGame.rb:70:in `load'
+[Delta Speed Up] _Main_Script.rb:23:in `load'
+
+=================
+
+[2025-03-30 03:43:53 +0200]
+[Pokémon Essentials version 21.1]
+[v21.1 Hotfixes 1.0.9]
+
+Exception: NoMethodError
+Message: undefined method `mounted_pkmn' for #<PokemonGlobalMetadata>
+
+Backtrace:
+009_Game_Player.rb:641:in `pbDismountBike'
+[Following Pokemon EX] Refresh.rb:21:in `pbDismountBike'
+001_Overworld.rb:273:in `block (2 levels) in load_scripts_from_folder'
+005_Event_Handlers.rb:89:in `block in trigger'
+005_Event_Handlers.rb:89:in `each_value'
+005_Event_Handlers.rb:89:in `trigger'
+006_Event_HandlerCollections.rb:63:in `trigger'
+006_Game_MapFactory.rb:147:in `setMapChanged'
+006_Game_MapFactory.rb:26:in `setup'
+006_Game_MapFactory.rb:11:in `initialize'
+
+=================
+
+[2025-03-30 03:44:26 +0200]
+[Pokémon Essentials version 21.1]
+[v21.1 Hotfixes 1.0.9]
+
+Exception: NoMethodError
+Message: undefined method `>' for nil:NilClass
+
+Backtrace:
+007_Game_Character.rb:376:in `jumping?'
+007_Game_Character.rb:899:in `update_command'
+007_Game_Character.rb:886:in `update'
+[v21.1 Hotfixes] Misc bug fixes.rb:592:in `update'
+004_Game_Map.rb:462:in `block in update'
+004_Game_Map.rb:462:in `each_value'
+004_Game_Map.rb:462:in `update'
+[Delta Speed Up] _Main_Script.rb:153:in `update'
+001_StartGame.rb:70:in `load'
+[Delta Speed Up] _Main_Script.rb:23:in `load'
+
+=================
+
+[2025-03-30 03:45:27 +0200]
+[Pokémon Essentials version 21.1]
+[v21.1 Hotfixes 1.0.9]
+
+Error in Plugin: [[DBK] Z-Power]
+Exception: NameError
+Message: undefined method `bag_pocket_names' for class `#<Class:Settings>'
+
+Backtrace:
+[[DBK] Z-Power] [002] Item Handlers.rb:184:in `alias_method'
+[[DBK] Z-Power] [002] Item Handlers.rb:184:in `<module:Settings>'
+[[DBK] Z-Power] [002] Item Handlers.rb:183:in `<main>'
+005_PluginManager.rb:665:in `eval'
+005_PluginManager.rb:665:in `block (2 levels) in runPlugins'
+005_PluginManager.rb:655:in `each'
+005_PluginManager.rb:655:in `block in runPlugins'
+005_PluginManager.rb:646:in `each'
+005_PluginManager.rb:646:in `runPlugins'
+999_Main.rb:38:in `mainFunctionDebug'
+
+=================
+
+[2025-03-30 03:48:34 +0200]
+[Pokémon Essentials version 21.1]
+[v21.1 Hotfixes 1.0.9]
+
+Error in Plugin: [[DBK] Z-Power]
+Exception: NameError
+Message: undefined method `bag_pocket_names' for class `#<Class:Settings>'
+
+Backtrace:
+[[DBK] Z-Power] [002] Item Handlers.rb:184:in `alias_method'
+[[DBK] Z-Power] [002] Item Handlers.rb:184:in `<module:Settings>'
+[[DBK] Z-Power] [002] Item Handlers.rb:183:in `<main>'
+005_PluginManager.rb:665:in `eval'
+005_PluginManager.rb:665:in `block (2 levels) in runPlugins'
+005_PluginManager.rb:655:in `each'
+005_PluginManager.rb:655:in `block in runPlugins'
+005_PluginManager.rb:646:in `each'
+005_PluginManager.rb:646:in `runPlugins'
+999_Main.rb:38:in `mainFunctionDebug'

@@ -1,5 +1,5 @@
 #===============================================================================
-# Wild encounters editor
+# Wild encounters editor.
 #===============================================================================
 # Main editor method for editing wild encounters. Lists all defined encounter
 # sets, and edits them.
@@ -340,7 +340,7 @@ def pbEncounterTypeEditor(enc_data, enc_type)
 end
 
 #===============================================================================
-# Trainer type editor
+# Trainer type editor.
 #===============================================================================
 def pbTrainerTypeEditor
   properties = GameData::TrainerType.editor_properties
@@ -348,7 +348,7 @@ def pbTrainerTypeEditor
     if tr_type
       case button
       when Input::ACTION
-        if tr_type.is_a?(Symbol) && pbConfirmMessageSerious("Delete this trainer type?")
+        if tr_type.is_a?(Symbol) && pbConfirmMessageSerious(_INTL("Delete this trainer type?"))
           GameData::TrainerType::DATA.delete(tr_type)
           GameData::TrainerType.save
           pbConvertTrainerData
@@ -443,7 +443,7 @@ def pbTrainerTypeEditorNew(default_name)
 end
 
 #===============================================================================
-# Individual trainer editor
+# Individual trainer editor.
 #===============================================================================
 module TrainerBattleProperty
   NUM_ITEMS = 8
@@ -481,7 +481,7 @@ def pbTrainerBattleEditor
     if trainer_id
       case button
       when Input::ACTION
-        if trainer_id.is_a?(Array) && pbConfirmMessageSerious("Delete this trainer battle?")
+        if trainer_id.is_a?(Array) && pbConfirmMessageSerious(_INTL("Delete this trainer battle?"))
           tr_data = GameData::Trainer::DATA[trainer_id]
           GameData::Trainer::DATA.delete(trainer_id)
           modified = true
@@ -527,7 +527,7 @@ def pbTrainerBattleEditor
                 :trainer_type    => data[0],
                 :real_name       => data[1],
                 :version         => data[2],
-                :lose_text       => data[3],
+                :real_lose_text  => data[3],
                 :pokemon         => party,
                 :items           => items,
                 :pbs_file_suffix => tr_data.pbs_file_suffix
@@ -599,7 +599,7 @@ def pbTrainerBattleEditor
 end
 
 #===============================================================================
-# Trainer Pokémon editor
+# Trainer Pokémon editor.
 #===============================================================================
 module TrainerPokemonProperty
   def self.set(settingname, initsetting)
@@ -687,7 +687,7 @@ module TrainerPokemonProperty
 end
 
 #===============================================================================
-# Metadata editor
+# Metadata editor.
 #===============================================================================
 def pbMetadataScreen
   sel_player = -1
@@ -774,7 +774,7 @@ def pbEditPlayerMetadata(player_id = 1)
 end
 
 #===============================================================================
-# Map metadata editor
+# Map metadata editor.
 #===============================================================================
 def pbMapMetadataScreen(map_id = 0)
   loop do
@@ -817,7 +817,7 @@ def pbEditMapMetadata(map_id)
 end
 
 #===============================================================================
-# Item editor
+# Item editor.
 #===============================================================================
 def pbItemEditor
   properties = GameData::Item.editor_properties
@@ -825,7 +825,7 @@ def pbItemEditor
     if item
       case button
       when Input::ACTION
-        if item.is_a?(Symbol) && pbConfirmMessageSerious("Delete this item?")
+        if item.is_a?(Symbol) && pbConfirmMessageSerious(_INTL("Delete this item?"))
           GameData::Item::DATA.delete(item)
           GameData::Item.save
           Compiler.write_items
@@ -896,8 +896,8 @@ def pbItemEditorNew(default_name)
     return
   end
   # Choose a pocket
-  pocket = PocketProperty.set("", 0)
-  return if pocket == 0
+  pocket = PocketProperty.set("", :None)
+  return if pocket == :None
   # Choose a price
   price = LimitProperty.new(999_999).set(_INTL("Purchase price"), -1)
   return if price == -1
@@ -921,7 +921,7 @@ def pbItemEditorNew(default_name)
 end
 
 #===============================================================================
-# Pokémon species editor
+# Pokémon species editor.
 #===============================================================================
 def pbPokemonEditor
   properties = GameData::Species.editor_properties
@@ -929,7 +929,7 @@ def pbPokemonEditor
     if species
       case button
       when Input::ACTION
-        if species.is_a?(Symbol) && pbConfirmMessageSerious("Delete this species?")
+        if species.is_a?(Symbol) && pbConfirmMessageSerious(_INTL("Delete this species?"))
           GameData::Species::DATA.delete(species)
           GameData::Species.save
           Compiler.write_pokemon
@@ -987,7 +987,7 @@ def pbPokemonEditor
 end
 
 #===============================================================================
-# Regional Dexes editor
+# Regional Dexes editor.
 #===============================================================================
 def pbRegionalDexEditor(dex)
   viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
@@ -1247,7 +1247,7 @@ def pbEvoFamiliesToStrings
 end
 
 #===============================================================================
-# Battle animations rearranger
+# Battle animations rearranger.
 #===============================================================================
 def pbAnimationsOrganiser
   list = pbLoadBattleAnimations

@@ -89,8 +89,7 @@ module Mouse
     #  check if mouse is in specified area
     #---------------------------------------------------------------------------
     def over_area?(arx, ary, arw, arh)
-      rect = Mouse::Rect.new(arx, ary, arw, arh)
-      over?(rect)
+      Rect.new(arx, ary, arw, arh).over?
     end
     #---------------------------------------------------------------------------
     #  create rectangle from mouse drag selection
@@ -163,14 +162,6 @@ module Mouse
     def drag_object_y(object, button = :left, rect = nil)
       drag_object(object, button, rect, :vertical)
     end
-    
-    def update
-      # Update mouse state
-      @last_x = Input.mouse_x
-      @last_y = Input.mouse_y
-      # Reset one-frame states if needed
-      @drag = nil unless press?(:left) || press?(:right) || press?(:middle)
-    end
     #---------------------------------------------------------------------------
   end
   #-----------------------------------------------------------------------------
@@ -207,6 +198,14 @@ module Mouse
   module Viewport
     def mouse_params
       [rect.x, rect.y, rect.width, rect.height]
+    end
+  end
+  #-----------------------------------------------------------------------------
+  #  rect extensions
+  #-----------------------------------------------------------------------------
+  module Rect
+    def mouse_params
+      [x, y, width, height]
     end
   end
   #-----------------------------------------------------------------------------
@@ -252,25 +251,6 @@ module Mouse
       self.x.between?(target.x, target.x + target.width) && self.y.between?(target.y, target.y + target.height) && Mouse.release?
     end
   end
-  #-----------------------------------------------------------------------------
-  #  rect extensions
-  #-----------------------------------------------------------------------------
-  class Rect
-    attr_accessor :x, :y, :width, :height
-    
-    include Extensions
-    
-    def initialize(x, y, width, height)
-      @x = x
-      @y = y
-      @width = width
-      @height = height
-    end
-    
-    def mouse_params
-      [@x, @y, @width, @height]
-    end
-  end
 end
 #-------------------------------------------------------------------------------
 #  add mouse functionality to sprite class
@@ -289,10 +269,7 @@ end
 #-------------------------------------------------------------------------------
 class ::Rect
   include Mouse::Extensions
-  
-  def mouse_params
-    [x, y, width, height]
-  end
+  include Mouse::Rect
 end
 #-------------------------------------------------------------------------------
 #  add mouse functionality to viewport class

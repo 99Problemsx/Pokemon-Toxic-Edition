@@ -1,5 +1,5 @@
 #===============================================================================
-# Text colors
+# Text colors.
 #===============================================================================
 # Unused
 def ctag(color)
@@ -39,38 +39,8 @@ def shadowctagFromRgb(param)
   return shadowctagFromColor(Color.new_from_rgb(param))
 end
 
-# @deprecated This method is slated to be removed in v22.
-def colorToRgb32(color)
-  Deprecation.warn_method("colorToRgb32", "v22", "color.to_rgb32")
-  return color.to_rgb32
-end
-
-# @deprecated This method is slated to be removed in v22.
-def colorToRgb16(color)
-  Deprecation.warn_method("colorToRgb16", "v22", "color.to_rgb15")
-  return color.to_rgb15
-end
-
-# @deprecated This method is slated to be removed in v22.
-def rgbToColor(param)
-  Deprecation.warn_method("rgbToColor", "v22", "Color.new_from_rgb(param)")
-  return Color.new_from_rgb(param)
-end
-
-# @deprecated This method is slated to be removed in v22.
-def rgb15ToColor(param)
-  Deprecation.warn_method("rgb15ToColor", "v22", "Color.new_from_rgb(param)")
-  return Color.new_from_rgb(param)
-end
-
-# @deprecated This method is slated to be removed in v22.
-def getContrastColor(color)
-  Deprecation.warn_method("getContrastColor", "v22", "color.get_contrast_color")
-  return color.get_contrast_color
-end
-
 #===============================================================================
-# Format text
+# Format text.
 #===============================================================================
 FORMATREGEXP = /<(\/?)(c|c2|c3|o|fn|br|fs|i|b|r|pg|pog|u|s|icon|img|ac|ar|al|outln|outln2)(\s*\=\s*([^>]*))?>/i
 
@@ -96,7 +66,9 @@ def fmtReplaceEscapes(text)
 end
 
 def toUnformattedText(text)
-  text2 = text.gsub(FORMATREGEXP, "")
+  text2 = text.clone
+  pbReplaceMessageText(text2, nil)
+  text2 = text2.gsub(FORMATREGEXP, "")
   fmtReplaceEscapes(text2)
   return text2
 end
@@ -177,7 +149,7 @@ def getFormattedTextFast(bitmap, xDst, yDst, widthDst, heightDst, text, lineheig
     elsif isspace
       hadspace = true
     end
-    texty = (lineheight * y) + yDst + yStart
+    texty = (lineheight * y) + yDst + yStart - 2   # TEXT OFFSET
     # Push character
     if heightDst < 0 || yStart < yDst + heightDst
       havenl = true if isWaitChar(textchars[position])
@@ -344,7 +316,7 @@ end
 #===============================================================================
 def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight = 32,
                      newlineBreaks = true, explicitBreaksOnly = false,
-                     collapseAlignments = false)
+                     collapseAlignments = false, msg_window = nil)
   dummybitmap = nil
   if !bitmap || bitmap.disposed?   # allows function to be called with nil bitmap
     dummybitmap = Bitmap.new(1, 1)
@@ -357,6 +329,7 @@ def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight =
   textchunks = []
   controls = []
 #  oldtext = text
+  pbReplaceMessageText(text, msg_window)
   while text[FORMATREGEXP]
     textchunks.push($~.pre_match)
     if $~[3]
@@ -406,7 +379,11 @@ def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight =
   fontsize = defaultfontsize
   fontnamestack = []
   fontsizestack = []
-  defaultcolors = [oldfont.color.clone, nil]
+  if msg_window
+    defaultcolors = [msg_window.baseColor, msg_window.shadowColor]
+  else
+    defaultcolors = [oldfont.color.clone, nil]
+  end
   if defaultfontname.is_a?(Array)
     defaultfontname = defaultfontname.find { |i| Font.exist?(i) } || "Arial"
   elsif !Font.exist?(defaultfontname)
@@ -420,7 +397,7 @@ def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight =
   hadnonspace = false
   havenl = false
   position = 0
-  while position < textchars.length
+  while position <= textchars.length
     nextline = 0
     graphic = nil
     graphicX = 0
@@ -565,7 +542,10 @@ def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight =
     else
       xStart = 0
       yStart = 0
-      width = isWaitChar(textchars[position]) ? 0 : bitmap.text_size(textchars[position]).width
+      width = 0
+      if textchars[position]
+        width = isWaitChar(textchars[position]) ? 0 : bitmap.text_size(textchars[position]).width
+      end
       width += 2 if width > 0 && outline2count > 0
     end
     if rightalign == 1 && nextline == 0
@@ -608,7 +588,10 @@ def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight =
         end
       end
     end
-    isspace = (textchars[position][/\s/] || isWaitChar(textchars[position])) ? true : false
+    isspace = false
+    if textchars[position]
+      isspace = (textchars[position][/\s/] || isWaitChar(textchars[position])) ? true : false
+    end
     if hadspace && !isspace
       # set last word to here
       lastword[0] = characters.length
@@ -630,7 +613,7 @@ def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight =
                        (boldcount > 0), (italiccount > 0), colors[0], colors[1],
                        (underlinecount > 0), (strikecount > 0), fontname, fontsize,
                        position, graphicRect,
-                       ((outlinecount > 0) ? 1 : 0) + ((outline2count > 0) ? 2 : 0)])
+                       ((outlinecount > 0) ? 1 : 0) + ((outline2count > 0) ? 2 : 0)]) if graphic || textchars[position]
       charactersInternal.push([alignment, y, xStart, textchars[position], extraspace])
     end
     x += width
@@ -784,7 +767,7 @@ def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight =
 end
 
 #===============================================================================
-# Draw text and images on a bitmap
+# Draw text and images on a bitmap.
 #===============================================================================
 def getLineBrokenText(bitmap, value, width, dims)
   x = 0
@@ -941,17 +924,18 @@ def drawSingleFormattedChar(bitmap, ch)
   if ch[5]   # If a graphic
     graphic = Bitmap.new(ch[0])
     graphicRect = ch[15]
-    bitmap.blt(ch[1], ch[2], graphic, graphicRect, ch[8].alpha)
+    bitmap.blt(ch[1], ch[2] - (bitmap.text_offset_y || 0), graphic, graphicRect, ch[8].alpha)
     graphic.dispose
     return
   end
   bitmap.font.size = ch[13] if bitmap.font.size != ch[13]
   if ch[9]   # shadow
     if ch[10]   # underline
-      bitmap.fill_rect(ch[1], ch[2] + ch[4] - [(ch[4] - bitmap.font.size) / 2, 0].max - 2, ch[3], 4, ch[9])
+      bitmap.fill_rect(ch[1], ch[2] + ch[4] - [(ch[4] - bitmap.font.size) / 2, 0].max - 2 - (bitmap.text_offset_y || 0),
+                       ch[3], 4, ch[9])
     end
     if ch[11]   # strikeout
-      bitmap.fill_rect(ch[1], ch[2] + 2 + (ch[4] / 2), ch[3], 4, ch[9])
+      bitmap.fill_rect(ch[1], ch[2] + 2 + (ch[4] / 2) - (bitmap.text_offset_y || 0), ch[3], 4, ch[9])
     end
   end
   if ch[0] == "\n" || ch[0] == "\r" || ch[0] == " " || isWaitChar(ch[0])
@@ -993,10 +977,11 @@ def drawSingleFormattedChar(bitmap, ch)
     bitmap.draw_text(ch[1] + offset, ch[2] + offset, ch[3], ch[4], ch[0])
   end
   if ch[10]   # underline
-    bitmap.fill_rect(ch[1], ch[2] + ch[4] - [(ch[4] - bitmap.font.size) / 2, 0].max - 2, ch[3] - 2, 2, ch[8])
+    bitmap.fill_rect(ch[1], ch[2] + ch[4] - [(ch[4] - bitmap.font.size) / 2, 0].max - 2 - (bitmap.text_offset_y || 0),
+                     ch[3] - 2, 2, ch[8])
   end
   if ch[11]   # strikeout
-    bitmap.fill_rect(ch[1], ch[2] + 2 + (ch[4] / 2), ch[3] - 2, 2, ch[8])
+    bitmap.fill_rect(ch[1], ch[2] + 2 + (ch[4] / 2) - (bitmap.text_offset_y || 0), ch[3] - 2, 2, ch[8])
   end
 end
 
@@ -1128,7 +1113,7 @@ def pbDrawTextPositions(bitmap, textpos)
 end
 
 #===============================================================================
-# Draw images on a bitmap
+# Draw images on a bitmap.
 #===============================================================================
 def pbCopyBitmap(dstbm, srcbm, x, y, opacity = 255)
   rc = Rect.new(0, 0, srcbm.width, srcbm.height)

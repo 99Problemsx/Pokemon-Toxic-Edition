@@ -1,6 +1,6 @@
 class Battle
   def pbGainExp
-    values = []
+    values = Array.new($player.party.size, 0)  # Initialisiere mit 0 für alle Pokemon
     moves  = {}
     # Play wild victory music if it's the end of the battle (has to be here)
     @scene.pbWildBattleSuccess if wildBattle? && pbAllFainted?(1) && !pbAllFainted?(0)
@@ -34,7 +34,6 @@ class Battle
         eachInTeam(0, 0) do |pkmn, i|
           next if !pkmn.able?
           unless b.participants.include?(i) || expShare.include?(i)
-            values[i] = 0
             next
           end
           pbGainEVsOne(i, b)
@@ -46,19 +45,12 @@ class Battle
           eachInTeam(0, 0) do |pkmn, i|
             next if !pkmn.able?
             next if b.participants.include?(i) || expShare.include?(i)
-            #pbDisplayPaused(_INTL("Your other Pokémon also gained Exp. Points!")) if showMessage
             showMessage = false
             pbGainEVsOne(i, b)
             values[i] = pbGainExpOne_Panel(i, b, numPartic, expShare, expAll, false)
           end
         end
       end
-      vr = []
-      for v in values
-        t_v = v ? v : 0
-        vr.push(t_v)
-      end
-      values = vr
       s = Swdfm_Exp_Screen.new(values)
       # Clear the participants array
       for i in 0...$player.party.size

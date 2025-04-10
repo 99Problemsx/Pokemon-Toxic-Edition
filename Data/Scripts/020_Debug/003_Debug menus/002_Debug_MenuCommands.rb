@@ -1,6 +1,7 @@
 #===============================================================================
-# Field options
+# Field options.
 #===============================================================================
+
 MenuHandlers.add(:debug_menu, :field_menu, {
   "name"        => _INTL("Field options..."),
   "parent"      => :main,
@@ -126,7 +127,7 @@ MenuHandlers.add(:debug_menu, :safari_zone_and_bug_contest, {
               break
             end
           end
-        when 1   # Safari Balls
+        when 1   # Sport Balls
           params = ChooseNumberParams.new
           params.setRange(0, 99999)
           params.setDefaultValue(contest.ballcount)
@@ -162,7 +163,7 @@ MenuHandlers.add(:debug_menu, :edit_field_effects, {
         params = ChooseNumberParams.new
         params.setRange(0, 99999)
         params.setDefaultValue($PokemonGlobal.repel)
-        $PokemonGlobal.repel = pbMessageChooseNumber(_INTL("Set the Pokémon's level."), params)
+        $PokemonGlobal.repel = pbMessageChooseNumber(_INTL("Set the number of steps remaining."), params)
       when 1   # Strength used
         $PokemonMap.strengthUsed = !$PokemonMap.strengthUsed
       when 2   # Flash used
@@ -220,33 +221,33 @@ MenuHandlers.add(:debug_menu, :storage_wallpapers, {
   "description" => _INTL("Unlock and lock special wallpapers used in Pokémon storage."),
   "effect"      => proc {
     w = $PokemonStorage.allWallpapers
-    if w.length <= PokemonStorage::BASICWALLPAPERQTY
+    if w.length <= PokemonStorage::BASIC_WALLPAPER_COUNT
       pbMessage(_INTL("There are no special wallpapers defined."))
-    else
-      paperscmd = 0
-      unlockarray = $PokemonStorage.unlockedWallpapers
-      loop do
-        paperscmds = []
-        paperscmds.push(_INTL("Unlock all"))
-        paperscmds.push(_INTL("Lock all"))
-        (PokemonStorage::BASICWALLPAPERQTY...w.length).each do |i|
-          paperscmds.push((unlockarray[i] ? "[Y]" : "[  ]") + " " + w[i])
+      next
+    end
+    paperscmd = 0
+    unlockarray = $PokemonStorage.unlockedWallpapers
+    loop do
+      paperscmds = []
+      paperscmds.push(_INTL("Unlock all"))
+      paperscmds.push(_INTL("Lock all"))
+      (PokemonStorage::BASIC_WALLPAPER_COUNT...w.length).each do |i|
+        paperscmds.push((unlockarray[i] ? "[Y]" : "[  ]") + " " + w[i])
+      end
+      paperscmd = pbShowCommands(nil, paperscmds, -1, paperscmd)
+      break if paperscmd < 0
+      case paperscmd
+      when 0   # Unlock all
+        (PokemonStorage::BASIC_WALLPAPER_COUNT...w.length).each do |i|
+          unlockarray[i] = true
         end
-        paperscmd = pbShowCommands(nil, paperscmds, -1, paperscmd)
-        break if paperscmd < 0
-        case paperscmd
-        when 0   # Unlock all
-          (PokemonStorage::BASICWALLPAPERQTY...w.length).each do |i|
-            unlockarray[i] = true
-          end
-        when 1   # Lock all
-          (PokemonStorage::BASICWALLPAPERQTY...w.length).each do |i|
-            unlockarray[i] = false
-          end
-        else
-          paperindex = paperscmd - 2 + PokemonStorage::BASICWALLPAPERQTY
-          unlockarray[paperindex] = !$PokemonStorage.unlockedWallpapers[paperindex]
+      when 1   # Lock all
+        (PokemonStorage::BASIC_WALLPAPER_COUNT...w.length).each do |i|
+          unlockarray[i] = false
         end
+      else
+        paperindex = paperscmd - 2 + PokemonStorage::BASIC_WALLPAPER_COUNT
+        unlockarray[paperindex] = !$PokemonStorage.unlockedWallpapers[paperindex]
       end
     end
   }
@@ -264,8 +265,9 @@ MenuHandlers.add(:debug_menu, :skip_credits, {
 })
 
 #===============================================================================
-# Battle options
+# Battle options.
 #===============================================================================
+
 MenuHandlers.add(:debug_menu, :battle_menu, {
   "name"        => _INTL("Battle options..."),
   "parent"      => :main,
@@ -352,9 +354,9 @@ MenuHandlers.add(:debug_menu, :test_wild_battle_advanced, {
         end
       else                                   # Edit a Pokémon
         if pbConfirmMessage(_INTL("Change this Pokémon?"))
-          scr = PokemonDebugPartyScreen.new
-          scr.pbPokemonDebug(pkmn[pkmnCmd], -1, nil, true)
-          scr.pbEndScreen
+          scr = UI::PartyDebug.new
+          scr.pokemon_debug_menu(pkmn[pkmnCmd], -1, true)
+          scr.silent_end_screen
         elsif pbConfirmMessage(_INTL("Delete this Pokémon?"))
           pkmn.delete_at(pkmnCmd)
           size0 = [pkmn.length, 1].max
@@ -543,8 +545,9 @@ MenuHandlers.add(:debug_menu, :toggle_logging, {
 })
 
 #===============================================================================
-# Pokémon options
+# Pokémon options.
 #===============================================================================
+
 MenuHandlers.add(:debug_menu, :pokemon_menu, {
   "name"        => _INTL("Pokémon options..."),
   "parent"      => :main,
@@ -708,16 +711,15 @@ MenuHandlers.add(:debug_menu, :open_storage, {
   "description" => _INTL("Opens the Pokémon storage boxes in Organize Boxes mode."),
   "effect"      => proc {
     pbFadeOutIn do
-      scene = PokemonStorageScene.new
-      screen = PokemonStorageScreen.new(scene, $PokemonStorage)
-      screen.pbStartScreen(0)
+      UI::PokemonStorage.new($PokemonStorage, mode: :organize).main
     end
   }
 })
 
 #===============================================================================
-# Shadow Pokémon options
+# Shadow Pokémon options.
 #===============================================================================
+
 MenuHandlers.add(:debug_menu, :shadow_pokemon_menu, {
   "name"        => _INTL("Shadow Pokémon options..."),
   "parent"      => :pokemon_menu,
@@ -766,8 +768,9 @@ MenuHandlers.add(:debug_menu, :relic_stone, {
 })
 
 #===============================================================================
-# Item options
+# Item options.
 #===============================================================================
+
 MenuHandlers.add(:debug_menu, :items_menu, {
   "name"        => _INTL("Item options..."),
   "parent"      => :main,
@@ -783,7 +786,7 @@ MenuHandlers.add(:debug_menu, :add_item, {
     pbListScreenBlock(_INTL("ADD ITEM"), ItemLister.new) do |button, item|
       if button == Input::USE && item
         params = ChooseNumberParams.new
-        params.setRange(1, Settings::BAG_MAX_PER_SLOT)
+        params.setRange(1, PokemonBag::MAX_PER_SLOT)
         params.setInitialValue(1)
         params.setCancelValue(0)
         qty = pbMessageChooseNumber(_INTL("Add how many {1}?",
@@ -803,7 +806,7 @@ MenuHandlers.add(:debug_menu, :fill_bag, {
   "description" => _INTL("Empties the Bag and then fills it with a certain number of every item."),
   "effect"      => proc {
     params = ChooseNumberParams.new
-    params.setRange(1, Settings::BAG_MAX_PER_SLOT)
+    params.setRange(1, PokemonBag::MAX_PER_SLOT)
     params.setInitialValue(1)
     params.setCancelValue(0)
     qty = pbMessageChooseNumber(_INTL("Choose the number of items."), params)
@@ -811,13 +814,15 @@ MenuHandlers.add(:debug_menu, :fill_bag, {
       $bag.clear
       # NOTE: This doesn't simply use $bag.add for every item in turn, because
       #       that's really slow when done in bulk.
-      pocket_sizes = Settings::BAG_MAX_POCKET_SIZE
+      pocket_sizes = {}
+      GameData::BagPocket.each { |pckt| pocket_sizes[pckt.id] = pckt.max_slots }
       bag = $bag.pockets   # Called here so that it only rearranges itself once
       GameData::Item.each do |i|
-        next if !pocket_sizes[i.pocket - 1] || pocket_sizes[i.pocket - 1] == 0
-        next if pocket_sizes[i.pocket - 1] > 0 && bag[i.pocket].length >= pocket_sizes[i.pocket - 1]
+        bag_pocket = i.bag_pocket
+        next if !pocket_sizes[bag_pocket] || pocket_sizes[bag_pocket] == 0
+        next if pocket_sizes[bag_pocket] > 0 && bag[bag_pocket].length >= pocket_sizes[bag_pocket]
         item_qty = (i.is_important?) ? 1 : qty
-        bag[i.pocket].push([i.id, item_qty])
+        bag[bag_pocket].push([i.id, item_qty])
       end
       # NOTE: Auto-sorting pockets don't need to be sorted afterwards, because
       #       items are added in the same order they would be sorted into.
@@ -837,8 +842,9 @@ MenuHandlers.add(:debug_menu, :empty_bag, {
 })
 
 #===============================================================================
-# Player options
+# Player options.
 #===============================================================================
+
 MenuHandlers.add(:debug_menu, :player_menu, {
   "name"        => _INTL("Player options..."),
   "parent"      => :main,
@@ -1143,8 +1149,9 @@ MenuHandlers.add(:debug_menu, :random_id, {
 })
 
 #===============================================================================
-# PBS file editors
+# PBS file editors.
 #===============================================================================
+
 MenuHandlers.add(:debug_menu, :pbs_editors_menu, {
   "name"        => _INTL("PBS file editors..."),
   "parent"      => :main,
@@ -1261,16 +1268,32 @@ MenuHandlers.add(:debug_menu, :set_pokedex_lists, {
 })
 
 #===============================================================================
-# Other editors
+# Other editors.
 #===============================================================================
+
 MenuHandlers.add(:debug_menu, :editors_menu, {
   "name"        => _INTL("Other editors..."),
   "parent"      => :main,
   "description" => _INTL("Edit battle animations, terrain tags, map data, etc.")
 })
 
+MenuHandlers.add(:debug_menu, :use_pc, {
+  "name"        => _INTL("New battle animation editor"),
+  "parent"      => :editors_menu,
+  "description" => _INTL("Edit the battle animations."),
+  "effect"      => proc {
+    Graphics.resize_screen(AnimationEditor::WINDOW_WIDTH, AnimationEditor::WINDOW_HEIGHT)
+    pbSetResizeFactor(1)
+    screen = AnimationEditor::AnimationSelector.new
+    screen.run
+    Graphics.resize_screen(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT)
+    pbSetResizeFactor($PokemonSystem.screensize)
+    $game_map&.autoplay
+  }
+})
+
 MenuHandlers.add(:debug_menu, :animation_editor, {
-  "name"        => _INTL("Battle animation editor"),
+  "name"        => _INTL("Old battle animation editor"),
   "parent"      => :editors_menu,
   "description" => _INTL("Edit the battle animations."),
   "effect"      => proc {
@@ -1279,9 +1302,9 @@ MenuHandlers.add(:debug_menu, :animation_editor, {
 })
 
 MenuHandlers.add(:debug_menu, :animation_organiser, {
-  "name"        => _INTL("Battle animation organiser"),
+  "name"        => _INTL("Old battle animation organiser"),
   "parent"      => :editors_menu,
-  "description" => _INTL("Rearrange/add/delete battle animations."),
+  "description" => _INTL("Rearrange/add/delete old battle animations."),
   "effect"      => proc {
     pbFadeOutIn { pbAnimationsOrganiser }
   }
@@ -1324,8 +1347,9 @@ MenuHandlers.add(:debug_menu, :fix_invalid_tiles, {
 })
 
 #===============================================================================
-# Other options
+# Other options.
 #===============================================================================
+
 MenuHandlers.add(:debug_menu, :files_menu, {
   "name"        => _INTL("Files options..."),
   "parent"      => :main,
@@ -1378,7 +1402,7 @@ MenuHandlers.add(:debug_menu, :create_pbs_files, {
     loop do
       cmd = pbShowCommands(nil, cmds, -1, cmd)
       case cmd
-      when 0  then Compiler.write_all
+      when 0  then Compiler.write_all_pbs_files
       when 1  then Compiler.write_abilities
       when 2  then Compiler.write_trainer_lists
       when 3  then Compiler.write_berry_plants

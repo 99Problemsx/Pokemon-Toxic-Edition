@@ -2,6 +2,8 @@
 #
 #===============================================================================
 class PokemonTrade_Scene
+  TRADE_BGM = "Evolution"
+
   def pbUpdate
     pbUpdateSpriteHash(@sprites)
   end
@@ -181,7 +183,7 @@ class PokemonTrade_Scene
                                @pokemon.name, @pokemon.owner.public_id, @pokemon.owner.name) + "\\wtnp[0]") { pbUpdate }
     pbMessageWaitForInput(@sprites["msgwindow"], 50, true) { pbUpdate }
     pbPlayDecisionSE
-    pbBGMPlay("Evolution")
+    pbBGMPlay(TRADE_BGM)
     pbScene1
     pbMessageDisplay(@sprites["msgwindow"],
                      _INTL("For {1}'s {2},\n{3} sends {4}.", @trader1, speciesname1, @trader2, speciesname2) + "\1") { pbUpdate }

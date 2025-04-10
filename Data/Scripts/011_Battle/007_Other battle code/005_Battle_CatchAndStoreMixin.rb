@@ -1,7 +1,11 @@
+#===============================================================================
+#
+#===============================================================================
 module Battle::CatchAndStoreMixin
-  #=============================================================================
-  # Store caught Pokémon
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Store caught Pokémon.
+  #-----------------------------------------------------------------------------
+
   def pbStorePokemon(pkmn)
     # Nickname the Pokémon (unless it's a Shadow Pokémon)
     if !pkmn.shadowPokemon?
@@ -17,9 +21,10 @@ module Battle::CatchAndStoreMixin
               _INTL("Send to a Box"),
               _INTL("See {1}'s summary", pkmn.name),
               _INTL("Check party")]
-      cmds.delete_at(1) if @sendToBoxes == 2
+      cmds.delete_at(1) if @sendToBoxes == 2   # Remove "Send to a Box" option
       loop do
         cmd = pbShowCommands(_INTL("Where do you want to send {1} to?", pkmn.name), cmds, 99)
+        next if cmd == 99 && @sendToBoxes == 2   # Can't cancel if must add to party
         break if cmd == 99   # Cancelling = send to a Box
         cmd += 1 if cmd >= 1 && @sendToBoxes == 2
         case cmd
@@ -32,8 +37,13 @@ module Battle::CatchAndStoreMixin
           end
           next if party_index < 0   # Cancelled
           party_size = pbPlayer.party.length
-          # Send chosen Pokémon to storage
+          # Get chosen Pokémon and clear battle-related conditions
           send_pkmn = pbPlayer.party[party_index]
+          @peer.pbOnLeavingBattle(self, send_pkmn, @usedInBattle[0][party_index], true)
+          send_pkmn.statusCount = 0 if send_pkmn.status == :POISON   # Bad poison becomes regular
+          send_pkmn.makeUnmega
+          send_pkmn.makeUnprimal
+          # Send chosen Pokémon to storage
           stored_box = @peer.pbStorePokemon(pbPlayer, send_pkmn)
           pbPlayer.party.delete_at(party_index)
           box_name = @peer.pbBoxName(stored_box)
@@ -43,13 +53,9 @@ module Battle::CatchAndStoreMixin
             if idx < party_size - 1
               @initialItems[0][idx] = @initialItems[0][idx + 1]
               $game_temp.party_levels_before_battle[idx] = $game_temp.party_levels_before_battle[idx + 1]
-              $game_temp.party_critical_hits_dealt[idx] = $game_temp.party_critical_hits_dealt[idx + 1]
-              $game_temp.party_direct_damage_taken[idx] = $game_temp.party_direct_damage_taken[idx + 1]
             else
               @initialItems[0][idx] = nil
               $game_temp.party_levels_before_battle[idx] = nil
-              $game_temp.party_critical_hits_dealt[idx] = nil
-              $game_temp.party_direct_damage_taken[idx] = nil
             end
           end
           break
@@ -57,9 +63,7 @@ module Battle::CatchAndStoreMixin
           break
         when 2   # See X's summary
           pbFadeOutIn do
-            summary_scene = PokemonSummary_Scene.new
-            summary_screen = PokemonSummaryScreen.new(summary_scene, true)
-            summary_screen.pbStartScreen([pkmn], 0)
+            UI::PokemonSummary.new(pkmn, mode: :in_battle).main
           end
         when 3   # Check party
           @scene.pbPartyScreen(0, true, 2)
@@ -100,9 +104,10 @@ module Battle::CatchAndStoreMixin
     @caughtPokemon.clear
   end
 
-  #=============================================================================
-  # Throw a Poké Ball
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Throw a Poké Ball.
+  #-----------------------------------------------------------------------------
+
   def pbThrowPokeBall(idxBattler, ball, catch_rate = nil, showPlayer = false)
     # Determine which Pokémon you're throwing the Poké Ball at
     battler = nil
@@ -168,7 +173,7 @@ module Battle::CatchAndStoreMixin
       end
       battler.pbReset
       if pbAllFainted?(battler.index)
-        @decision = (trainerBattle?) ? 1 : 4   # Battle ended by win/capture
+        @decision = (trainerBattle?) ? Battle::Outcome::WIN : Battle::Outcome::CATCH
       end
       # Modify the Pokémon's properties because of the capture
       if GameData::Item.get(ball).is_snag_ball?
@@ -194,9 +199,10 @@ module Battle::CatchAndStoreMixin
     end
   end
 
-  #=============================================================================
-  # Calculate how many shakes a thrown Poké Ball will make (4 = capture)
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Calculate how many shakes a thrown Poké Ball will make (4 = capture).
+  #-----------------------------------------------------------------------------
+
   def pbCaptureCalc(pkmn, battler, catch_rate, ball)
     return 4 if $DEBUG && Input.press?(Input::CTRL)
     # Get a catch rate if one wasn't provided

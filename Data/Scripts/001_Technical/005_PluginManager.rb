@@ -102,7 +102,6 @@
 #------------------------------------------------------------------------------#
 #                     Please give credit when using this.                      #
 #==============================================================================#
-
 module PluginManager
   # Holds all registered plugin data.
   @@Plugins = {}
@@ -341,26 +340,47 @@ module PluginManager
   #     0 if v1 is equal to v2
   #     -1 if v1 is lower than v2
   def self.compare_versions(v1, v2)
-    d1 = v1.chars
-    d1.insert(0, "0") if d1[0] == "."   # Turn ".123" into "0.123"
-    while d1[-1] == "."                 # Turn "123." into "123"
-      d1 = d1[0..-2]
+    version_chunks1 = v1.split(".")
+    version_chunks1.each_with_index do |val, i|
+      next if val != ""
+      version_chunks1[i] = (i == 0) ? "0" : nil
     end
-    d2 = v2.chars
-    d2.insert(0, "0") if d2[0] == "."   # Turn ".123" into "0.123"
-    while d2[-1] == "."                 # Turn "123." into "123"
-      d2 = d2[0..-2]
+    version_chunks1.compact!
+    version_chunks2 = v2.split(".")
+    version_chunks2.each_with_index do |val, i|
+      next if val != ""
+      version_chunks2[i] = (i == 0) ? "0" : nil
     end
-    [d1.size, d2.size].max.times do |i|   # Compare each digit in turn
-      c1 = d1[i]
-      c2 = d2[i]
-      if c1
-        return 1 if !c2
-        return 1 if c1.to_i(16) > c2.to_i(16)
-        return -1 if c1.to_i(16) < c2.to_i(16)
-      elsif c2
-        return -1
+    version_chunks2.compact!
+    # Compare each chunk in turn
+    decision = :equal   # Could be :higher or :lower
+    [version_chunks1.length, version_chunks2.length].max.times do |i|
+      chunk1 = version_chunks1[i]
+      chunk2 = version_chunks2[i]
+      if !chunk1
+        decision = :lower if decision == :equal
+        break
+      elsif !chunk2
+        decision = :higher if decision == :equal
+        break
       end
+      # Make both chunks the same left by pre-padding with "0"
+      chars_count = [chunk1.length, chunk2.length].max
+      chunk1 = chunk1.rjust(chars_count, "0").chars
+      chunk2 = chunk2.rjust(chars_count, "0").chars
+      chunk1.length.times do |j|
+        c1 = chunk1[j]
+        c2 = chunk2[j]
+        next if c1 == c2
+        decision = (c1.to_i(16) > c2.to_i(16)) ? :higher : :lower
+        break
+      end
+      break if decision != :equal
+    end
+    case decision
+    when :equal then return 0
+    when :higher then return 1
+    when :lower then return -1
     end
     return 0
   end
@@ -380,7 +400,6 @@ module PluginManager
     e.backtrace[0, 10].each { |i| message += "#{i}\r\n" }
     # output to log
     errorlog = "errorlog.txt"
-    errorlog = RTP.getSaveFileName("errorlog.txt") if (Object.const_defined?(:RTP) rescue false)
     File.open(errorlog, "ab") do |f|
       f.write("\r\n=================\r\n\r\n[#{Time.now}]\r\n")
       f.write(message)
@@ -411,7 +430,7 @@ module PluginManager
     Compiler.pbCompilerEachPreppedLine(filename) do |line, line_no|
       # split line up into property name and values
       if !line[/^\s*(\w+)\s*=\s*(.*)$/]
-        raise _INTL("Bad line syntax (expected syntax like XXX=YYY)\n{1}", FileLineData.linereport)
+        raise _INTL("Bad line syntax (expected syntax like XXX=YYY).") + "\n" + FileLineData.linereport
       end
       property = $~[1].upcase
       data = $~[2].split(",")
@@ -555,10 +574,21 @@ module PluginManager
   def self.needCompiling?(order, plugins)
     # fixed actions
     return false if !$DEBUG || FileTest.exist?("Game.rgssad")
+    return true if $full_compile
     return true if !FileTest.exist?("Data/PluginScripts.rxdata")
     Input.update
+    # Force compiling if holding Shift or Ctrl
     return true if Input.press?(Input::SHIFT) || Input.press?(Input::CTRL)
-    # analyze whether or not to push recompile
+    # Should compile if the number of plugins has changed
+    scripts = load_data("Data/PluginScripts.rxdata")
+    return true if scripts.length != plugins.length
+    # Should compile if any plugins have changed version or been replaced
+    found_plugins = []
+    plugins.each_pair { |name, meta| found_plugins.push([meta[:name], meta[:version]]) }
+    existing_plugins = []
+    scripts.each { |plugin| existing_plugins.push([plugin[1][:name], plugin[1][:version]]) }
+    return true if found_plugins != existing_plugins
+    # Should compile if any plugin files have been recently modified
     mtime = File.mtime("Data/PluginScripts.rxdata")
     order.each do |o|
       # go through all the registered plugin scripts

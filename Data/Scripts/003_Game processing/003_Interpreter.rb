@@ -113,6 +113,8 @@ class Interpreter
         end
         @move_route_waiting = false
       end
+      # Do nothing if the player is jumping out of surfing
+      return if $game_temp.ending_surf
       # Do nothing while waiting
       if @wait_count > 0
         return if System.uptime - @wait_start < @wait_count
@@ -162,7 +164,7 @@ class Interpreter
       # Assemble error message
       err = "Script error in Interpreter\r\n"
       if $game_map
-        map_name = ($game_map.name rescue nil) || "???"
+        map_name = (pbGetBasicMapNameFromId($game_map.map_id) rescue nil) || "???"
         if event
           err = "Script error in event #{event.id} (coords #{event.x},#{event.y}), map #{$game_map.map_id} (#{map_name})\r\n"
         else
@@ -440,9 +442,9 @@ class Interpreter
     $game_temp.mart_prices[item] = [-1, -1] if !$game_temp.mart_prices[item]
     $game_temp.mart_prices[item][0] = buy_price if buy_price > 0
     if sell_price >= 0   # 0=can't sell
-      $game_temp.mart_prices[item][1] = sell_price * 2
+      $game_temp.mart_prices[item][1] = sell_price
     elsif buy_price > 0
-      $game_temp.mart_prices[item][1] = buy_price
+      $game_temp.mart_prices[item][1] = buy_price / Settings::ITEM_SELL_PRICE_DIVISOR
     end
   end
 

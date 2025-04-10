@@ -2,10 +2,15 @@ class Swdfm_Exp_Screen
   def initialize(values)
     @v21 = Essentials::VERSION.include?("21")
 	@elapsed       = 0
-	@values        = values
+	@values        = values || Array.new($player.party.size, 0)
+	# Stelle sicher, dass @values die richtige Größe hat
+	if @values.size < $player.party.size
+	  @values = Array.new($player.party.size, 0)
+	end
 	speed          = 200 - BAR_SPEED
 	speed          = speed.clamp(1, 200)
-	@total_frames  = (@values.max / speed).floor
+	max_exp        = @values.compact.max || 0
+	@total_frames  = (max_exp / speed).floor
 	@total_frames  = @total_frames.clamp(40 * FASTEST_TIME, 40 * SLOWEST_TIME)
     @sprites    = {}
     @width      = Graphics.width
@@ -52,24 +57,25 @@ class Swdfm_Exp_Screen
   
   def update_bars
     for i in 0...$player.party.size
-	  next if $player.party[i].level == Settings:: MAXIMUM_LEVEL
-	  mock_exp  = $player.party[i].exp + (@values[i] * @elapsed / @total_frames).floor
-	  lvl, perc = $player.party[i].exp_fraction_for_panel(mock_exp)
-	  if lvl > @levels[i]
-		@levels[i] = lvl
-	    redraw_level(i)
-		@sprites["bar_1_#{i}"].bitmap.clear
-	  end
-	  if @elapsed == (ANNOUCE_TIME * 40) || @elapsed == @total_frames
-	    dispose_if_there("exp_#{i}")
-	  end
-	  bmp = @sprites["bar_1_#{i}"].bitmap
-	  bmp = Swdfm_Bitmap.colour(bmp, EXP_EXP_COLOUR, 0, 0, (bmp.width * perc / 100).floor, bmp.height)
-	  @sprites["bar_1_#{i}"].bitmap = bmp
-	end
-	@elapsed += 1
-	f = @v21 ? (1 / 40) : 1
-	pbWait(f)
+      next if $player.party[i].level == Settings::MAXIMUM_LEVEL
+      next if @values[i].nil? || @values[i] <= 0
+      mock_exp = $player.party[i].exp + ((@values[i] || 0) * @elapsed / @total_frames).floor
+      lvl, perc = $player.party[i].exp_fraction_for_panel(mock_exp)
+      if lvl > @levels[i]
+        @levels[i] = lvl
+        redraw_level(i)
+        @sprites["bar_1_#{i}"].bitmap.clear
+      end
+      if @elapsed == (ANNOUCE_TIME * 40) || @elapsed == @total_frames
+        dispose_if_there("exp_#{i}")
+      end
+      bmp = @sprites["bar_1_#{i}"].bitmap
+      bmp = Swdfm_Bitmap.colour(bmp, EXP_EXP_COLOUR, 0, 0, (bmp.width * perc / 100).floor, bmp.height)
+      @sprites["bar_1_#{i}"].bitmap = bmp
+    end
+    @elapsed += 1
+    f = @v21 ? (1 / 40) : 1
+    pbWait(f)
   end
   
   def draw_party

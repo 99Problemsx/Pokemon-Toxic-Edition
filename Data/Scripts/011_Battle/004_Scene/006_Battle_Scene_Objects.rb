@@ -1,5 +1,5 @@
 #===============================================================================
-# Data box for regular battles
+# Data box for regular battles.
 #===============================================================================
 class Battle::Scene::PokemonDataBox < Sprite
   attr_reader   :battler
@@ -18,12 +18,12 @@ class Battle::Scene::PokemonDataBox < Sprite
   # Height in pixels of a status icon
   STATUS_ICON_HEIGHT = 16
   # Text colors
-  NAME_BASE_COLOR         = Color.new(72, 72, 72)
-  NAME_SHADOW_COLOR       = Color.new(184, 184, 184)
-  MALE_BASE_COLOR         = Color.new(48, 96, 216)
-  MALE_SHADOW_COLOR       = NAME_SHADOW_COLOR
-  FEMALE_BASE_COLOR       = Color.new(248, 88, 40)
-  FEMALE_SHADOW_COLOR     = NAME_SHADOW_COLOR
+  NAME_BASE_COLOR     = Color.new(72, 72, 72)
+  NAME_SHADOW_COLOR   = Color.new(184, 184, 184)
+  MALE_BASE_COLOR     = Color.new(48, 96, 216)
+  MALE_SHADOW_COLOR   = NAME_SHADOW_COLOR
+  FEMALE_BASE_COLOR   = Color.new(248, 88, 40)
+  FEMALE_SHADOW_COLOR = NAME_SHADOW_COLOR
 
   def initialize(battler, sideSize, viewport = nil)
     super(viewport)
@@ -98,7 +98,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     @contents = Bitmap.new(@databoxBitmap.width, @databoxBitmap.height)
     self.bitmap  = @contents
     self.visible = false
-    self.z       = 150 + ((@battler.index / 2) * 5)
+    self.z       = 10150 + ((@battler.index / 2) * 5)
     pbSetSystemFont(self.bitmap)
   end
 
@@ -413,7 +413,7 @@ class Battle::Scene::PokemonDataBox < Sprite
 end
 
 #===============================================================================
-# Splash bar to announce a triggered ability
+# Splash bar to announce a triggered ability.
 #===============================================================================
 class Battle::Scene::AbilitySplashBar < Sprite
   attr_reader :battler
@@ -438,7 +438,7 @@ class Battle::Scene::AbilitySplashBar < Sprite
     # Position the bar
     self.x       = (side == 0) ? -Graphics.width / 2 : Graphics.width
     self.y       = (side == 0) ? 180 : 80
-    self.z       = 120
+    self.z       = 10120
     self.visible = false
   end
 
@@ -506,7 +506,7 @@ class Battle::Scene::AbilitySplashBar < Sprite
 end
 
 #===============================================================================
-# Pokémon sprite (used in battle)
+# Pokémon sprite (used in battle).
 #===============================================================================
 class Battle::Scene::BattlerSprite < RPG::Sprite
   attr_reader   :pkmn
@@ -578,9 +578,9 @@ class Battle::Scene::BattlerSprite < RPG::Sprite
     return if !@_iconBitmap
     pbSetOrigin
     if @index.even?
-      self.z = 50 + (5 * @index / 2)
+      self.z = 1100 + (100 * @index / 2)
     else
-      self.z = 50 - (5 * (@index + 1) / 2)
+      self.z = 1000 - (100 * (@index + 1) / 2)
     end
     # Set original position
     p = Battle::Scene.pbBattlerPosition(@index, @sideSize)
@@ -636,7 +636,7 @@ class Battle::Scene::BattlerSprite < RPG::Sprite
 end
 
 #===============================================================================
-# Shadow sprite for Pokémon (used in battle)
+# Shadow sprite for Pokémon (used in battle).
 #===============================================================================
 class Battle::Scene::BattlerShadowSprite < RPG::Sprite
   attr_reader   :pkmn
@@ -672,7 +672,7 @@ class Battle::Scene::BattlerShadowSprite < RPG::Sprite
   def pbSetPosition
     return if !@_iconBitmap
     pbSetOrigin
-    self.z = 3
+    self.z = -198
     # Set original position
     p = Battle::Scene.pbBattlerPosition(@index, @sideSize)
     self.x = p[0]

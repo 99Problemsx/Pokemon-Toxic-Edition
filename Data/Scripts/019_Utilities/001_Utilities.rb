@@ -1,5 +1,5 @@
 #===============================================================================
-# General purpose utilities
+# General purpose utilities.
 #===============================================================================
 def _pbNextComb(comb, length)
   i = comb.length - 1
@@ -60,6 +60,11 @@ def pbGetLanguage
   return 2 # Use 'English' by default
 end
 
+def pbChooseLanguage
+  commands = Settings::LANGUAGES.map { |val| val[0] }
+  return pbShowCommands(nil, commands)
+end
+
 # Converts a Celsius temperature to Fahrenheit.
 def toFahrenheit(celsius)
   return (celsius * 9.0 / 5.0).round + 32
@@ -98,7 +103,7 @@ class AntiRandom
 end
 
 #===============================================================================
-# Constants utilities
+# Constants utilities.
 #===============================================================================
 # Unused
 def isConst?(val, mod, constant)
@@ -152,7 +157,7 @@ def getConstantNameOrValue(mod, value)
 end
 
 #===============================================================================
-# Event utilities
+# Event utilities.
 #===============================================================================
 def pbTimeEvent(variableNumber, secs = 86_400)
   return if !$game_variables
@@ -191,25 +196,21 @@ def pbTimeEventValid(variableNumber)
   return ret
 end
 
-def pbExclaim(event, id = Settings::EXCLAMATION_ANIMATION_ID, tinting = false)
-  if event.is_a?(Array)
-    sprite = nil
-    done = []
-    event.each do |i|
-      next if done.include?(i.id)
-      spriteset = $scene.spriteset(i.map_id)
-      sprite ||= spriteset&.addUserAnimation(id, i.x, i.y, tinting, 2)
-      done.push(i.id)
-    end
-  else
-    spriteset = $scene.spriteset(event.map_id)
-    sprite = spriteset&.addUserAnimation(id, event.x, event.y, tinting, 2)
+def pbExclaim(events, anim = Settings::EXCLAMATION_ANIMATION_ID, tinting = false)
+  events = [events] if !events.is_a?(Array)
+  events.each do |ev|
+    ev.animation_id = anim
+    ev.animation_height = 3
+    ev.animation_regular_tone = !tinting
   end
-  until sprite.disposed?
-    Graphics.update
-    Input.update
-    pbUpdateSceneMap
+  anim_data = $data_animations[anim]
+  frame_count = anim_data.frame_max
+  frame_rate = 20
+  if anim_data.name[/\[\s*(\d+?)\s*\]\s*$/]
+    frame_rate = $~[1].to_i
   end
+  pbWait(frame_count / frame_rate.to_f)
+  events.each { |i| i.animation_id = 0 }
 end
 
 def pbNoticePlayer(event, always_show_exclaim = false)
@@ -221,7 +222,7 @@ def pbNoticePlayer(event, always_show_exclaim = false)
 end
 
 #===============================================================================
-# Player-related utilities, random name generator
+# Player-related utilities, random name generator.
 #===============================================================================
 # Unused
 def pbGetPlayerGraphic
@@ -373,7 +374,7 @@ def getRandomName(maxLength = 100)
 end
 
 #===============================================================================
-# Regional and National Pokédexes utilities
+# Regional and National Pokédexes utilities.
 #===============================================================================
 # Returns the ID number of the region containing the player's current location,
 # as determined by the current map's metadata.
@@ -419,7 +420,7 @@ def pbGetRegionalDexLength(region_dex)
 end
 
 #===============================================================================
-# Other utilities
+# Other utilities.
 #===============================================================================
 def pbTextEntry(helptext, minlength, maxlength, variableNumber)
   $game_variables[variableNumber] = pbEnterText(helptext, minlength, maxlength)
@@ -449,39 +450,38 @@ def pbMoveTutorAnnotations(move, movelist = nil)
   return ret
 end
 
-def pbMoveTutorChoose(move, movelist = nil, bymachine = false, oneusemachine = false)
+# TODO: The Bag screen needs passing into this method (if using a machine). If
+#       it exists, refresh it before finishing pbFadeOutIn to update the party
+#       compatibility icons.
+def pbMoveTutorChoose(move, movelist = nil, by_machine = false, one_use_machine = false)
   ret = false
   move = GameData::Move.get(move).id
   if movelist.is_a?(Array)
     movelist.map! { |m| GameData::Move.get(m).id }
   end
   pbFadeOutIn do
-    movename = GameData::Move.get(move).name
+    move_name = GameData::Move.get(move).name
+    screen = UI::Party.new($player.party, mode: :teach_pokemon)
     annot = pbMoveTutorAnnotations(move, movelist)
-    scene = PokemonParty_Scene.new
-    screen = PokemonPartyScreen.new(scene, $player.party)
-    screen.pbStartScene(_INTL("Teach which Pokémon?"), false, annot)
-    loop do
-      chosen = screen.pbChoosePokemon
-      break if chosen < 0
-      pokemon = $player.party[chosen]
-      if pokemon.egg?
-        pbMessage(_INTL("Eggs can't be taught any moves.")) { screen.pbUpdate }
-      elsif pokemon.shadowPokemon?
-        pbMessage(_INTL("Shadow Pokémon can't be taught any moves.")) { screen.pbUpdate }
-      elsif movelist && movelist.none? { |j| j == pokemon.species }
-        pbMessage(_INTL("{1} can't learn {2}.", pokemon.name, movename)) { screen.pbUpdate }
-      elsif !pokemon.compatible_with_move?(move)
-        pbMessage(_INTL("{1} can't learn {2}.", pokemon.name, movename)) { screen.pbUpdate }
-      elsif pbLearnMove(pokemon, move, false, bymachine) { screen.pbUpdate }
-        $stats.moves_taught_by_item += 1 if bymachine
-        $stats.moves_taught_by_tutor += 1 if !bymachine
-        pokemon.add_first_move(move) if oneusemachine
-        ret = true
-        break
+    screen.set_annotations(annot)
+    screen.choose_pokemon do |pkmn, party_index|
+      next true if party_index < 0
+      if pkmn.egg?
+        screen.show_message(_INTL("Eggs can't be taught any moves."))
+      elsif pkmn.shadowPokemon?
+        screen.show_message(_INTL("Shadow Pokémon can't be taught any moves."))
+      elsif movelist && movelist.none? { |j| j == pkmn.species }
+        screen.show_message(_INTL("{1} can't learn {2}.", pkmn.name, move_name))
+      elsif !pkmn.compatible_with_move?(move)
+        screen.show_message(_INTL("{1} can't learn {2}.", pkmn.name, move_name))
+      elsif pbLearnMove(pkmn, move, false, by_machine, screen) { screen.update }
+        $stats.moves_taught_by_item += 1 if by_machine
+        $stats.moves_taught_by_tutor += 1 if !by_machine
+        pkmn.add_first_move(move) if one_use_machine
+        next true
       end
+      next false
     end
-    screen.pbEndScene
   end
   return ret   # Returns whether the move was learned by a Pokemon
 end
@@ -600,18 +600,17 @@ def pbLoadRpgxpScene(scene)
   Graphics.transition
 end
 
-def pbChooseLanguage
-  commands = []
-  Settings::LANGUAGES.each do |lang|
-    commands.push(lang[0])
-  end
-  return pbShowCommands(nil, commands)
-end
-
 def pbScreenCapture
   t = Time.now
   filestart = t.strftime("[%Y-%m-%d] %H_%M_%S.%L")
-  capturefile = RTP.getSaveFileName(sprintf("%s.png", filestart))
-  Graphics.screenshot(capturefile)
-  pbSEPlay("Pkmn exp full") if FileTest.audio_exist?("Audio/SE/Pkmn exp full")
+  begin
+    folder_name = "Screenshots"
+    Dir.create(folder_name) if !Dir.safe?(folder_name)
+    capturefile = folder_name + "/" + sprintf("%s.png", filestart)
+    Graphics.screenshot(capturefile)
+  rescue
+    capturefile = RTP.getSaveFileName(sprintf("%s.png", filestart))
+    Graphics.screenshot(capturefile)
+  end
+  pbSEPlay("Screenshot") if FileTest.audio_exist?("Audio/SE/Screenshot")
 end
